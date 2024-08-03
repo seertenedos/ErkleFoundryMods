@@ -87,6 +87,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap);
 

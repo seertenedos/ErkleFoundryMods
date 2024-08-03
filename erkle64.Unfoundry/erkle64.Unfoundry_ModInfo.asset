@@ -20,4 +20,4 @@ MonoBehaviour:
   assetBundles: []
   assemblies: []
   dependsOn: []
-  thumbnailTexture: {fileID: 0}
+  thumbnailTexture: {fileID: 2800000, guid: e1dff71a5ae48fc4483c8846839ae1a9, type: 3}

@@ -26,13 +26,11 @@ namespace Unfoundry
 
         public override void OnAddedToWorld()
         {
-            C3.Dbg.Assert(Instance == null);
             Instance = this;
         }
 
         public override void OnRemovedFromWorld()
         {
-            C3.Dbg.Assert(Instance == this);
             Instance = null;
         }
 

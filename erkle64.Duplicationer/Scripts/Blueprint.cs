@@ -581,6 +581,8 @@ namespace Duplicationer
                 ulong pasteConfigSettings_01 = 0ul;
                 ulong pasteConfigSettings_02 = 0ul;
 
+                byte[] dcsData = new byte[0];
+
                 var customDataWrapper = new CustomDataWrapper(buildableObjectData.customData);
                 foreach (var applier in CustomDataApplier.All)
                 {
@@ -596,6 +598,7 @@ namespace Duplicationer
                             ref pasteConfigSettings_02,
                             ref additionalData_ulong_01,
                             ref additionalData_ulong_02,
+                            ref dcsData,
                             ref _data,
                             entityIdMap);
                     }
@@ -637,7 +640,8 @@ namespace Duplicationer
                             playSound: true,
                             usePasteConfigSettings: usePasteConfigSettings,
                             pasteConfigSettings_01: pasteConfigSettings_01,
-                            pasteConfigSettings_02: pasteConfigSettings_02
+                            pasteConfigSettings_02: pasteConfigSettings_02,
+                            dcsData: dcsData
                         );
 
                         ActionManager.AddQueuedEvent(() =>
@@ -820,7 +824,17 @@ namespace Duplicationer
                 var template = ItemTemplateManager.getBuildableObjectTemplate(buildableObjectData.templateId);
                 if (template != null)
                 {
-                    if (template.canBeRotatedAroundXAxis)
+                    if (template.type == BuildableObjectTemplate.BuildableObjectType.DataCable)
+                    {
+                        buildableObjectData.itemMode = (byte)(
+                            (buildableObjectData.itemMode & 0x00000012)
+                            | ((buildableObjectData.itemMode & 0x00000001) << 5)
+                            | ((buildableObjectData.itemMode & 0x00000024) >> 2)
+                            | ((buildableObjectData.itemMode & 0x00000008) >> 1)
+                            );
+                    }
+
+                    if (template.canBeRotatedAroundXAxis || template.type == BuildableObjectTemplate.BuildableObjectType.DataCable)
                     {
                         var oldOrientation = buildableObjectData.orientationUnlocked;
                         var newOrientation = Quaternion.Euler(0.0f, 90.0f, 0.0f) * oldOrientation;

@@ -3,17 +3,166 @@ using System.Collections.Generic;
 using System.Text;
 using TinyJSON;
 using System;
-using CubeInterOp;
 using System.Linq;
+using MessagePack;
+using UnityMeshSimplifier;
 
 namespace Duplicationer
 {
+    public class CDG_Battery : TypedCustomDataGatherer<BatteryGO>
+    {
+        public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
+        {
+            var dsc = new BatteryDataSystemControls();
+            DSF_Battery.batteryEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
+            var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
+        }
+    }
+
+    public class CDG_BurnerGenerator : TypedCustomDataGatherer<BurnerGeneratorGO>
+    {
+        public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
+        {
+            var dsc = new BurnerGeneratorDataSystemControls();
+            DSF_BurnerGenerator.burnerGeneratorEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
+            var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
+        }
+    }
+
+    public class CDG_Conveyor : TypedCustomDataGatherer<ConveyorGO>
+    {
+        public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
+        {
+            var dsc = new ConveyorDataSystemControls();
+            DSF_Conveyor.conveyorEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
+            var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
+        }
+    }
+
+    public class CDG_DataCompare : TypedCustomDataGatherer<DataCompareGO>
+    {
+        public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
+        {
+            var dsc = new DataCompareEntityDataSystemControls();
+            DSF_DataCompare.dataCompareEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
+            var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
+        }
+    }
+
+    public class CDG_DataProcessor : TypedCustomDataGatherer<DataProcessorGO>
+    {
+        public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
+        {
+            var dsc = new DataProcessingEntityDataSystemControls();
+            DSF_DataProcessor.dataProcessorEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
+            var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
+        }
+    }
+
+    public class CDG_Door : TypedCustomDataGatherer<DoorGO>
+    {
+        public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
+        {
+            var dsc = new DoorDataSystemControls();
+            DSF_Door.doorEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
+            var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
+        }
+    }
+
+    public class CDG_DroneMiner : TypedCustomDataGatherer<DroneMinerGO>
+    {
+        public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
+        {
+            var dsc = new DroneMinerDataSystemControls();
+            DSF_DroneMiner.droneEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
+            var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
+        }
+    }
+
+    public class CDG_Light : TypedCustomDataGatherer<LightGO>
+    {
+        public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
+        {
+            var dsc = new LightDataSystemControls();
+            DSF_Light.lightEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
+            var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
+        }
+    }
+
+    public class CDG_LvgGenerator : TypedCustomDataGatherer<BiomassBurnerGO>
+    {
+        public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
+        {
+            var dsc = new LvgGeneratorDataSystemControls();
+            DSF_LvgGenerator.lvgGeneratorEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
+            var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
+        }
+    }
+
+    public class CDG_Pump : TypedCustomDataGatherer<PumpGO>
+    {
+        public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
+        {
+            var dsc = new PumpDataSystemControls();
+            DSF_Pump.pumpEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
+            var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
+        }
+    }
+
+    public class CDG_Pumpjack : TypedCustomDataGatherer<PumpjackGO>
+    {
+        public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
+        {
+            var dsc = new PumpjackDataSystemControls();
+            DSF_Pumpjack.pumpjackEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
+            var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
+        }
+    }
+
+    public class CDG_SolarPanel : TypedCustomDataGatherer<SolarPanelGO>
+    {
+        public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
+        {
+            var dsc = new SolarPanelDataSystemControls();
+            DSF_SolarPanel.solarPanelEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
+            var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
+        }
+    }
+
+    public class CDG_Transformer : TypedCustomDataGatherer<TransformerGO>
+    {
+        public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
+        {
+            var dsc = new TransformerDataSystemControls();
+            DSF_Transformer.transformerEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
+            var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
+        }
+    }
+
     public class CDG_Producer : TypedCustomDataGatherer<ProducerGO>
     {
         public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
         {
             var assembler = (ProducerGO)bogo;
             customData.Add("craftingRecipeId", assembler.getLastPolledRecipeId());
+
+            var dsc = new ProducerDataSystemControls();
+            DSF_Producer.producerEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
+            var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
         }
     }
 
@@ -27,6 +176,11 @@ namespace Duplicationer
             {
                 customData.Add("loaderFilterTemplateId", loader.getLastSetFilterTemplate()?.id ?? ulong.MaxValue);
             }
+
+            var dsc = new LoaderDataSystemControls();
+            DSF_Loader.loaderEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
+            var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
         }
     }
 

@@ -100,6 +100,14 @@ namespace Unfoundry
             return this;
         }
 
+        public UIBuilder SetSizeDelta(float width, float height)
+        {
+            RectTransform transform = (RectTransform)GameObject.transform;
+            transform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+            transform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+            return this;
+        }
+
         public UIBuilder SetRotation(float degrees)
         {
             var transform = (RectTransform)GameObject.transform;

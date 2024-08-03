@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: erkle64.Adjustinator_ModInfo
   m_EditorClassIdentifier: 
   identifier: erkle64.Adjustinator
-  displayName: erkle64.Adjustinator
+  displayName: Adjustinator
   description: 
   modType: 0
   thumbnail: 

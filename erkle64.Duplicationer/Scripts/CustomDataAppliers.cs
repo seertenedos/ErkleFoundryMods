@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using TinyJSON;
 using Unfoundry;
-using System.Threading.Tasks;
 using System.Linq;
 using System;
 
@@ -23,6 +22,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap)
         {
@@ -54,6 +54,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap)
         {
@@ -73,6 +74,35 @@ namespace Duplicationer
         }
     }
 
+    public class CDA_DCSData : CustomDataApplier
+    {
+        public override bool ShouldApply(BuildableObjectTemplate bot, CustomDataWrapper customData)
+            => customData.HasCustomData("dcsData");
+
+        public override void Apply(
+            BuildableObjectTemplate bot,
+            CustomDataWrapper customData,
+            List<PostBuildAction> postBuildActions,
+            ulong usernameHash,
+            ref bool usePasteConfigSettings,
+            ref ulong pasteConfigSettings_01,
+            ref ulong pasteConfigSettings_02,
+            ref ulong additionalData_ulong_01,
+            ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
+            ref BlueprintData blueprintData,
+            Dictionary<ulong, ulong> entityIdMap)
+        {
+            usePasteConfigSettings = true;
+
+            var loader_dsc = customData.GetCustomData<string>("dcsData");
+            if (loader_dsc != null)
+            {
+                dcsData = Convert.FromBase64String(loader_dsc);
+            }
+        }
+    }
+
     public class CDA_ConveyorBalancer : CustomDataApplier
     {
         public override bool ShouldApply(BuildableObjectTemplate bot, CustomDataWrapper customData)
@@ -88,6 +118,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap)
         {
@@ -118,6 +149,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap)
         {
@@ -150,6 +182,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap)
         {
@@ -182,6 +215,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap)
         {
@@ -223,6 +257,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap)
         {
@@ -259,6 +294,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap)
         {
@@ -293,6 +329,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap)
         {
@@ -337,6 +374,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap)
         {
@@ -378,6 +416,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap)
         {
@@ -410,6 +449,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap)
         {
@@ -442,6 +482,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap)
         {
@@ -474,6 +515,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap)
         {
@@ -520,6 +562,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap)
         {
@@ -566,6 +609,7 @@ namespace Duplicationer
             ref ulong pasteConfigSettings_02,
             ref ulong additionalData_ulong_01,
             ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
             ref BlueprintData blueprintData,
             Dictionary<ulong, ulong> entityIdMap)
         {

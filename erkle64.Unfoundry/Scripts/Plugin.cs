@@ -51,7 +51,7 @@ namespace Unfoundry
 
         public struct HandheldData
         {
-            public int CurrentlySetMode { get; internal set; }
+            public int CurrentlySetMode { get; set; }
 
             public HandheldData(int currentlySetMode)
             {
