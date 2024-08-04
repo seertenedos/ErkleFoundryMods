@@ -33,6 +33,8 @@ namespace RapidPocketCrafting
         [HarmonyPostfix]
         public static void CharacterManagerInit()
         {
+            if (!Config.enabled.value) return;
+
             CharacterManager.characterManager_setCharacterCraftingSpeedDecrementPercentage(GetCraftingTimeDecrease());
         }
 
@@ -40,6 +42,8 @@ namespace RapidPocketCrafting
         [HarmonyPostfix]
         public static void CharacterManagerIncreasePlayerCharacterCraftingSpeedByResearch()
         {
+            if (!Config.enabled.value) return;
+
             CharacterManager.characterManager_setCharacterCraftingSpeedDecrementPercentage(GetCraftingTimeDecrease());
         }
     }

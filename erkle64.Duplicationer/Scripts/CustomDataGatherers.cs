@@ -64,6 +64,17 @@ namespace Duplicationer
         }
     }
 
+    public class CDG_DataMemory : TypedCustomDataGatherer<DataMemoryGO>
+    {
+        public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
+        {
+            var dsc = new DataMemoryEntityDataSystemControls();
+            DSF_DataMemory.dataMemoryEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
+            var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
+        }
+    }
+
     public class CDG_Door : TypedCustomDataGatherer<DoorGO>
     {
         public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
