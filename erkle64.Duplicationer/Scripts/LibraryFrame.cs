@@ -112,7 +112,7 @@ namespace Duplicationer
             }
 
             var builder = UIBuilder.BeginWith(_libraryGridObject);
-            foreach (var path in Directory.GetDirectories(Path.Combine(DuplicationerPlugin.BlueprintFolder, relativePath)))
+            foreach (var path in Directory.GetDirectories(Path.Combine(DuplicationerSystem.BlueprintFolder, relativePath)))
             {
                 var name = Path.GetFileName(path);
 
@@ -201,7 +201,7 @@ namespace Duplicationer
                 }
             }
 
-            foreach (var path in Directory.GetFiles(Path.Combine(DuplicationerPlugin.BlueprintFolder, relativePath), $"*.{DuplicationerPlugin.BlueprintExtension}"))
+            foreach (var path in Directory.GetFiles(Path.Combine(DuplicationerSystem.BlueprintFolder, relativePath), $"*.{DuplicationerSystem.BLUEPRINT_EXTENSION}"))
             {
                 try
                 {
@@ -331,14 +331,14 @@ namespace Duplicationer
                                             TextEntryFrame.Show($"Rename Blueprint", nameToRename, "Rename", (string newName) =>
                                             {
                                                 string filenameBase = Path.Combine(Path.GetDirectoryName(newName), PathHelpers.MakeValidFileName(Path.GetFileName(newName)));
-                                                string newPath = Path.Combine(DuplicationerPlugin.BlueprintFolder, relativePath, $"{filenameBase}.{DuplicationerPlugin.BlueprintExtension}");
+                                                string newPath = Path.Combine(DuplicationerSystem.BlueprintFolder, relativePath, $"{filenameBase}.{DuplicationerSystem.BLUEPRINT_EXTENSION}");
                                                 if (File.Exists(newPath))
                                                 {
                                                     ConfirmationFrame.Show($"Overwrite '{newName}'?", "Overwrite", () =>
                                                     {
                                                         try
                                                         {
-                                                            DuplicationerPlugin.log.Log($"Renaming blueprint '{nameToRename}' to '{newName}'");
+                                                            DuplicationerSystem.log.Log($"Renaming blueprint '{nameToRename}' to '{newName}'");
                                                             File.Delete(newPath);
                                                             File.Move(pathToRename, newPath);
                                                             RenameBlueprint(newPath, Path.GetFileName(newName));
@@ -351,7 +351,7 @@ namespace Duplicationer
                                                 {
                                                     try
                                                     {
-                                                        DuplicationerPlugin.log.Log($"Renaming blueprint '{nameToRename}' to '{newName}'");
+                                                        DuplicationerSystem.log.Log($"Renaming blueprint '{nameToRename}' to '{newName}'");
                                                         File.Move(pathToRename, newPath);
                                                         RenameBlueprint(newPath, Path.GetFileName(newName));
                                                         FillLibraryGrid(relativePath);
@@ -368,7 +368,7 @@ namespace Duplicationer
                 }
                 catch(System.Exception ex)
                 {
-                    DuplicationerPlugin.log.LogWarning($"Error loading blueprint info from '{path}': {ex}");
+                    DuplicationerSystem.log.LogWarning($"Error loading blueprint info from '{path}': {ex}");
                 }
             }
         }

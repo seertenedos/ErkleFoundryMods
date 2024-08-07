@@ -9,7 +9,7 @@ namespace Unfoundry
         public delegate void BuildEventDelegate(ulong entityId);
         private static Dictionary<Vector3Int, BuildEventDelegate> buildEvents = new Dictionary<Vector3Int, BuildEventDelegate>();
 
-        public static int MaxQueuedEventsPerFrame => UnfoundryConfig.maxQueuedEventsPerFrame.value;
+        public static int MaxQueuedEventsPerFrame => Config.maxQueuedEventsPerFrame.value;
         public delegate void QueuedEventDelegate();
         private static Queue<QueuedEventDelegate> queuedEvents = new Queue<QueuedEventDelegate>();
 

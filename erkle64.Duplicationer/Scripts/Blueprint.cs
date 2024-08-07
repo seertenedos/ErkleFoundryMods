@@ -494,7 +494,7 @@ namespace Duplicationer
                                                     }
                                                 }
                                             }
-                                            GameRoot.addLockstepEvent(new BuildEntityEvent(usernameHash, partTemplate.parentItemTemplate.id, mode, worldPos, 0, Quaternion.identity, DuplicationerPlugin.IsCheatModeEnabled ? 0 : 1, 0, false));
+                                            GameRoot.addLockstepEvent(new BuildEntityEvent(usernameHash, partTemplate.parentItemTemplate.id, mode, worldPos, 0, Quaternion.identity, DuplicationerSystem.IsCheatModeEnabled ? 0 : 1, 0, false));
                                         });
                                     }
                                 }
@@ -517,7 +517,7 @@ namespace Duplicationer
                                                     }
                                                 }
                                             }
-                                            GameRoot.addLockstepEvent(new BuildEntityEvent(usernameHash, blockTemplate.yieldItemOnDig_template.id, mode, worldPos, 0, Quaternion.identity, DuplicationerPlugin.IsCheatModeEnabled ? 0 : 1, 0, false));
+                                            GameRoot.addLockstepEvent(new BuildEntityEvent(usernameHash, blockTemplate.yieldItemOnDig_template.id, mode, worldPos, 0, Quaternion.identity, DuplicationerSystem.IsCheatModeEnabled ? 0 : 1, 0, false));
                                         });
                                     }
                                     else if (blockTemplate != null && blockTemplate.parentBOT != null)
@@ -539,17 +539,17 @@ namespace Duplicationer
                                                         }
                                                     }
                                                 }
-                                                GameRoot.addLockstepEvent(new BuildEntityEvent(usernameHash, itemTemplate.id, mode, worldPos, 0, Quaternion.identity, DuplicationerPlugin.IsCheatModeEnabled ? 0 : 1, 0, false));
+                                                GameRoot.addLockstepEvent(new BuildEntityEvent(usernameHash, itemTemplate.id, mode, worldPos, 0, Quaternion.identity, DuplicationerSystem.IsCheatModeEnabled ? 0 : 1, 0, false));
                                             });
                                         }
                                         else
                                         {
-                                            DuplicationerPlugin.log.LogWarning((string)$"No item template for terrain index {blockId}");
+                                            DuplicationerSystem.log.LogWarning((string)$"No item template for terrain index {blockId}");
                                         }
                                     }
                                     else
                                     {
-                                        DuplicationerPlugin.log.LogWarning((string)$"No block template for terrain index {blockId}");
+                                        DuplicationerSystem.log.LogWarning((string)$"No block template for terrain index {blockId}");
                                     }
                                 }
                             }
@@ -631,7 +631,7 @@ namespace Duplicationer
                             worldPos,
                             buildableObjectData.orientationY,
                             buildableObjectData.orientationUnlocked,
-                            DuplicationerPlugin.IsCheatModeEnabled
+                            DuplicationerSystem.IsCheatModeEnabled
                                 ? 0
                                 : (template.modularBuildingModule_amountItemCost > 1 ? (int)template.modularBuildingModule_amountItemCost : 1),
                             0,
@@ -676,7 +676,7 @@ namespace Duplicationer
 
                     var dependency = constructionTaskGroup.GetTask(parentId);
                     if (dependency != null) _dependenciesTemp.Add(dependency);
-                    else DuplicationerPlugin.log.LogWarning($"Entity id {parentId} not found in blueprint");
+                    else DuplicationerSystem.log.LogWarning($"Entity id {parentId} not found in blueprint");
                 }
 
                 var powerlineEntityIds = new List<ulong>();
@@ -685,7 +685,7 @@ namespace Duplicationer
                 {
                     var dependency = constructionTaskGroup.GetTask(powerlineEntityId);
                     if (dependency != null) _dependenciesTemp.Add(dependency);
-                    else DuplicationerPlugin.log.LogWarning($"Entity id {powerlineEntityId} not found in blueprint");
+                    else DuplicationerSystem.log.LogWarning($"Entity id {powerlineEntityId} not found in blueprint");
                 }
 
                 if (_dependenciesTemp.Count > 0)
@@ -791,7 +791,7 @@ namespace Duplicationer
                         }
                         else
                         {
-                            DuplicationerPlugin.log.LogWarning("data not found");
+                            DuplicationerSystem.log.LogWarning("data not found");
                             match = false;
                         }
 
@@ -1181,7 +1181,7 @@ namespace Duplicationer
                                         else
                                         {
                                             template = ItemTemplateManager.getBuildingPartTemplate(GameRoot.BuildingPartIdxLookupTable.table[id]);
-                                            if (template == null) DuplicationerPlugin.log.LogWarning((string)$"Template not found for terrain index {id}-{GameRoot.BUILDING_PART_ARRAY_IDX_START} with id {GameRoot.BuildingPartIdxLookupTable.table[id]} at ({worldPos.x}, {worldPos.y}, {worldPos.z})");
+                                            if (template == null) DuplicationerSystem.log.LogWarning((string)$"Template not found for terrain index {id}-{GameRoot.BUILDING_PART_ARRAY_IDX_START} with id {GameRoot.BuildingPartIdxLookupTable.table[id]} at ({worldPos.x}, {worldPos.y}, {worldPos.z})");
                                         }
 
                                         if (template != null)

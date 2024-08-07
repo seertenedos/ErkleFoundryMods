@@ -231,12 +231,12 @@ namespace Duplicationer
                     }
                     else
                     {
-                        DuplicationerPlugin.log.LogWarning("Failed to get inventory accessor for storage");
+                        DuplicationerSystem.log.LogWarning("Failed to get inventory accessor for storage");
                     }
                 }
                 else
                 {
-                    DuplicationerPlugin.log.LogWarning("Failed to get entity id for storage");
+                    DuplicationerSystem.log.LogWarning("Failed to get entity id for storage");
                 }
             });
         }
@@ -273,7 +273,7 @@ namespace Duplicationer
                 }
                 else
                 {
-                    DuplicationerPlugin.log.LogWarning("Failed to get entity id for drone transport");
+                    DuplicationerSystem.log.LogWarning("Failed to get entity id for drone transport");
                 }
             });
         }
@@ -308,7 +308,7 @@ namespace Duplicationer
                 }
                 else
                 {
-                    DuplicationerPlugin.log.LogWarning("Failed to get entity id for drone transport");
+                    DuplicationerSystem.log.LogWarning("Failed to get entity id for drone transport");
                 }
             });
         }

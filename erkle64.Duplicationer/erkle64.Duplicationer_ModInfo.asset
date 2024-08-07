@@ -15,7 +15,7 @@ MonoBehaviour:
   identifier: erkle64.Duplicationer
   displayName: Duplicationer
   description: Bulk copy/paste blueprints.
-  modType: 0
+  modType: 2
   thumbnail: 
   assetBundles: []
   assemblies: []

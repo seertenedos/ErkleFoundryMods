@@ -15,7 +15,7 @@ MonoBehaviour:
   identifier: erkle64.Unfoundry
   displayName: Unfoundry
   description: Utilities for mod developers
-  modType: 0
+  modType: 2
   thumbnail: 
   assetBundles: []
   assemblies: []

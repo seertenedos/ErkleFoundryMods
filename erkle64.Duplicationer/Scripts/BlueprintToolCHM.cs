@@ -503,7 +503,7 @@ namespace Duplicationer
                 int countReady;
                 int countMissing;
 
-                if (DuplicationerPlugin.IsCheatModeEnabled)
+                if (DuplicationerSystem.IsCheatModeEnabled)
                 {
                     countReady = 0;
                     countMissing = 0;
@@ -730,7 +730,7 @@ namespace Duplicationer
             if (CurrentBlueprint == null) throw new System.ArgumentNullException(nameof(CurrentBlueprint));
 
             ulong usernameHash = GameRoot.getClientCharacter().usernameHash;
-            DuplicationerPlugin.log.Log(string.Format("Placing blueprint at {0}", targetPosition.ToString()));
+            DuplicationerSystem.log.Log(string.Format("Placing blueprint at {0}", targetPosition.ToString()));
             AABB3D aabb = ObjectPoolManager.aabb3ds.getObject();
             var modularBaseCoords = new Dictionary<ulong, Vector3Int>();
             var constructionTaskGroup = new ConstructionTaskGroup((ConstructionTaskGroup taskGroup) => { _activeConstructionTaskGroups.Remove(taskGroup); });
@@ -824,12 +824,12 @@ namespace Duplicationer
             if (string.IsNullOrWhiteSpace(name)) return;
 
             string filenameBase = Path.Combine(Path.GetDirectoryName(name), PathHelpers.MakeValidFileName(Path.GetFileName(name)));
-            string path = Path.Combine(DuplicationerPlugin.BlueprintFolder, $"{filenameBase}.{DuplicationerPlugin.BlueprintExtension}");
+            string path = Path.Combine(DuplicationerSystem.BlueprintFolder, $"{filenameBase}.{DuplicationerSystem.BLUEPRINT_EXTENSION}");
             if (File.Exists(path))
             {
                 ConfirmationFrame.Show($"Overwrite '{name}'?", "Overwrite", () =>
                 {
-                    DuplicationerPlugin.log.Log($"Saving blueprint '{name}' to '{path}'");
+                    DuplicationerSystem.log.Log($"Saving blueprint '{name}' to '{path}'");
                     CurrentBlueprint.Save(path, Path.GetFileName(name), _saveFrame.IconItemTemplates.Take(_saveFrame.IconCount).ToArray());
 
                     HideSaveFrame();
@@ -837,7 +837,7 @@ namespace Duplicationer
             }
             else
             {
-                DuplicationerPlugin.log.Log($"Saving blueprint '{name}' to '{path}'");
+                DuplicationerSystem.log.Log($"Saving blueprint '{name}' to '{path}'");
                 CurrentBlueprint.Save(path, Path.GetFileName(name), _saveFrame.IconItemTemplates.Take(_saveFrame.IconCount).ToArray());
 
                 HideSaveFrame();

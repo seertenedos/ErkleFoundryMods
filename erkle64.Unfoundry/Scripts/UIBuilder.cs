@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C3;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -427,7 +428,7 @@ namespace Unfoundry
         {
             if (_scrollBoxPrefab == null)
             {
-                _scrollBoxPrefab = Plugin.GetBundledAsset<GameObject>("ScrollBox.prefab");
+                _scrollBoxPrefab = AssetManager.Database.LoadAssetAtPath<GameObject>("Assets/erkle64.Unfoundry/Bundled/ScrollBox.prefab");
                 if (_scrollBoxPrefab == null) throw new Exception("Failed to load ScrollBox prefab");
             }
 
@@ -489,7 +490,7 @@ namespace Unfoundry
         {
             var component = GameObject.AddComponent<TextMeshProUGUI>();
             component.text = text;
-            component.font = ResourceExt.FindFont(fontName);
+            component.font = AssetManager.Database.LoadAssetAtPath<TMP_FontAsset>(fontName);
             component.fontSize = fontSize;
             component.color = fontColor;
             component.alignment = alignment;
@@ -597,7 +598,7 @@ namespace Unfoundry
         {
             if (sprites.TryGetValue(textureName, out Sprite sprite)) return sprite;
 
-            var texture = ResourceExt.FindTexture(textureName);
+            var texture = AssetManager.Database.LoadAssetAtPath<Texture2D>(textureName);
             return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f, 0, SpriteMeshType.FullRect, border);
         }
 

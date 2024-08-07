@@ -8,6 +8,16 @@ namespace Unfoundry
 {
     public static class Extensions
     {
+        public static Vector3 SnappedToNearestAxis(this Vector3 direction)
+        {
+            float num1 = Mathf.Abs(direction.x);
+            float num2 = Mathf.Abs(direction.y);
+            float num3 = Mathf.Abs(direction.z);
+            if ((double)num1 > (double)num2 && (double)num1 > (double)num3)
+                return new Vector3(Mathf.Sign(direction.x), 0.0f, 0.0f);
+            return (double)num2 > (double)num1 && (double)num2 > (double)num3 ? new Vector3(0.0f, Mathf.Sign(direction.y), 0.0f) : new Vector3(0.0f, 0.0f, Mathf.Sign(direction.z));
+        }
+
         public static bool IsNullOrEmpty(this Array array)
         {
             return array == null || array.Length == 0;

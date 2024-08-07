@@ -1,11 +1,11 @@
-﻿using HarmonyLib;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Unfoundry;
 using UnityEngine;
 
 namespace Duplicationer
 {
+
     internal class BlueprintToolModeSelectArea : BlueprintToolMode
     {
         private enum Mode
@@ -53,7 +53,7 @@ namespace Duplicationer
                     Vector3Int targetCoord, targetNormal;
                     if (CustomHandheldMode.GetTargetCube(-0.01f, out targetPoint, out targetCoord, out targetNormal))
                     {
-                        if (InputHelpers.IsAltHeld) targetCoord += Vector3Int.RoundToInt(Plugin.SnappedToNearestAxis(targetNormal));
+                        if (InputHelpers.IsAltHeld) targetCoord += Vector3Int.RoundToInt(((Vector3)targetNormal).SnappedToNearestAxis());
 
                         tool.boxMode = BlueprintToolCHM.BoxMode.Selection;
                         tool.selectionFrom = tool.selectionTo = targetCoord;
@@ -273,4 +273,5 @@ namespace Duplicationer
             NextMode = nextMode;
         }
     }
+
 }

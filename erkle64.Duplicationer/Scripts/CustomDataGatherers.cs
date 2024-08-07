@@ -295,12 +295,12 @@ namespace Duplicationer
                     var nodeById = rootNode.FindModularBuildingNodeById(parentId);
                     if (nodeById == null)
                     {
-                        DuplicationerPlugin.log.LogError("parent node not found!");
+                        DuplicationerSystem.log.LogError("parent node not found!");
                         break;
                     }
                     if (nodeById.attachments[(int)parentAttachmentPointIdx] != null)
                     {
-                        DuplicationerPlugin.log.LogError("parent node attachment point is occupied!");
+                        DuplicationerSystem.log.LogError("parent node attachment point is occupied!");
                         break;
                     }
                     var node = new ModularBuildingData(ItemTemplateManager.getBuildableObjectTemplate(botId), id);

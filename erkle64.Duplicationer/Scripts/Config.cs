@@ -1,14 +1,11 @@
-﻿using UnityEngine;
-using System.IO;
-using Unfoundry;
-using System.Collections.Generic;
 using C3.ModKit;
-using System.Reflection;
-using C3;
+using UnityEngine;
 
 namespace Duplicationer
 {
-    public static class Config {
+
+    public static class Config
+    {
         [ModSettingGroup]
         public static class Events
         {
@@ -87,71 +84,4 @@ namespace Duplicationer
         }
     }
 
-    [UnfoundryMod(GUID)]
-    public class DuplicationerPlugin : UnfoundryPlugin
-    {
-        public const string
-            MODNAME = "Duplicationer",
-            AUTHOR = "erkle64",
-            GUID = AUTHOR + "." + MODNAME,
-            VERSION = "0.5.0";
-
-        public static LogSource log;
-
-        public static string BlueprintFolder;
-
-        public const string BlueprintExtension = "ebp";
-
-        private static BlueprintToolCHM blueprintTool;
-
-        public static int BlueprintToolModeIndex { get; private set; }
-
-        public DuplicationerPlugin()
-        {
-            log = new LogSource(MODNAME);
-        }
-
-        public override void Load(Mod mod)
-        {
-            BlueprintFolder = Path.Combine(Application.persistentDataPath, MODNAME.ToLower());
-
-            log.Log("Loading Duplicationer");
-            log.Log($"blueprintFolder: {BlueprintFolder}");
-
-            if (!Directory.Exists(BlueprintFolder)) Directory.CreateDirectory(BlueprintFolder);
-        }
-
-        public override void GameEnter()
-        {
-            blueprintTool = new BlueprintToolCHM();
-            blueprintTool.LoadIconSprites();
-            CommonEvents.OnDeselectTool += CustomHandheldModeManager.ExitCurrentMode2;
-            CommonEvents.OnUpdate += OnUpdate;
-
-            BlueprintToolModeIndex = CustomHandheldModeManager.RegisterMode(blueprintTool);
-        }
-
-        public override void GameExit()
-        {
-            CommonEvents.OnDeselectTool -= OnUpdate;
-            CommonEvents.OnUpdate -= OnUpdate;
-
-            CustomHandheldModeManager.DeregisterMode(blueprintTool);
-
-            blueprintTool = null;
-        }
-
-        private static void OnUpdate()
-        {
-            var clientCharacter = GameRoot.getClientCharacter();
-            if (clientCharacter == null) return;
-
-            if (Input.GetKeyDown(Config.Input.toggleBlueprintToolKey.value) && InputHelpers.IsKeyboardInputAllowed)
-            {
-                CustomHandheldModeManager.ToggleMode(clientCharacter, BlueprintToolModeIndex);
-            }
-        }
-
-        public static bool IsCheatModeEnabled => Config.Cheats.cheatModeAllowed.value && Config.Cheats.cheatModeEnabled.value;
-    }
 }

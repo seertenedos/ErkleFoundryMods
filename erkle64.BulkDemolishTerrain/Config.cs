@@ -1,4 +1,4 @@
-using static BulkDemolishTerrain.Plugin;
+using static BulkDemolishTerrain.BulkDemolishTerrainSystem;
 using UnityEngine;
 using C3.ModKit;
 

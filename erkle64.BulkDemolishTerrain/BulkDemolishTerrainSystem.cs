@@ -9,16 +9,10 @@ using C3;
 
 namespace BulkDemolishTerrain
 {
-    [UnfoundryMod(GUID)]
-    public class Plugin : UnfoundryPlugin
+    [AddSystemToGameSimulation]
+    public class BulkDemolishTerrainSystem : SystemManager.System
     {
-        public const string
-            MODNAME = "BulkDemolishTerrain",
-            AUTHOR = "erkle64",
-            GUID = AUTHOR + "." + MODNAME,
-            VERSION = "1.4.1";
-
-        public static LogSource log;
+        public static LogSource log = new LogSource("BulkDemolishTerrain");
 
         private static readonly Queue<Vector3Int> _queuedTerrainRemovals = new Queue<Vector3Int>();
         private static float _lastTerrainRemovalUpdate = 0.0f;
@@ -41,20 +35,15 @@ namespace BulkDemolishTerrain
             LiquidOnly
         }
 
-        public Plugin()
+        public override void OnAddedToWorld()
         {
-            log = new LogSource(MODNAME);
-
             if (!Config.General.removeLiquids.value && Config.Modes.currentTerrainMode.value == TerrainMode.LiquidOnly)
             {
                 Config.Modes.currentTerrainMode.value = TerrainMode.Collect;
             }
 
             Config.General.playerPlacedOnly.onValueChanged += OnPlayerPlacedOnlyChanged;
-        }
 
-        public override void GameEnter()
-        {
             _radialMenuStateControl = new(
                 new CustomRadialMenuOption(
                     "Collect Terrain",
@@ -89,19 +78,16 @@ namespace BulkDemolishTerrain
             );
         }
 
-        public override void GameExit()
+        public override void OnRemovedFromWorld()
         {
             _radialMenuStateControl = null;
+
+            Config.General.playerPlacedOnly.onValueChanged -= OnPlayerPlacedOnlyChanged;
         }
 
         private void OnPlayerPlacedOnlyChanged(bool value)
         {
             shouldRemove = null;
-        }
-
-        public override void Load(Mod mod)
-        {
-            log.Log($"Loading {MODNAME}");
         }
 
         [FoundryRPC]

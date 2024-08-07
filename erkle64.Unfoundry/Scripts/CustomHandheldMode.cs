@@ -78,7 +78,7 @@ namespace Unfoundry
             if (Physics.Raycast(lookRay, out hitInfo, 300.0f, GlobalStaticCache.s_LayerMask_Terrain | GlobalStaticCache.s_LayerMask_TerrainTileCollider | GlobalStaticCache.s_LayerMask_BuildableObjectFullSize | GlobalStaticCache.s_LayerMask_BuildableObjectPartialSize))
             {
                 targetPoint = hitInfo.point;
-                var normal = Plugin.SnappedToNearestAxis(hitInfo.normal);
+                var normal = hitInfo.normal.SnappedToNearestAxis();
                 targetCoord = new Vector3Int(Mathf.FloorToInt(hitInfo.point.x + normal.x * offset), Mathf.FloorToInt(hitInfo.point.y + normal.y * offset), Mathf.FloorToInt(hitInfo.point.z + normal.z * offset));
                 targetNormal = new Vector3Int(Mathf.RoundToInt(normal.x), Mathf.RoundToInt(normal.y), Mathf.RoundToInt(normal.z));
                 return true;
@@ -96,7 +96,7 @@ namespace Unfoundry
             RaycastHit hitInfo;
             if (Physics.Raycast(lookRay, out hitInfo, 30.0f, GlobalStaticCache.s_LayerMask_Terrain | GlobalStaticCache.s_LayerMask_TerrainTileCollider | GlobalStaticCache.s_LayerMask_BuildableObjectFullSize | GlobalStaticCache.s_LayerMask_BuildableObjectPartialSize))
             {
-                var normal = Plugin.SnappedToNearestAxis(hitInfo.normal);
+                var normal = hitInfo.normal.SnappedToNearestAxis();
                 targetCoord = new Vector3Int(Mathf.FloorToInt(hitInfo.point.x + normal.x * offset), Mathf.FloorToInt(hitInfo.point.y + normal.y * offset), Mathf.FloorToInt(hitInfo.point.z + normal.z * offset));
                 return true;
             }

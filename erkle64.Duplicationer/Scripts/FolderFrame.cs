@@ -32,7 +32,7 @@ namespace Duplicationer
             _relativePath = relativePath;
             _originalFolderName = folderName;
 
-            var originalPath = Path.Combine(DuplicationerPlugin.BlueprintFolder, relativePath, folderName);
+            var originalPath = Path.Combine(DuplicationerSystem.BlueprintFolder, relativePath, folderName);
 
             /*ulong usernameHash = GameRoot.getClientCharacter().usernameHash;
             UIBuilder.BeginWith(GameRoot.getDefaultCanvas())
@@ -172,7 +172,7 @@ namespace Duplicationer
 
         private void ConfirmFolderEdit(string relativePath, string originalName, string newName)
         {
-            var newPath = Path.Combine(DuplicationerPlugin.BlueprintFolder, relativePath, newName);
+            var newPath = Path.Combine(DuplicationerSystem.BlueprintFolder, relativePath, newName);
             var iconNamePath = Path.Combine(newPath, "__folder_icon.txt");
             if (string.IsNullOrWhiteSpace(originalName))
             {
@@ -194,7 +194,7 @@ namespace Duplicationer
             }
             else
             {
-                var originalPath = Path.Combine(DuplicationerPlugin.BlueprintFolder, relativePath, originalName);
+                var originalPath = Path.Combine(DuplicationerSystem.BlueprintFolder, relativePath, originalName);
 
                 try
                 {
