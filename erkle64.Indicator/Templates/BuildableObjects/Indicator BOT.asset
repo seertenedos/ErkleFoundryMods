@@ -102,7 +102,7 @@ MonoBehaviour:
     lightIntensity: 1
     lightType: 0
   spawnFlyingDebrisWhenExploding: 1
-  debrisWithExplosionForcePrefab: {fileID: 129258123506043949, guid: 60f55ce0325dd794682404385a98b631, type: 3}
+  debrisWithExplosionForcePrefab: {fileID: 129258123506043949, guid: f549ccdd163879849a6f5bd55f4b5007, type: 3}
   itemBufferSlotMap: []
   hasRailings: 0
   walkway_mesh_noRailings:

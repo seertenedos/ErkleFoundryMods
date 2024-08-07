@@ -34,6 +34,7 @@ namespace WaterPlacer
             if (Input.GetKeyDown(Config.Input.openWaterPlacerKey.value) && InputHelpers.IsKeyboardInputAllowed)
             {
                 CustomHandheldModeManager.ToggleMode(clientCharacter, _waterPlacerModeIndex);
+                TabletHelper.ClearDataSignals();
             }
         }
     }

@@ -643,6 +643,7 @@ namespace Duplicationer
 
             TabletHelper.SetTabletTextAnalyzer(GetTabletTitle());
             TabletHelper.SetTabletTextLastCopiedConfig(CurrentBlueprintStatusText.Replace('\n', ' '));
+            TabletHelper.ClearDataSignals();
 
             switch (boxMode)
             {

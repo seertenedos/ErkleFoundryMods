@@ -56,6 +56,7 @@ namespace Unfoundry
             if (data.CurrentlySetMode != modeIndex)
             {
                 clientData.setEquipmentMode(modeIndex);
+                TabletHelper.ClearDataSignals();
             }
             else
             {

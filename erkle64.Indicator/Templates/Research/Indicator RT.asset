@@ -19,7 +19,7 @@ MonoBehaviour:
   modIdentifier: _base
   serializedOriginal: 
   name: Data Indicator
-  icon_identifier: 
+  icon_identifier: erkle64_data_indicator
   entitlementIdentifier: 
   flags: 0
   isInternal: 0

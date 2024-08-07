@@ -22,9 +22,9 @@ MonoBehaviour:
   includeInModKit: 0
   includeInCreativeMode: 1
   assetPack: 
-  creativeModeCategory_str: _base_cmct_decoratives
+  creativeModeCategory_str: _base_cmct_data_cable
   entitlementIdentifier: 
-  icon_identifier: 
+  icon_identifier: erkle64_data_indicator
   stackSize: 50
   isHiddenItem: 0
   flags: 2

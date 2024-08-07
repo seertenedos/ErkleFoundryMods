@@ -21,7 +21,7 @@ MonoBehaviour:
   hideInDemo: 0
   name: Data Indicator
   entitlementIdentifier: 
-  icon_identifier: 
+  icon_identifier: erkle64_data_indicator
   category_identifier: _base_buildings
   rowGroup_identifier: _base_buildings_data_cable
   isHiddenInCharacterCraftingFrame: 0
@@ -91,10 +91,10 @@ MonoBehaviour:
 
     40/m _base_xenoferrite_plates
 
-    40/m
-    _base_polymer_board
+    40/m _base_polymer_board
 
-    40/m _base_eic_ii
+    40/m
+    _base_eic_ii
 
     [OUTPUT]
 
