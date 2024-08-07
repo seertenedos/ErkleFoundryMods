@@ -1,0 +1,28 @@
+CraftingRecipe:
+  _ignium_liquefaction:
+    __template: _base_basic_refining_liquid_polymer
+    name: Ignium Liquefaction
+    input_data:
+      - identifier: _base_ore_ignium
+        amount: 10
+        percentage_str: "1"
+    outputElemental_data:
+      - identifier: _base_olumite
+        amount_str: "500"
+    icon_identifier: erkle64_ignium_liquefaction
+    tags:
+      - chemical_processor
+ResearchTemplate:
+  _ignium_liquefaction:
+    __template: _base_mining_force_ii
+    name: Ignium Liquefaction
+    description: Allows converting ignium into olumite.
+    icon_identifier: erkle64_ignium_liquefaction
+    researchContext:
+    flags:
+    list_researchDependencies_str:
+      - _base_fracking_tower
+    list_craftingUnlocks_str:
+      - _ignium_liquefaction
+    miningHardness_unlockedLevel: 0
+    originalName: Ignium Liquefaction

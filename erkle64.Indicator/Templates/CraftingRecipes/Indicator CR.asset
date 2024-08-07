@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 505421408, guid: 1c83dc1f03b8cf43812e942694488c9e, type: 3}
+  m_Name: Indicator CR
+  m_EditorClassIdentifier: 
+  includeIngame: 1
+  includeInBuild: 1
+  includeInDemo: 1
+  identifier: _base_indicator
+  modIdentifier: _base
+  serializedOriginal: 
+  hideInDemo: 0
+  name: Data Indicator
+  entitlementIdentifier: 
+  icon_identifier: 
+  category_identifier: _base_buildings
+  rowGroup_identifier: _base_buildings_data_cable
+  isHiddenInCharacterCraftingFrame: 0
+  isHiddenByNarrativeTrigger: 0
+  isNeverUnseenRecipe: 0
+  narrativeTrigger: 
+  input_data:
+  - identifier: _base_xenoferrite_plates
+    amount: 1
+    percentage_str: 1
+  - identifier: _base_polymer_board
+    amount: 1
+    percentage_str: 1
+  - identifier: _base_eic_ii
+    amount: 1
+    percentage_str: 1
+  output_data:
+  - identifier: _base_indicator
+    amount: 1
+    percentage_str: 1
+  inputElemental_data: []
+  outputElemental_data: []
+  relatedItemTemplateIdentifier: _base_indicator
+  sortingOrderWithinRowGroup: 450
+  timeMs: 3000
+  tags:
+  - character
+  - assembler
+  forceShowOutputsAtTooltips: 0
+  recipePriority: 1000
+  extraInfoTooltipText: 
+  _infoBox: '===[SPEED 1]==============
+
+    [INPUT]
+
+    20/m _base_xenoferrite_plates
+
+    20/m
+    _base_polymer_board
+
+    20/m _base_eic_ii
+
+    [OUTPUT]
+
+    20/m _base_indicator
+
+    ===[SPEED
+    1.5]==============
+
+    [INPUT]
+
+    30/m _base_xenoferrite_plates
+
+    30/m
+    _base_polymer_board
+
+    30/m _base_eic_ii
+
+    [OUTPUT]
+
+    30/m _base_indicator
+
+    ===[SPEED
+    2]==============
+
+    [INPUT]
+
+    40/m _base_xenoferrite_plates
+
+    40/m
+    _base_polymer_board
+
+    40/m _base_eic_ii
+
+    [OUTPUT]
+
+    40/m _base_indicator
+
+'

@@ -1,0 +1,5 @@
+TerrainBlockType:
+  _base_concrete:
+    movementSpeedModifier: 2
+  _base_concrete_slabs:
+    movementSpeedModifier: 2
