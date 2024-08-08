@@ -1157,15 +1157,4 @@ namespace Duplicationer
             Blueprint
         }
     }
-
-    public static class UIExtensions
-    {
-        public static UIBuilder SetSizeDelta(this UIBuilder builder, float width, float height)
-        {
-            RectTransform transform = (RectTransform)builder.GameObject.transform;
-            transform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
-            transform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
-            return builder;
-        }
-    }
 }

@@ -24,44 +24,6 @@ namespace PlanIt
             _onConfirm = onConfirm;
             _onCancel = onCancel;
 
-            /*if (_frame == null)
-            {
-                *//*UIBuilder.BeginWith(GameRoot.getDefaultCanvas())
-                    .Element_Panel("ItemSelectFrame", "corner_cut_outline", new Color(0.133f, 0.133f, 0.133f, 1.0f), new Vector4(13, 10, 8, 13))
-                        .Keep(out _frame)
-                        .SetRectTransform(20.0f, 20.0f, -20.0f, -20.0f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f)
-                        .Element_Header("HeaderBar", "corner_cut_outline", new Color(0.0f, 0.6f, 1.0f, 1.0f), new Vector4(13, 3, 8, 13))
-                            .SetRectTransform(0.0f, -60.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f)
-                            .Layout()
-                                .MinWidth(200)
-                                .MinHeight(60)
-                            .Done
-                            .Element("Heading")
-                                .SetRectTransform(0.0f, 0.0f, -60.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f)
-                                .Component_Text("PlanIt - Select Item", "OpenSansSemibold SDF", 34.0f, Color.white)
-                            .Done
-                            .Element_Button("Button Close", "corner_cut_fully_inset", Color.white, new Vector4(13.0f, 1.0f, 4.0f, 13.0f))
-                                .SetOnClick(() => Hide(false))
-                                .SetRectTransform(-60.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.5f, 1.0f, 0.0f, 1.0f, 1.0f)
-                                .SetTransitionColors(new Color(1.0f, 1.0f, 1.0f, 1.0f), new Color(1.0f, 0.25f, 0.0f, 1.0f), new Color(1.0f, 0.0f, 0.0f, 1.0f), new Color(1.0f, 0.25f, 0.0f, 1.0f), new Color(0.5f, 0.5f, 0.5f, 1.0f), 1.0f, 0.1f)
-                                .Element("Image")
-                                    .SetRectTransform(5.0f, 5.0f, -5.0f, -5.0f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f)
-                                    .Component_Image("cross", Color.white, Image.Type.Sliced, Vector4.zero)
-                                .Done
-                            .Done
-                        .Done
-                        .Element("Content")
-                            .SetRectTransform(0.0f, 0.0f, 0.0f, -60.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f)
-                            .SetGridLayout(new RectOffset(10, 10, 10, 10), new Vector2(74, 74), new Vector2(4, 4), GridLayoutGroup.Corner.UpperLeft, GridLayoutGroup.Axis.Horizontal, TextAnchor.UpperLeft, GridLayoutGroup.Constraint.Flexible)
-                            .Do(BuildContent)
-                        .Done
-                    .Done
-                .End();*//*
-
-                AudioManager.playUISoundEffect(ResourceDB.resourceLinker.audioClip_UIOpen);
-                GlobalStateManager.addCursorRequirement();
-            }*/
-
             gameObject.SetActive(true);
             AudioManager.playUISoundEffect(ResourceDB.resourceLinker.audioClip_UIOpen);
             GlobalStateManager.addCursorRequirement();

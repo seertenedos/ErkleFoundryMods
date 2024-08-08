@@ -73,6 +73,8 @@ namespace Unfoundry
             private static void GameCamera_OnGameInitializationDone()
             {
                 var menuSystem = CustomRadialMenuSystem.Instance;
+                if (menuSystem == null) return;
+
                 if (menuSystem.radialMenu != null)
                 {
                     OnLateUpdate -= menuSystem.radialMenu.Update;

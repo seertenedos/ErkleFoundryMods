@@ -103,6 +103,40 @@ namespace Duplicationer
         }
     }
 
+    public class CDA_ObjectColor : CustomDataApplier
+    {
+        public override bool ShouldApply(BuildableObjectTemplate bot, CustomDataWrapper customData)
+            => customData.HasCustomData("objectColor");
+
+        public override void Apply(
+            BuildableObjectTemplate bot,
+            CustomDataWrapper customData,
+            List<PostBuildAction> postBuildActions,
+            ulong usernameHash,
+            ref bool usePasteConfigSettings,
+            ref ulong pasteConfigSettings_01,
+            ref ulong pasteConfigSettings_02,
+            ref ulong additionalData_ulong_01,
+            ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
+            ref BlueprintData blueprintData,
+            Dictionary<ulong, ulong> entityIdMap)
+        {
+            var color = customData.GetCustomData<int>("objectColor");
+            var r = (byte)(color & 0xff);
+            var g = (byte)((color >> 8) & 0xff);
+            var b = (byte)((color >> 16) & 0xff);
+
+            postBuildActions.Add((ConstructionTaskGroup taskGroup, ConstructionTaskGroup.ConstructionTask task) =>
+            {
+                if (task.entityId > 0)
+                {
+                    GameRoot.addLockstepEvent(new ColorizeObjectEvent(usernameHash, task.entityId, r, g, b, false));
+                }
+            });
+        }
+    }
+
     public class CDA_ConveyorBalancer : CustomDataApplier
     {
         public override bool ShouldApply(BuildableObjectTemplate bot, CustomDataWrapper customData)

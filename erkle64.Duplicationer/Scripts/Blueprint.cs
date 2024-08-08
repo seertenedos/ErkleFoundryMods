@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using TinyJSON;
 using Unfoundry;
 using UnityEngine;
-using static Duplicationer.BlueprintData.BuildableObjectData;
 
 namespace Duplicationer
 {
@@ -145,6 +145,9 @@ namespace Duplicationer
             return Create(from, size, buildings, blocks);
         }
 
+        [DllImport("FoundryNative", EntryPoint = "buildableEntity_getObjectColor")]
+        private static extern void buildableEntity_getObjectColor(ulong entityId, ref byte r, ref byte g, ref byte b);
+
         public static Blueprint Create(Vector3Int from, Vector3Int size, IEnumerable<BuildableObjectGO> buildings, byte[] blocks)
         {
             var to = from + size;
@@ -216,6 +219,13 @@ namespace Duplicationer
                     {
                         gatherer.Gather(bogo, customDataWrapper, powerGridBuildings);
                     }
+                }
+
+                if (bogo is IHasColorManager hasColorManager && hasColorManager.ColorManager != null && hasColorManager.ColorManager.hasAnyColorableObject())
+                {
+                    byte r = 0, g = 0, b = 0;
+                    buildableEntity_getObjectColor(bogo.relatedEntityId, ref r, ref g, ref b);
+                    customDataWrapper.Add("objectColor", r | (g << 8) | (b << 16));
                 }
 
                 buildingDataArray[buildingIndex].customData = customData.ToArray();

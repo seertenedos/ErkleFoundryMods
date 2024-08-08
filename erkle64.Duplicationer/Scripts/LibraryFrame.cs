@@ -24,44 +24,6 @@ namespace Duplicationer
             _tool.HideBlueprintFrame(true);
             _tool.HideFolderFrame(true);
 
-            /*ulong usernameHash = GameRoot.getClientCharacter().usernameHash;
-            UIBuilder.BeginWith(GameRoot.getDefaultCanvas())
-                .Element_Panel("Library Frame", "corner_cut_outline", new Color(0.133f, 0.133f, 0.133f, 1.0f), new Vector4(13, 10, 8, 13))
-                    .Keep(out _frameRoot)
-                    .SetRectTransform(100, 100, -100, -100, 0.5f, 0.5f, 0, 0, 1, 1)
-                    .Element_Header("HeaderBar", "corner_cut_outline", new Color(0.0f, 0.6f, 1.0f, 1.0f), new Vector4(13, 3, 8, 13))
-                        .SetRectTransform(0.0f, -60.0f, 0.0f, 0.0f, 0.5f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f)
-                        .Element("Heading")
-                            .SetRectTransform(0.0f, 0.0f, -60.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f)
-                            .Component_Text("Blueprints", "OpenSansSemibold SDF", 34.0f, Color.white)
-                            .Keep(out libraryFrameHeading)
-                        .Done
-                        .Element_Button("Button Close", "corner_cut_fully_inset", Color.white, new Vector4(13.0f, 1.0f, 4.0f, 13.0f))
-                            .SetOnClick(() => Hide())
-                            .SetRectTransform(-60.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.5f, 1.0f, 0.0f, 1.0f, 1.0f)
-                            .SetTransitionColors(new Color(1.0f, 1.0f, 1.0f, 1.0f), new Color(1.0f, 0.25f, 0.0f, 1.0f), new Color(1.0f, 0.0f, 0.0f, 1.0f), new Color(1.0f, 0.25f, 0.0f, 1.0f), new Color(0.5f, 0.5f, 0.5f, 1.0f), 1.0f, 0.1f)
-                            .Element("Image")
-                                .SetRectTransform(5.0f, 5.0f, -5.0f, -5.0f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f)
-                                .Component_Image("cross", Color.white, Image.Type.Sliced, Vector4.zero)
-                            .Done
-                        .Done
-                    .Done
-                    .Element("Content")
-                        .SetRectTransform(0.0f, 0.0f, 0.0f, -60.0f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f)
-                        .Element("Padding")
-                            .SetRectTransform(10.0f, 10.0f, -10.0f, -10.0f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f)
-                            .Do(builder =>
-                            {
-                                var gameObject = Object.Instantiate(_tool.prefabGridScrollView.Prefab, builder.GameObject.transform);
-                                var grid = gameObject.GetComponentInChildren<GridLayoutGroup>();
-                                if (grid == null) throw new System.Exception("Grid not found.");
-                                libraryGridObject = grid.gameObject;
-                            })
-                        .Done
-                    .Done
-                .Done
-            .End();*/
-
             FillLibraryGrid(_lastLibraryRelativePath, saveFrame);
 
             Shown();
@@ -111,7 +73,6 @@ namespace Duplicationer
                 }
             }
 
-            var builder = UIBuilder.BeginWith(_libraryGridObject);
             foreach (var path in Directory.GetDirectories(Path.Combine(DuplicationerSystem.BlueprintFolder, relativePath)))
             {
                 var name = Path.GetFileName(path);

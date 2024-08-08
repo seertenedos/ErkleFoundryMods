@@ -230,12 +230,12 @@ namespace Unfoundry
                     .PreferredWidth(minWidth)
                     .FlexibleWidth(flexibleWidth)
                 .Done
-                .Component_Text(text, "OpenSansSemibold SDF", 18.0f, color ?? Color.white, TextAlignmentOptions.MidlineLeft);
+                .Component_Text(text, "Assets/CubeFactoryAssets/Fonts/OpenSans/Default/OpenSansSemibold SDF.asset", 18.0f, color ?? Color.white, TextAlignmentOptions.MidlineLeft);
         }
 
         public UIBuilder Element_TextButton(string name, string text, Color? color = null)
         {
-            return Element_Button(name, "corner_cut", Color.white, new Vector4(10.0f, 1.0f, 2.0f, 10.0f))
+            return Element_Button(name, "Assets/erkle64.Unfoundry/Bundled/UI/corner_cut.png", Color.white, new Vector4(10.0f, 1.0f, 2.0f, 10.0f))
                 .SetTransitionColors(new Color(0.2f, 0.2f, 0.2f, 1.0f), new Color(0.0f, 0.6f, 1.0f, 1.0f), new Color(0.222f, 0.667f, 1.0f, 1.0f), new Color(0.0f, 0.6f, 1.0f, 1.0f), new Color(0.5f, 0.5f, 0.5f, 1.0f), 1.0f, 0.1f)
                 .Layout()
                     .MinWidth(40)
@@ -244,18 +244,18 @@ namespace Unfoundry
                 .Done
                 .Element("Text")
                     .SetRectTransform(0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f)
-                    .Component_Text(text, "OpenSansSemibold SDF", 18.0f, color ?? Color.white, TextAlignmentOptions.Center)
+                    .Component_Text(text, "Assets/CubeFactoryAssets/Fonts/OpenSans/Default/OpenSansSemibold SDF.asset", 18.0f, color ?? Color.white, TextAlignmentOptions.Center)
                 .Done;
         }
         public UIBuilder Element_TextButton_AutoSize(string name, string text)
         {
-            return Element_Button(name, "corner_cut", Color.white, new Vector4(10f, 1f, 2f, 10f), Image.Type.Sliced)
+            return Element_Button(name, "Assets/erkle64.Unfoundry/Bundled/UI/corner_cut.png", Color.white, new Vector4(10f, 1f, 2f, 10f), Image.Type.Sliced)
                 .SetVerticalLayout(new RectOffset(12, 12, 4, 4), 0, TextAnchor.UpperLeft, false, true, true, false, false, true, true)
                 .AutoSize(ContentSizeFitter.FitMode.PreferredSize, ContentSizeFitter.FitMode.PreferredSize)
                 .SetTransitionColors(new Color(0.2f, 0.2f, 0.2f, 1f), new Color(0f, 0.6f, 1f, 1f), new Color(0.222f, 0.667f, 1f, 1f), new Color(0f, 0.6f, 1f, 1f), new Color(0.5f, 0.5f, 0.5f, 1f), 1f, 0.1f)
                 .Element("Text")
                     .AutoSize(ContentSizeFitter.FitMode.PreferredSize, ContentSizeFitter.FitMode.PreferredSize)
-                    .Component_Text(text, "OpenSansSemibold SDF", 18f, Color.white, TextAlignmentOptions.Center)
+                    .Component_Text(text, "Assets/CubeFactoryAssets/Fonts/OpenSans/Default/OpenSansSemibold SDF.asset", 18f, Color.white, TextAlignmentOptions.Center)
                 .Done;
         }
 
@@ -266,7 +266,7 @@ namespace Unfoundry
 
         public UIBuilder Element_IconButton(string name, Sprite icon, int imageWidth = 36, int imageHeight = 36, float rotation = 0.0f)
         {
-            return Element_Button(name, "corner_cut", Color.white, new Vector4(10.0f, 1.0f, 2.0f, 10.0f))
+            return Element_Button(name, "Assets/erkle64.Unfoundry/Bundled/UI/corner_cut.png", Color.white, new Vector4(10.0f, 1.0f, 2.0f, 10.0f))
                 .SetTransitionColors(new Color(0.2f, 0.2f, 0.2f, 1.0f), new Color(0.0f, 0.6f, 1.0f, 1.0f), new Color(0.222f, 0.667f, 1.0f, 1.0f), new Color(0.0f, 0.6f, 1.0f, 1.0f), new Color(0.5f, 0.5f, 0.5f, 1.0f), 1.0f, 0.1f)
                 .Layout()
                     .MinWidth(imageWidth + 10)
@@ -283,7 +283,7 @@ namespace Unfoundry
 
         public UIBuilder Element_ImageButton(string name, string textureName, int imageWidth = 36, int imageHeight = 36, float rotation = 0.0f)
         {
-            return Element_Button(name, "corner_cut", Color.white, new Vector4(10.0f, 1.0f, 2.0f, 10.0f))
+            return Element_Button(name, "Assets/erkle64.Unfoundry/Bundled/UI/corner_cut.png", Color.white, new Vector4(10.0f, 1.0f, 2.0f, 10.0f))
                 .SetTransitionColors(new Color(0.2f, 0.2f, 0.2f, 1.0f), new Color(0.0f, 0.6f, 1.0f, 1.0f), new Color(0.222f, 0.667f, 1.0f, 1.0f), new Color(0.0f, 0.6f, 1.0f, 1.0f), new Color(0.5f, 0.5f, 0.5f, 1.0f), 1.0f, 0.1f)
                 .Layout()
                     .MinWidth(imageWidth + 10)
@@ -300,7 +300,7 @@ namespace Unfoundry
 
         public UIBuilder Element_ImageTextButton(string name, string text, string textureName, Color? color = null, int imageWidth = 36, int imageHeight = 36, float rotation = 0.0f)
         {
-            return Element_Button(name, "corner_cut", Color.white, new Vector4(10.0f, 1.0f, 2.0f, 10.0f))
+            return Element_Button(name, "Assets/erkle64.Unfoundry/Bundled/UI/corner_cut.png", Color.white, new Vector4(10.0f, 1.0f, 2.0f, 10.0f))
                 .SetTransitionColors(new Color(0.2f, 0.2f, 0.2f, 1.0f), new Color(0.0f, 0.6f, 1.0f, 1.0f), new Color(0.222f, 0.667f, 1.0f, 1.0f), new Color(0.0f, 0.6f, 1.0f, 1.0f), new Color(0.5f, 0.5f, 0.5f, 1.0f), 1.0f, 0.1f)
                 .Layout()
                     .MinWidth(imageWidth + 10)
@@ -309,7 +309,7 @@ namespace Unfoundry
                 .Done
                 .Element("Text")
                     .SetRectTransform(0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f)
-                    .Component_Text(text, "OpenSansSemibold SDF", 18.0f, color ?? Color.white, TextAlignmentOptions.Center)
+                    .Component_Text(text, "Assets/CubeFactoryAssets/Fonts/OpenSans/Default/OpenSansSemibold SDF.asset", 18.0f, color ?? Color.white, TextAlignmentOptions.Center)
                 .Done
                 .Element("Image")
                     .SetRectTransform(5.0f, -imageHeight * 0.5f, 5.0f + imageWidth, imageHeight * 0.5f, 0.0f, 0.5f, 0.0f, 0.5f, 0.0f, 0.5f)
@@ -321,7 +321,7 @@ namespace Unfoundry
         public UIBuilder Element_Toggle(string name, bool isChecked, float size = 30.0f, Action<bool> onValueChanged = null)
         {
             return Element(name)
-                .Component_Image("corner_cut", Color.white, Image.Type.Sliced, new Vector4(10.0f, 1.0f, 2.0f, 10.0f))
+                .Component_Image("Assets/erkle64.Unfoundry/Bundled/UI/corner_cut.png", Color.white, Image.Type.Sliced, new Vector4(10.0f, 1.0f, 2.0f, 10.0f))
                 .Component<Toggle>()
                 .SetTransitionColors(
                     new Color(0.333f, 0.333f, 0.333f),
@@ -338,7 +338,7 @@ namespace Unfoundry
                     .PreferredHeight(size)
                 .Done
                 .Element("Image")
-                    .Component_Image("checkmark_208x208", Color.white, Image.Type.Simple)
+                    .Component_Image("Assets/erkle64.Unfoundry/Bundled/UI/checkmark_208x208.png", Color.white, Image.Type.Simple)
                     .Keep(out Image checkImage)
                     .SetRectTransform(5.0f, 5.0f, -5.0f, -5.0f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f)
                 .Done
@@ -355,7 +355,7 @@ namespace Unfoundry
             return Element(name)
                 .Element("Background")
                     .SetRectTransform(10.0f, -10.0f, -10.0f, 10.0f, 0.5f, 0.5f, 0.0f, 0.5f, 1.0f, 0.5f)
-                    .Component_Image("solid_square_white", Color.white)
+                    .Component_Image("Assets/erkle64.Unfoundry/Bundled/UI/solid_square_white.png", Color.white)
                     .Component<Outline>()
                 .Done
                 .Element("Fill Area")
@@ -363,7 +363,7 @@ namespace Unfoundry
                     .Element("Fill")
                         .Keep(out RectTransform fillRect)
                         .SetRectTransform(-5.0f, 0.0f, 5.0f, 0.0f, 0.5f, 0.5f, 0.0f, 0.0f, 0.1919192f, 1.0f)
-                        .Component_Image("solid_square_white", new Color(0.0f, 0.6f, 1.0f))
+                        .Component_Image("Assets/erkle64.Unfoundry/Bundled/UI/solid_square_white.png", new Color(0.0f, 0.6f, 1.0f))
                     .Done
                 .Done
                 .Element("Handle Slide Area")
@@ -371,7 +371,7 @@ namespace Unfoundry
                     .Element("Handle")
                         .Keep(out RectTransform handleRect)
                         .SetRectTransform(-12.5f, 0.0f, 12.5f, 0.0f, 0.5f, 0.5f, 0.1919192f, 0.0f, 0.1919192f, 1.0f)
-                        .Component_Image("solid_square_white", new Color(0.0f, 0.6f, 1.0f))
+                        .Component_Image("Assets/erkle64.Unfoundry/Bundled/UI/solid_square_white.png", new Color(0.0f, 0.6f, 1.0f))
                         .Component<Outline>()
                     .Done
                 .Done
@@ -391,7 +391,7 @@ namespace Unfoundry
         public UIBuilder Element_InputField(string name, string text, TMP_InputField.ContentType contentType, Action<string> onValueChanged)
         {
             return Element(name)
-                .Component_Image("corner_cut", Color.white, Image.Type.Sliced, new Vector4(10.0f, 1.0f, 2.0f, 10.0f))
+                .Component_Image("Assets/erkle64.Unfoundry/Bundled/UI/corner_cut.png", Color.white, Image.Type.Sliced, new Vector4(10.0f, 1.0f, 2.0f, 10.0f))
                 .Component<TMP_InputField>()
                 .Layout()
                     .MinWidth(40)
@@ -407,7 +407,7 @@ namespace Unfoundry
                     })
                     .Element("Text")
                         .SetRectTransform(0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f)
-                        .Component_Text(text, "OpenSansSemibold SDF", 18.0f, Color.black, TextAlignmentOptions.MidlineLeft)
+                        .Component_Text(text, "Assets/CubeFactoryAssets/Fonts/OpenSans/Default/OpenSansSemibold SDF.asset", 18.0f, Color.black, TextAlignmentOptions.MidlineLeft)
                     .Done
                 .Done
                 .WithComponent((TMP_InputField inputField) =>

@@ -160,12 +160,12 @@ namespace Unfoundry
                     .Done
                     .Element("Center Text")
                         .SetRectTransform(9, 0, -9, 0, 0.5f, 0.5f, 0.25f, 0.25f, 0.75f, 0.75f)
-                        .Component_Text("", "OpenSansSemibold SDF", 30, Color.white, TextAlignmentOptions.Center)
+                        .Component_Text("", "Assets/CubeFactoryAssets/Fonts/OpenSans/Default/OpenSansSemibold SDF.asset", 30, Color.white, TextAlignmentOptions.Center)
                         .Keep(out centerText)
                     .Done
                     .Element("Center Text")
                         .SetRectTransform(9, 0, -9, 0, 0.5f, 0.5f, 0.32f, 0.32f, 0.68f, 0.68f)
-                        .Component_Text("", "OpenSansSemibold SDF", 16, Color.white, TextAlignmentOptions.Bottom)
+                        .Component_Text("", "Assets/CubeFactoryAssets/Fonts/OpenSans/Default/OpenSansSemibold SDF.asset", 16, Color.white, TextAlignmentOptions.Bottom)
                         .Keep(out centerSubscriptText)
                     .Done
                     .GameObject;

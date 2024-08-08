@@ -5,7 +5,9 @@ using TinyJSON;
 using System;
 using System.Linq;
 using MessagePack;
-using UnityMeshSimplifier;
+using UnityEngine;
+using static CharacterTabletUsabilityManager;
+using static UnityEngine.GraphicsBuffer;
 
 namespace Duplicationer
 {
@@ -71,6 +73,39 @@ namespace Duplicationer
             var dsc = new DataMemoryEntityDataSystemControls();
             DSF_DataMemory.dataMemoryEntity_modifyDSC(bogo.relatedEntityId, IOBool.iotrue, ref dsc);
             var dcsData = MessagePackSerializer.Serialize(dsc, GlobalStateManager.msgp_options_fast);
+            customData.Add("dcsData", Convert.ToBase64String(dcsData));
+        }
+    }
+
+    public class CDG_DataSource : TypedCustomDataGatherer<DataSourceGO>
+    {
+        public int[] dataSource_signalIdxArray = new int[DSF_DataSource.MAX_SLOTS];
+        public int[] dataSource_signalValueArray = new int[DSF_DataSource.MAX_SLOTS];
+        public bool dataSource_broadcastState = false;
+
+        public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
+        {
+            DSF_DataSource.dataSourceEntity_ioDSC(bogo.relatedEntityId, dataSource_signalIdxArray, dataSource_signalValueArray, Mathf.Min(dataSource_signalIdxArray.Length, dataSource_signalValueArray.Length), IOBool.iotrue);
+
+            if (bogo.template.dataSourceEntity_mode == 1)
+            {
+                byte ioState = 0;
+                DSF_DataSource.dataSourceEntity_getBroadcastState(bogo.relatedEntityId, ref ioState);
+                dataSource_broadcastState = ioState == 1;
+            }
+            else
+            {
+                dataSource_broadcastState = false;
+            }
+
+            int[] dataConfigArrays = new int[DSF_DataSource.MAX_SLOTS * 2 + 1];
+            for (int i = 0; i < DSF_DataSource.MAX_SLOTS; i++)
+            {
+                dataConfigArrays[i] = dataSource_signalIdxArray[i];
+                dataConfigArrays[DSF_DataSource.MAX_SLOTS + i] = dataSource_signalValueArray[i];
+            }
+            dataConfigArrays[DSF_DataSource.MAX_SLOTS * 2] = dataSource_broadcastState ? 1 : 0;
+            var dcsData = MessagePackSerializer.Serialize(dataConfigArrays, GlobalStateManager.msgp_options_fast);
             customData.Add("dcsData", Convert.ToBase64String(dcsData));
         }
     }
