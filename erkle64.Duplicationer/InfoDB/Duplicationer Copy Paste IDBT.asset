@@ -21,7 +21,7 @@ MonoBehaviour:
   category_identifier: _erkle64_duplicationer
   sidebarButtonText: Copy/Paste
   sortOrderDESC: 1000
-  infoPageType: 1
+  infoPageType: 0
   isUnlockedByDefault: 1
   isReadByDefault: 0
   unlockTriggers: []
@@ -111,9 +111,9 @@ MonoBehaviour:
     image: {fileID: 21300000, guid: 151d93f7f18067a40968765730486d11, type: 3}
     addImageText: 0
     imageTextData: []
-  showNotificationOnUnlock: 1
-  notificationHeader: Duplicationer
-  notificationContent: Learn more about blueprints.
-  notificationIcon: {fileID: 21300000, guid: 81cfe2f8916dcd14fa645881cbad668d, type: 3}
+  showNotificationOnUnlock: 0
+  notificationHeader: 
+  notificationContent: 
+  notificationIcon: {fileID: 0}
   notificationTimeSec: 10
   notificationDelaySec: 0
