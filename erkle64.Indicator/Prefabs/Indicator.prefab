@@ -133,14 +133,10 @@ MonoBehaviour:
   connectorIdx: 0
   meshFilter: {fileID: 6451900576099466985}
   meshRenderer: {fileID: 7593358531071881926}
-  regularMesh: {fileID: 7624978196364739513, guid: dbe21de1585ed5449bc24a00f8e4aff1,
-    type: 3}
-  alternativeIndicatorMesh: {fileID: -1795431041418463265, guid: dbe21de1585ed5449bc24a00f8e4aff1,
-    type: 3}
-  material_indicatorGreen: {fileID: 2100000, guid: 1e3b08747b6520e43b92db33907a480c,
-    type: 2}
-  material_indicatorRed: {fileID: 2100000, guid: 40ac403c7ba69394482f746992db082c,
-    type: 2}
+  regularMesh: {fileID: 7624978196364739513, guid: dbe21de1585ed5449bc24a00f8e4aff1, type: 3}
+  alternativeIndicatorMesh: {fileID: -1795431041418463265, guid: dbe21de1585ed5449bc24a00f8e4aff1, type: 3}
+  material_indicatorGreen: {fileID: 2100000, guid: 1e3b08747b6520e43b92db33907a480c, type: 2}
+  material_indicatorRed: {fileID: 2100000, guid: 40ac403c7ba69394482f746992db082c, type: 2}
   alternativeConnectors: []
 --- !u!33 &6451900576099466985
 MeshFilter:
@@ -223,7 +219,6 @@ GameObject:
   - component: {fileID: 1302339924773396748}
   - component: {fileID: 4864127888083623755}
   - component: {fileID: 7889716433213470825}
-  - component: {fileID: 8170506506108541025}
   m_Layer: 13
   m_Name: Indicator
   m_TagString: Untagged
@@ -315,29 +310,6 @@ LODGroup:
     renderers:
     - renderer: {fileID: 7711827370519362397}
   m_Enabled: 1
---- !u!114 &8170506506108541025
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3499449853303005783}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1956842370, guid: 29486fe0b871ffeca76cef1777c919bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_data: {fileID: 11400000, guid: 84ba8f720727482489618aa051011e5b, type: 2}
-  m_rootTransform: {fileID: 8205166014862523289}
-  m_lodGroup: {fileID: 7889716433213470825}
-  m_renderers:
-  - {fileID: 539638530653758630}
-  m_lodReplacement: 2
-  m_renderPipelineInUse: 0
-  m_insertIndex: 1
-  m_lastImpostor: {fileID: 4334317824964887804}
-  m_folderPath: Assets/Imposters/
-  m_cutMode: 0
 --- !u!1 &4334317824964887804
 GameObject:
   m_ObjectHideFlags: 0

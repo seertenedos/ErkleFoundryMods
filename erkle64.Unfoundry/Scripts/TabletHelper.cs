@@ -42,6 +42,8 @@ namespace Unfoundry
             list_signalEntries.Clear();
 
             tabletHH.container_dataMemoryGrid.SetActive(false);
+            tabletHH.container_dataProcessorGrid.SetActive(false);
+            tabletHH.container_dataCompareGrid.SetActive(false);
         }
     }
 }

@@ -21,4 +21,4 @@ MonoBehaviour:
   assemblies: []
   dependsOn:
   - erkle64.Unfoundry
-  thumbnailTexture: {fileID: 0}
+  thumbnailTexture: {fileID: 2800000, guid: 43e20ffac53429143a3cfa4b9e714563, type: 3}

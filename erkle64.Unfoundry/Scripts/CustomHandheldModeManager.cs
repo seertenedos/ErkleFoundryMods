@@ -10,7 +10,7 @@ namespace Unfoundry
     {
         public static bool IsCustomHandheldModeActive { get; private set; } = false;
 
-        public const int FirstCustomIndex = 4;
+        public const int FirstCustomIndex = 16;
 
         private static Dictionary<ulong, HandheldData> handheldData = new Dictionary<ulong, HandheldData>();
         private static List<CustomHandheldMode> customHandheldModes = new List<CustomHandheldMode>();
@@ -180,12 +180,12 @@ namespace Unfoundry
                 {
                     var materialsByMode = new Material[newArraySize];
                     var containersByMode = new GameObject[newArraySize];
-                    for (int i = 0; i < FirstCustomIndex - 1; i++)
+                    for (int i = 0; i < __instance.materialsByMode.Length; i++)
                     {
                         materialsByMode[i] = __instance.materialsByMode[i];
                         containersByMode[i] = __instance.containersByMode[i];
                     }
-                    for (int i = FirstCustomIndex - 1; i < newArraySize; i++)
+                    for (int i = __instance.materialsByMode.Length; i < newArraySize; i++)
                     {
                         materialsByMode[i] = __instance.materialsByMode[0];
                         containersByMode[i] = __instance.containersByMode[0];

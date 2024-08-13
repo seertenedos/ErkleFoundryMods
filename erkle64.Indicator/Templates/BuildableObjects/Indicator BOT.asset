@@ -428,6 +428,28 @@ MonoBehaviour:
   al_splitter_splineDataContainer_input: {fileID: 0}
   escalator_localForwardDirection: 
   escalator_type: 0
+  escalator_tier: 0
+  escalator_botGroup_straight: 
+  escalator_botGroup_slopeDown: 
+  escalator_botGroup_slopeUp: 
+  escalator_botGroup_curveLeft: 
+  escalator_botGroup_curveRight: 
+  escalator_connectionForward_localOffset_origin:
+    x: 0
+    y: 0
+    z: 0
+  escalator_connectionForward_localOffset_target:
+    x: 0
+    y: 0
+    z: 0
+  escalator_connectionBackward_localOffset_origin:
+    x: 0
+    y: 0
+    z: 0
+  escalator_connectionBackward_localOffset_target:
+    x: 0
+    y: 0
+    z: 0
   baseStation_craftingRecipeIdentifier: []
   oreVeinMiner_railMinerSlotLength: 0
   oreVeinMiner_railMinerDrillSlotPadding: 0

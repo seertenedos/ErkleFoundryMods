@@ -1,29 +1,29 @@
 ItemTemplate:
   _big_boomer:
-    __template: _base_dynamite_i
     name: Big Boomer
     explosionRadius: 20
+    __template: _base_dynamite_i
 CraftingRecipe:
   _big_boomer:
-    __template: _base_dynamite_i
     name: Big Boomer
+    __template: _base_dynamite_i
     input_data:
-      - identifier: _base_xenoferrite_plates
-        amount: 1
-        percentage_str: '1'
-      - identifier: _base_explosives_i:
-        amount: 5
-        percentage_str: '1'
-      - identifier: _base_wire_coil:
-        amount: 3
-        percentage_str: '1'
-      - identifier: _base_eic_i:
-        amount: 3
-        percentage_str: '1'
+      - amount: 1
+        percentage_str: "1"
+        identifier: _base_xenoferrite_plates
+      - amount: 5
+        percentage_str: "1"
+        identifier: _base_explosives_i
+      - amount: 3
+        percentage_str: "1"
+        identifier: _base_wire_coil
+      - amount: 3
+        percentage_str: "1"
+        identifier: _base_eic_i
     output_data:
-      - identifier: _big_boomer:
-        amount: 1
-        percentage_str: '1'
+      - amount: 1
+        percentage_str: "1"
+        identifier: _big_boomer
 ResearchTemplate:
   _base_explosives_i:
     list_craftingUnlocks_str:
