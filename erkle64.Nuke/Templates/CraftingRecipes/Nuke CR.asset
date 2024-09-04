@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 505421408, guid: 1c83dc1f03b8cf43812e942694488c9e, type: 3}
+  m_Name: Nuke CR
+  m_EditorClassIdentifier: 
+  includeIngame: 1
+  includeInBuild: 1
+  includeInDemo: 1
+  identifier: _erkle64_nuke
+  modIdentifier: _base
+  serializedOriginal: "template:\n  hideInDemo: False\n  name: Explosive Charge\n 
+    entitlementIdentifier: \"\"\n  icon_identifier: dynamite_i\n  category_identifier:
+    _base_handhelds\n  rowGroup_identifier: _base_handhelds_general\n  isHiddenInCharacterCraftingFrame:
+    False\n  isHiddenByNarrativeTrigger: False\n  isNeverUnseenRecipe: False\n  narrativeTrigger:
+    \"\"\n  input_data:\n    - identifier: _base_xenoferrite_plates\n      amount:
+    1\n      percentage_str: 1\n    - identifier: _base_explosives_i\n      amount:
+    1\n      percentage_str: 1\n    - identifier: _base_wire_coil\n      amount:
+    3\n      percentage_str: 1\n    - identifier: _base_eic_i\n      amount: 3\n     
+    percentage_str: 1\n  output_data:\n    - identifier: _base_dynamite_i\n     
+    amount: 1\n      percentage_str: 1\n  inputElemental_data: []\n  outputElemental_data:
+    []\n  relatedItemTemplateIdentifier: _base_dynamite_i\n  sortingOrderWithinRowGroup:
+    200\n  timeMs: 5000\n  tags:\n    - character\n    - assembler\n  forceShowOutputsAtTooltips:
+    False\n  recipePriority: 1000\n  extraInfoTooltipText: \"\"\n  _infoBox: \"===[SPEED
+    1]==============\\n[INPUT]\\n12/m _base_xenoferrite_plates\\n12/m _base_explosives_i\\n36/m
+    _base_wire_coil\\n36/m _base_eic_i\\n[OUTPUT]\\n12/m _base_dynamite_i\\n===[SPEED
+    1.5]==============\\n[INPUT]\\n18/m _base_xenoferrite_plates\\n18/m _base_explosives_i\\n54/m
+    _base_wire_coil\\n54/m _base_eic_i\\n[OUTPUT]\\n18/m _base_dynamite_i\\n===[SPEED
+    2]==============\\n[INPUT]\\n24/m _base_xenoferrite_plates\\n24/m _base_explosives_i\\n72/m
+    _base_wire_coil\\n72/m _base_eic_i\\n[OUTPUT]\\n24/m _base_dynamite_i\\n\"\n 
+    identifier: _base_dynamite_i\n"
+  hideInDemo: 0
+  name: Nuclear Explosive Charge
+  entitlementIdentifier: 
+  icon_identifier: erkle64_nuke
+  category_identifier: _base_handhelds
+  rowGroup_identifier: _base_handhelds_general
+  isHiddenInCharacterCraftingFrame: 0
+  isHiddenByNarrativeTrigger: 0
+  isNeverUnseenRecipe: 0
+  narrativeTrigger: 
+  input_data:
+  - identifier: _base_xenoferrite_plates
+    amount: 4
+    percentage_str: 1
+  - identifier: _base_explosives_i
+    amount: 100
+    percentage_str: 1
+  - identifier: _base_wire_coil
+    amount: 12
+    percentage_str: 1
+  - identifier: _base_eic_i
+    amount: 3
+    percentage_str: 1
+  output_data:
+  - identifier: _erkle64_nuke
+    amount: 1
+    percentage_str: 1
+  inputElemental_data: []
+  outputElemental_data: []
+  relatedItemTemplateIdentifier: _erkle64_nuke
+  sortingOrderWithinRowGroup: 1000
+  timeMs: 60000
+  tags:
+  - character
+  - assembler
+  forceShowOutputsAtTooltips: 0
+  recipePriority: 1000
+  extraInfoTooltipText: 
+  _infoBox: 

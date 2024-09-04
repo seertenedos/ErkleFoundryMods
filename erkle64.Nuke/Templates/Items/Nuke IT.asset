@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1136031467, guid: 1c83dc1f03b8cf43812e942694488c9e, type: 3}
+  m_Name: Nuke IT
+  m_EditorClassIdentifier: 
+  includeIngame: 1
+  includeInBuild: 1
+  includeInDemo: 1
+  identifier: _erkle64_nuke
+  modIdentifier: _base
+  serializedOriginal: "template:\n  name: Explosive Charge\n  includeInCreativeMode:
+    True\n  assetPack: \"\"\n  creativeModeCategory_str: _base_cmct_handhelds\n 
+    entitlementIdentifier: \"\"\n  icon_identifier: dynamite_i\n  stackSize: 50\n 
+    isHiddenItem: False\n  flags: HANDHELD\n  toggleableModeType: Default\n  toggleableModes:
+    []\n  genericItemActionButtons: []\n  tooltipInfoMessage: \"\"\n  skipForRunningIdxGeneration:
+    False\n  itemDestroyFlags: Regular\n  conveyorMesh: Assets/CubeFactoryAssets/Import/Explosives/c4_detonator_01.fbx|76f44308624761c478a862d630f14c40\n 
+    meshScale:\n    x: 1\n    y: 1\n    z: 1\n  meshRotation:\n    x: 0\n    y: 0\n   
+    z: 0\n    w: 1\n  meshMaterial: Assets/CubeFactoryAssets/Import/Explosives/Material_Explosives.mat|f247ca6002b59f8409aa940798c2a188\n 
+    buildableObjectIdentifer: \"\"\n  handheldSubType: DYNAMITE\n  handheldObjectPrefab:
+    Assets/FoundryAssets/Char/Prefab/hand_dynamite_prefab.prefab|58f33726d711b744a8606d3036a579e2\n 
+    handheldObjectPrefab_droidOnly: Assets/FoundryAssets/Char/Prefab/hand_dynamite_prefab_3rd_person.prefab|e48f717417dd19e4a8bc687471c7c452\n 
+    skinGroup:\n  handheld_miner_shakeRightArmOnUse: False\n  handheld_defaultPowerPoleItemTemplate_str:
+    \"\"\n  supportsFocusMode: False\n  miningTimeReductionInSec: 0\n  miningRange:
+    0\n  explosionRadius: 5\n  burnable_fuelValueKJ_str: \"\"\n  burnable_residualItemTemplate_str:
+    \"\"\n  burnable_residualItemTemplate_count: 0\n  salesItem_currencyIdentifier:
+    \"\"\n  salesItem_currencyAmount: 0\n  salesItem_skyPlatformBaseCapacity: 0\n 
+    salesItem_sortOrderASC: 0\n  salesItem_hiddenByResearchIdentifier: \"\"\n  salesCurrency_skyPlatformBaseCapacity:
+    0\n  salesCurrency_sortOrderASC: 0\n  salesCurrency_hiddenByResearchIdentifier:
+    \"\"\n  sciencePack_researchFrameSortingOrder: 0\n  sciencePack_color:\n    r:
+    0\n    g: 0\n    b: 0\n    a: 0\n  railminer_slotLength: 0\n  railminer_speedInSlotsPerTick:
+    0\n  railminer_minecartSpeedInSlotsPerTick: 0\n  railMiner_terrainTargetList_str:
+    []\n  isMinecartItem: False\n  trainVehicle_templateIdentifier: \"\"\n  alStarter_alotIdentifier:
+    \"\"\n  alStarter_sellItemTemplateIdentifier: \"\"\n  warehouse_stackSize: 0\n 
+    rubble_recyclingResultIdentifier: \"\"\n  critter_templateIdentifier: \"\"\n 
+    autoProducerRecipes: []\n  identifier: _base_dynamite_i\n"
+  name: Nuclear Explosive Charge
+  includeInCreativeMode: 1
+  assetPack: 
+  creativeModeCategory_str: _base_cmct_handhelds
+  entitlementIdentifier: 
+  icon_identifier: erkle64_nuke
+  stackSize: 5
+  isHiddenItem: 0
+  flags: 4
+  toggleableModeType: 0
+  toggleableModes: []
+  genericItemActionButtons: []
+  tooltipInfoMessage: 
+  skipForRunningIdxGeneration: 0
+  itemDestroyFlags: 0
+  conveyorMesh: {fileID: -2476610798374931652, guid: 76f44308624761c478a862d630f14c40, type: 3}
+  meshScale: {x: 1, y: 1, z: 1}
+  meshRotation: {x: 0, y: 0, z: 0, w: 1}
+  meshMaterial: {fileID: 2100000, guid: f247ca6002b59f8409aa940798c2a188, type: 2}
+  buildableObjectIdentifer: 
+  handheldSubType: 8
+  handheldObjectPrefab: {fileID: 8623930502153697788, guid: 58f33726d711b744a8606d3036a579e2, type: 3}
+  handheldObjectPrefab_droidOnly: {fileID: 8623930502153697788, guid: e48f717417dd19e4a8bc687471c7c452, type: 3}
+  skinGroup: {fileID: 0}
+  handheld_miner_shakeRightArmOnUse: 0
+  handheld_defaultPowerPoleItemTemplate_str: 
+  supportsFocusMode: 0
+  miningTimeReductionInSec: 0
+  miningRange: 0
+  explosionRadius: 10
+  burnable_fuelValueKJ_str: 
+  burnable_residualItemTemplate_str: 
+  burnable_residualItemTemplate_count: 0
+  salesItem_currencyIdentifier: 
+  salesItem_currencyAmount: 0
+  salesItem_skyPlatformBaseCapacity: 0
+  salesItem_sortOrderASC: 0
+  salesItem_hiddenByResearchIdentifier: 
+  salesCurrency_skyPlatformBaseCapacity: 0
+  salesCurrency_sortOrderASC: 0
+  salesCurrency_hiddenByResearchIdentifier: 
+  sciencePack_researchFrameSortingOrder: 0
+  sciencePack_color: {r: 0, g: 0, b: 0, a: 0}
+  railminer_prefab: {fileID: 0}
+  railminer_slotLength: 0
+  railminer_speedInSlotsPerTick: 0
+  railminer_minecartSpeedInSlotsPerTick: 0
+  railMiner_terrainTargetList_str: []
+  isMinecartItem: 0
+  material_minecartMaterial: {fileID: 0}
+  trainVehicle_templateIdentifier: 
+  alStarter_alotIdentifier: 
+  alStarter_sellItemTemplateIdentifier: 
+  warehouse_stackSize: 0
+  rubble_recyclingResultIdentifier: 
+  critter_templateIdentifier: 
+  autoProducerRecipes: []

@@ -1,0 +1,16 @@
+{
+    "name": "erkle64.Nuke",
+    "rootNamespace": "ErkleNuke",
+    "references": [
+        "GUID:86acc7fdedb1d4147a94cd71f7d5ac74"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

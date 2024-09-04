@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1736236055, guid: 1c83dc1f03b8cf43812e942694488c9e, type: 3}
+  m_Name: Explosives RT
+  m_EditorClassIdentifier: 
+  includeIngame: 1
+  includeInBuild: 1
+  includeInDemo: 1
+  identifier: _erkle64_nuke
+  modIdentifier: _base
+  serializedOriginal: "template:\n  name: Explosives\n  icon_identifier: dynamite_i\n 
+    entitlementIdentifier: \"\"\n  flags: \"\"\n  isInternal: False\n  internalResearchUnlockDescription:
+    \"\"\n  manualEndlessResearchTemplate_str: \"\"\n  description: Throwable explosives
+    that can be detonated remotely.\n  researchContext: \"\"\n  secondsPerScienceItem:
+    20\n  input_data:\n    - identifier: _base_science_pack_i\n      amount: 40\n   
+    - identifier: _base_science_pack_ii\n      amount: 40\n  list_researchDependencies_str:\n   
+    - _base_science_pack_ii\n  list_craftingUnlocks_str:\n    - _base_explosives_i\n   
+    - _base_dynamite_i\n    - _base_dynamite_remote_control\n  list_blastFurnaceModes_str:
+    []\n  list_alots_str: []\n  list_oreScannerUnlocks_str: []\n  mapScanner_ore_identifier:
+    \"\"\n  mapScanner_reservoir_identifier: \"\"\n  inventorySize_additionalInventorySlots:
+    0\n  endlessResearch_amountOfManualEndlessResearches: 0\n  characterCraftingSpeed_additionalDecrementPercentage_str:
+    \"\"\n  miningDrillSpeed_miningTimeMultiplier_str: \"\"\n  miningHardness_unlockedLevel:
+    0\n  jetpackSpeed_speedIncreasmentPercent_str: \"\"\n  identifier: _base_explosives_i\n"
+  name: Nuclear Explosives
+  icon_identifier: erkle64_nuke
+  entitlementIdentifier: 
+  flags: 0
+  isInternal: 0
+  internalResearchUnlockDescription: 
+  manualEndlessResearchTemplate_str: 
+  description: Throwable nuclear explosives that can be detonated remotely.
+  researchContext: 
+  secondsPerScienceItem: 30
+  input_data:
+  - identifier: _base_science_pack_i
+    amount: 200
+  - identifier: _base_science_pack_ii
+    amount: 200
+  list_researchDependencies_str:
+  - _base_explosives_i
+  list_craftingUnlocks_str:
+  - _erkle64_nuke
+  list_blastFurnaceModes_str: []
+  list_alots_str: []
+  list_oreScannerUnlocks_str: []
+  mapScanner_ore_identifier: 
+  mapScanner_reservoir_identifier: 
+  inventorySize_additionalInventorySlots: 0
+  endlessResearch_amountOfManualEndlessResearches: 0
+  characterCraftingSpeed_additionalDecrementPercentage_str: 
+  miningDrillSpeed_miningTimeMultiplier_str: 
+  miningHardness_unlockedLevel: 0
+  jetpackSpeed_speedIncreasmentPercent_str: 
