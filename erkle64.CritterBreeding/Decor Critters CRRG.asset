@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -228454582, guid: 1c83dc1f03b8cf43812e942694488c9e, type: 3}
+  m_Name: Decor Critters CRRG
+  m_EditorClassIdentifier: 
+  includeIngame: 1
+  includeInBuild: 1
+  includeInDemo: 1
+  identifier: _base_decor_critters
+  modIdentifier: _base
+  serializedOriginal: 
+  sortingOrder: 0
+  identifier_category: _base_decor

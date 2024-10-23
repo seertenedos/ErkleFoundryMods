@@ -1,0 +1,40 @@
+BuildableObjectTemplate:
+  _erkle64_forest_surface_block:
+    __template: _base_terrain_dirt
+    name: Grass
+    terrainBlock_tbtIdentifier: _base_forest_surface_block
+  _erkle64_boreal_forest_surface_block:
+    __template: _base_terrain_dirt
+    name: Grass
+    terrainBlock_tbtIdentifier: _base_boreal_forest_surface_block
+  _erkle64_rocky_desert_surface_block:
+    __template: _base_terrain_dirt
+    name: Grass
+    terrainBlock_tbtIdentifier: _base_rocky_desert_surface_block
+ItemTemplate:
+  _base_rocky_desert_dirt:
+    toggleableModeType: MultipleBuildings
+    toggleableModes:
+      - name: Ground
+        icon_identifier: rocky_ground_transparent
+        isDefault: true
+        identifier: _base_terrain_rocky_desert_dirt
+      - name: Surface
+        icon_identifier: rocky_surface_transparent
+        isDefault: false
+        identifier: _erkle64_rocky_desert_surface_block
+  _base_dirt:
+    toggleableModeType: MultipleBuildings
+    toggleableModes:
+      - name: Dirt
+        icon_identifier: dirt_transparent
+        isDefault: true
+        identifier: _base_terrain_dirt
+      - name: Grass
+        icon_identifier: grass_transparent
+        isDefault: false
+        identifier: _erkle64_boreal_forest_surface_block
+      - name: Forest Grass
+        icon_identifier: grass_forest_transparent
+        isDefault: false
+        identifier: _erkle64_forest_surface_block

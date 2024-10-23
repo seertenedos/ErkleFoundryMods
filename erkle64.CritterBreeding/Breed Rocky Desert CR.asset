@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 505421408, guid: 1c83dc1f03b8cf43812e942694488c9e, type: 3}
+  m_Name: Breed Rocky Desert CR
+  m_EditorClassIdentifier: 
+  includeIngame: 1
+  includeInBuild: 1
+  includeInDemo: 1
+  identifier: _erkle64_breed_rocky_desert
+  modIdentifier: _base
+  serializedOriginal: 
+  hideInDemo: 0
+  name: Breed Critter - Rocky Desert
+  entitlementIdentifier: 
+  icon_identifier: critter_rocky_desert
+  category_identifier: _base_decor
+  rowGroup_identifier: _base_decor_critters
+  isHiddenInCharacterCraftingFrame: 0
+  isHiddenByNarrativeTrigger: 0
+  isNeverUnseenRecipe: 0
+  narrativeTrigger: 
+  input_data:
+  - identifier: _base_critter_rocky_desert
+    amount: 2
+    percentage_str: 1
+  - identifier: _base_biomass
+    amount: 100
+    percentage_str: 1
+  output_data:
+  - identifier: _base_critter_rocky_desert
+    amount: 3
+    percentage_str: 1
+  inputElemental_data:
+  - identifier: _base_water
+    amount_str: 1000
+  outputElemental_data: []
+  relatedItemTemplateIdentifier: _base_critter_rocky_desert
+  sortingOrderWithinRowGroup: 0
+  timeMs: 300000
+  tags:
+  - greenhouse
+  forceShowOutputsAtTooltips: 0
+  recipePriority: 1000
+  extraInfoTooltipText: 
+  _infoBox: 

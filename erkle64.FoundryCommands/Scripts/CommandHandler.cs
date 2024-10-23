@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 //   ^\/ give\s + ([\s\w\d] *?)\s(\d +)$
 
@@ -15,10 +12,25 @@ namespace FoundryCommands
         private Regex regex;
         private ProcessCommandDg onProcessCommand;
 
+        public string[] helpNames { get; private set; } = new string[0];
+        public string helpText { get; private set; } = string.Empty;
+
         public CommandHandler(string pattern, ProcessCommandDg onProcessCommand)
         {
             regex = new Regex(pattern, RegexOptions.IgnoreCase|RegexOptions.Singleline);
             this.onProcessCommand = onProcessCommand;
+        }
+
+        public CommandHandler SetHelpNames(params string[] helpNames)
+        {
+            this.helpNames = helpNames;
+            return this;
+        }
+
+        public CommandHandler SetHelpText(string helpText)
+        {
+            this.helpText = helpText;
+            return this;
         }
 
         public bool TryProcessCommand(string message)

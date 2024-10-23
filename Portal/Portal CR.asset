@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 505421408, guid: 1c83dc1f03b8cf43812e942694488c9e, type: 3}
+  m_Name: Portal CR
+  m_EditorClassIdentifier: 
+  includeIngame: 1
+  includeInBuild: 1
+  includeInDemo: 1
+  identifier: _erkle64_portal
+  modIdentifier: _base
+  serializedOriginal: "template:\n  hideInDemo: False\n  name: Assembler III\n  entitlementIdentifier:
+    \"\"\n  icon_identifier: assembler_iii\n  category_identifier: _base_buildings\n 
+    rowGroup_identifier: _base_buildings_processing\n  isHiddenInCharacterCraftingFrame:
+    False\n  isHiddenByNarrativeTrigger: False\n  isNeverUnseenRecipe: False\n  narrativeTrigger:
+    \"\"\n  input_data:\n    - identifier: _base_assembler_ii\n      amount: 1\n     
+    percentage_str: 1\n    - identifier: _base_firmarlite_sheet\n      amount: 20\n     
+    percentage_str: 1\n    - identifier: _base_eic_ii\n      amount: 10\n      percentage_str:
+    1\n  output_data:\n    - identifier: _base_assembler_iii\n      amount: 1\n     
+    percentage_str: 1\n  inputElemental_data: []\n  outputElemental_data: []\n  relatedItemTemplateIdentifier:
+    _base_assembler_iii\n  sortingOrderWithinRowGroup: 102\n  timeMs: 6000\n  tags:\n   
+    - character\n    - assembler\n  forceShowOutputsAtTooltips: False\n  recipePriority:
+    1000\n  extraInfoTooltipText: \"\"\n  _infoBox: \"===[SPEED 1]==============\\n[INPUT]\\n10/m
+    _base_assembler_ii\\n200/m _base_firmarlite_sheet\\n100/m _base_eic_ii\\n[OUTPUT]\\n10/m
+    _base_assembler_iii\\n===[SPEED 1.5]==============\\n[INPUT]\\n15/m _base_assembler_ii\\n300/m
+    _base_firmarlite_sheet\\n150/m _base_eic_ii\\n[OUTPUT]\\n15/m _base_assembler_iii\\n===[SPEED
+    2]==============\\n[INPUT]\\n20/m _base_assembler_ii\\n400/m _base_firmarlite_sheet\\n200/m
+    _base_eic_ii\\n[OUTPUT]\\n20/m _base_assembler_iii\\n\"\n  identifier: _base_assembler_iii\n"
+  hideInDemo: 0
+  name: Portal
+  entitlementIdentifier: 
+  icon_identifier: portal
+  category_identifier: _base_buildings
+  rowGroup_identifier: _base_buildings_infrastructure
+  isHiddenInCharacterCraftingFrame: 0
+  isHiddenByNarrativeTrigger: 0
+  isNeverUnseenRecipe: 0
+  narrativeTrigger: 
+  input_data:
+  - identifier: _base_energy_cell
+    amount: 5
+    percentage_str: 1
+  - identifier: _base_eic_ii
+    amount: 10
+    percentage_str: 1
+  - identifier: _base_firmarlite_bar
+    amount: 10
+    percentage_str: 1
+  output_data:
+  - identifier: _erkle64_portal
+    amount: 1
+    percentage_str: 1
+  inputElemental_data: []
+  outputElemental_data: []
+  relatedItemTemplateIdentifier: _erkle64_portal
+  sortingOrderWithinRowGroup: 1000
+  timeMs: 6000
+  tags:
+  - character
+  - assembler
+  forceShowOutputsAtTooltips: 0
+  recipePriority: 1000
+  extraInfoTooltipText: 
+  _infoBox: 

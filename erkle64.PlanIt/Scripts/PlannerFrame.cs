@@ -93,6 +93,9 @@ namespace PlanIt
             foreach (var conveyorSpeed in ItemElementRecipe.ConveyorSpeeds)
             {
                 var (conveyor, speed) = conveyorSpeed;
+
+                if (conveyor.identifier != "_base_conveyor_i" && conveyor.identifier != "_base_conveyor_ii" && conveyor.identifier != "_base_conveyor_iii") continue;
+
                 _conveyorOptionButtons[conveyorIndex].Setup(conveyor.icon, $"Use {conveyor.name}\nSpeed: {Mathf.RoundToInt((float)speed)}/m");
                 if (conveyorIndex++ >= _conveyorOptionButtons.Length) break;
             }

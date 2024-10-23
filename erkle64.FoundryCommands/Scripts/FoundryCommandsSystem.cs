@@ -156,6 +156,38 @@ namespace FoundryCommands
         {
             _commandHandlers = new CommandHandler[]
             {
+                // help
+                new CommandHandler(@"^\/help(?:(?:\s+)(.+))?$", (string[] arguments) => {
+
+                    if (arguments.Length > 0)
+                    {
+                        var commandToFind = arguments[0].Trim();
+                        foreach (var command in _commandHandlers)
+                        {
+                            if (command.helpNames.Contains(commandToFind))
+                            {
+                                ChatFrame.addMessage(command.helpText, 0);
+                                return;
+                            }
+                        }
+
+                        ChatFrame.addMessage($"Unknown command: {commandToFind}", 0);
+                        return;
+                    }
+                    else
+                    {
+                        var sb = new System.Text.StringBuilder();
+                        foreach (var command in _commandHandlers)
+                        {
+                            if (command.helpNames.Length == 0) continue;
+                            if (sb.Length > 0) sb.Append(", ");
+                            sb.Append(string.Join("|", command.helpNames));
+                        }
+                        ChatFrame.addMessage("Available commands: "+sb.ToString(), 0);
+                        ChatFrame.addMessage("use <b>/help</b> <i>command</i> for more info", 0);
+                    }
+                }),
+
                 // drag
                 new CommandHandler(@"^\/drag\s*?(?:\s+(\d+(?:\.\d*)?))?$", (string[] arguments) => {
                     switch(arguments.Length)
@@ -171,7 +203,9 @@ namespace FoundryCommands
                             ChatFrame.addMessage("Usage: <b>/drag</b> <i>range</i>", 0);
                             return;
                     }
-                }),
+                })
+                .SetHelpNames("drag")
+                .SetHelpText("<b>/drag</b> <i>range</i>\nSet the maximum range for drag building.\nDefault: 38.0"),
 
                 // teleport
                 new CommandHandler(@"^\/(?:(?:tp)|(?:teleport))(?:\s+(.*?)\s*)?$", (string[] arguments) => {
@@ -213,7 +247,9 @@ namespace FoundryCommands
                     }
 
                     ChatFrame.addMessage("Waypoint not found.", 0);
-                }),
+                })
+                .SetHelpNames("tp", "teleport")
+                .SetHelpText("<b>/tp</b> <i>waypoint-name</i>\n<b>/teleport</b> <i>waypoint-name</i>\nTeleport to a waypoint."),
 
                 // return
                 new CommandHandler(@"^\/(?:(?:tpr)|(?:ret)|(?:return))$", (string[] arguments) => {
@@ -249,7 +285,9 @@ namespace FoundryCommands
                         ChatFrame.addMessage("Ungenerated chunk.", 0);
                         ChunkManager.generateNewChunksBasedOnPosition(_lastPositionAtTeleport, ChunkManager._getChunkLoadDistance());
                     }
-                }),
+                })
+                .SetHelpNames("tpr", "ret", "return")
+                .SetHelpText("<b>/tpr</b>\n<b>/ret</b>\n<b>/return</b>\nReturn to position at last telport."),
 
                 // monitor
                 new CommandHandler(@"^\/(?:(?:monitor)|(?:mon))\s*?(?:\s+(\d+(?:\.\d*)?))?$", (string[] arguments) => {
@@ -323,12 +361,16 @@ namespace FoundryCommands
                         _monitorType = BuildableObjectTemplate.BuildableObjectType.ModularFluidTank;
                         _monitorContentStart = _monitorContent = data.fbData.content_l;
                     }
-                }),
+                })
+                .SetHelpNames("monitor", "mon")
+                .SetHelpText("<b>/monitor</b> <i>interval</i>\n<b>/mon</b> <i>interval</i>\nMonitor contents of targetted container/tank."),
 
                 // skyPlatform
                 new CommandHandler(@"^\/(?:(?:skyPlatform)|(?:sp))$", (string[] arguments) => {
                     SkyPlatformFrame.showFrame();
-                }),
+                })
+                .SetHelpNames("skyPlatform", "sp")
+                .SetHelpText("<b>/skyPlatform</b>\n<b>/sp</b>\nShow sky platform frame."),
 
                 // time
                 new CommandHandler(@"^\/time$", (string[] arguments) => {
@@ -361,7 +403,9 @@ namespace FoundryCommands
                     {
                         GameRoot.addLockstepEvent(new GameRoot.ChatMessageEvent(character.usernameHash, message, 0, false));
                     }
-                }),
+                })
+                .SetHelpNames("time")
+                .SetHelpText("<b>/time</b>\n<b>/time</b> <i>HH</i>\n<b>/time</b> <i>HH:MM</i>\nSet or show the current time."),
 
                 // calc
                 new CommandHandler(@"^\/(?:(?:c)|(?:calc)|(?:calculate))\s+(.+)$", (string[] arguments) => {
@@ -379,7 +423,9 @@ namespace FoundryCommands
                     {
                         ChatFrame.addMessage($"Error: {e.Message}", 0);
                     }
-                }),
+                })
+                .SetHelpNames("calc", "calculate")
+                .SetHelpText("<b>/calc</b> <i>expression</i>\n<b>/c</b> <i>expression</i>\nEvaluate a mathematical expression."),
 
                 // count
                 new CommandHandler(@"^\/count$", (string[] arguments) => {
@@ -480,6 +526,8 @@ namespace FoundryCommands
                             break;
                     }
                 })
+                .SetHelpNames("give")
+                .SetHelpText("<b>/give</b> <i>name</i>\n<b>/give</b> <i>name</i> <i>amount</i>\nAdd one stack or a specific number of items to player inventory.")
             };
         }
     }

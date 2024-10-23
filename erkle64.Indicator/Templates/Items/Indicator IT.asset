@@ -19,7 +19,6 @@ MonoBehaviour:
   modIdentifier: _base
   serializedOriginal: 
   name: Data Indicator
-  includeInModKit: 0
   includeInCreativeMode: 1
   assetPack: 
   creativeModeCategory_str: _base_cmct_data_cable
@@ -28,8 +27,68 @@ MonoBehaviour:
   stackSize: 50
   isHiddenItem: 0
   flags: 2
-  toggleableModeType: 0
-  toggleableModes: []
+  toggleableModeType: 1
+  toggleableModes:
+  - name: White
+    icon: {fileID: 21300000, guid: 1c10065c8f4bdad4a89f772b6f9e2b9b, type: 3}
+    identifier: _base_indicator
+    isDefault: 1
+  - name: Aqua
+    icon: {fileID: 21300000, guid: 786298f96d6bd5d48ac6e8306680e6c2, type: 3}
+    identifier: _base_indicator_aqua
+    isDefault: 0
+  - name: Blue
+    icon: {fileID: 21300000, guid: f803947e5c074b849af4ce144df2b6e6, type: 3}
+    identifier: _base_indicator_blue
+    isDefault: 0
+  - name: Magenta
+    icon: {fileID: 21300000, guid: b41bc2fdcfd9b494a8216a5f54d961fe, type: 3}
+    identifier: _base_indicator_fuchsia
+    isDefault: 0
+  - name: Gray
+    icon: {fileID: 21300000, guid: 4e904fc0321fc82458fda5e54e75964c, type: 3}
+    identifier: _base_indicator_gray
+    isDefault: 0
+  - name: Green
+    icon: {fileID: 21300000, guid: e48600539fb6f4047ada478f7fd0bd38, type: 3}
+    identifier: _base_indicator_green
+    isDefault: 0
+  - name: Lime
+    icon: {fileID: 21300000, guid: 9173cea174d1f9b4d8c462c15ad058bf, type: 3}
+    identifier: _base_indicator_lime
+    isDefault: 0
+  - name: Dark Red
+    icon: {fileID: 21300000, guid: 424e0bacacaf43e41aa3fad0d9da804e, type: 3}
+    identifier: _base_indicator_maroon
+    isDefault: 0
+  - name: Dark Blue
+    icon: {fileID: 21300000, guid: 5f0e0eabda837594da7f45ffac5f75d9, type: 3}
+    identifier: _base_indicator_navy
+    isDefault: 0
+  - name: Olive
+    icon: {fileID: 21300000, guid: 6d980063e7577f045a36fa89fd94d6b8, type: 3}
+    identifier: _base_indicator_olive
+    isDefault: 0
+  - name: Purple
+    icon: {fileID: 21300000, guid: 0788777548a16ad4088578bd1490d847, type: 3}
+    identifier: _base_indicator_purple
+    isDefault: 0
+  - name: Red
+    icon: {fileID: 21300000, guid: cf249da86c2da82439a72f5448bd5d8d, type: 3}
+    identifier: _base_indicator_red
+    isDefault: 0
+  - name: Light Gray
+    icon: {fileID: 21300000, guid: 2856d4cf679800b4b8a047490c2895bb, type: 3}
+    identifier: _base_indicator_silver
+    isDefault: 0
+  - name: Teal
+    icon: {fileID: 21300000, guid: a17bc65ead6e7b744b57277a86bdaede, type: 3}
+    identifier: _base_indicator_teal
+    isDefault: 0
+  - name: Yellow
+    icon: {fileID: 21300000, guid: bff8cd06617491345bbd76de74452078, type: 3}
+    identifier: _base_indicator_yellow
+    isDefault: 0
   genericItemActionButtons: []
   tooltipInfoMessage: 
   skipForRunningIdxGeneration: 0

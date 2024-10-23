@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1736236055, guid: 1c83dc1f03b8cf43812e942694488c9e, type: 3}
+  m_Name: Critter Breeding RT
+  m_EditorClassIdentifier: 
+  includeIngame: 1
+  includeInBuild: 1
+  includeInDemo: 1
+  identifier: _erkle64_critter_breeding
+  modIdentifier: _base
+  serializedOriginal: 
+  name: Critter Breeding
+  icon_identifier: critter_shrubland
+  entitlementIdentifier: 
+  flags: 0
+  isInternal: 0
+  internalResearchUnlockDescription: 
+  manualEndlessResearchTemplate_str: 
+  description: Allows breeding critters in a greenhouse.
+  researchContext: 
+  secondsPerScienceItem: 30
+  input_data:
+  - identifier: _base_science_pack_i
+    amount: 25
+  - identifier: _base_science_pack_ii
+    amount: 25
+  list_researchDependencies_str:
+  - _base_biomass_farming
+  list_craftingUnlocks_str:
+  - _erkle64_breed_shrublands
+  - _erkle64_breed_rocky_desert
+  list_blastFurnaceModes_str: []
+  list_alots_str: []
+  list_oreScannerUnlocks_str: []
+  mapScanner_ore_identifier: 
+  mapScanner_reservoir_identifier: 
+  inventorySize_additionalInventorySlots: 0
+  endlessResearch_amountOfManualEndlessResearches: 0
+  characterCraftingSpeed_additionalDecrementPercentage_str: 
+  miningDrillSpeed_miningTimeMultiplier_str: 
+  miningHardness_unlockedLevel: 0
+  jetpackSpeed_speedIncreasmentPercent_str: 

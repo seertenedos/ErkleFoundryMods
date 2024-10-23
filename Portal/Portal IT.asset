@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1136031467, guid: 1c83dc1f03b8cf43812e942694488c9e, type: 3}
+  m_Name: Portal IT
+  m_EditorClassIdentifier: 
+  includeIngame: 1
+  includeInBuild: 1
+  includeInDemo: 1
+  identifier: _erkle64_portal
+  modIdentifier: _base
+  serializedOriginal: 
+  name: Portal
+  includeInCreativeMode: 0
+  assetPack: 
+  creativeModeCategory_str: 
+  entitlementIdentifier: 
+  icon_identifier: portal
+  stackSize: 10
+  isHiddenItem: 0
+  flags: 2
+  toggleableModeType: 0
+  toggleableModes: []
+  genericItemActionButtons: []
+  tooltipInfoMessage: 
+  skipForRunningIdxGeneration: 0
+  itemDestroyFlags: 0
+  conveyorMesh: {fileID: 0}
+  meshScale: {x: 0, y: 0, z: 0}
+  meshRotation: {x: 0, y: 0, z: 0, w: 1}
+  meshMaterial: {fileID: 0}
+  buildableObjectIdentifer: _erkle64_portal
+  handheldSubType: 0
+  handheldObjectPrefab: {fileID: 0}
+  handheldObjectPrefab_droidOnly: {fileID: 0}
+  skinGroup: {fileID: 0}
+  handheld_miner_shakeRightArmOnUse: 0
+  handheld_defaultPowerPoleItemTemplate_str: 
+  supportsFocusMode: 0
+  miningTimeReductionInSec: 0
+  miningRange: 0
+  explosionRadius: 0
+  burnable_fuelValueKJ_str: 
+  burnable_residualItemTemplate_str: 
+  burnable_residualItemTemplate_count: 0
+  salesItem_currencyIdentifier: 
+  salesItem_currencyAmount: 0
+  salesItem_skyPlatformBaseCapacity: 0
+  salesItem_sortOrderASC: 0
+  salesItem_hiddenByResearchIdentifier: 
+  salesCurrency_skyPlatformBaseCapacity: 0
+  salesCurrency_sortOrderASC: 0
+  salesCurrency_hiddenByResearchIdentifier: 
+  sciencePack_researchFrameSortingOrder: 0
+  sciencePack_color: {r: 0, g: 0, b: 0, a: 0}
+  railminer_prefab: {fileID: 0}
+  railminer_slotLength: 0
+  railminer_speedInSlotsPerTick: 0
+  railminer_minecartSpeedInSlotsPerTick: 0
+  railMiner_terrainTargetList_str: []
+  isMinecartItem: 0
+  material_minecartMaterial: {fileID: 0}
+  trainVehicle_templateIdentifier: 
+  alStarter_alotIdentifier: 
+  alStarter_sellItemTemplateIdentifier: 
+  warehouse_stackSize: 0
+  rubble_recyclingResultIdentifier: 
+  critter_templateIdentifier: 
+  autoProducerRecipes: []
