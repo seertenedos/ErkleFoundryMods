@@ -175,8 +175,10 @@ namespace PlanIt
 
         public Accumulator Accumulate(double amount, HashSet<ItemElementTemplate> ignore, Solver solver, HashSet<ItemElementTemplate> seen)
         {
-            if (seen.Contains(this)) return new Accumulator(Empty, 0.0);
-            seen.Add(this);
+            PlanItSystem.log.Log($"Accumulate: {name} - {amount}");
+
+            //if (seen.Contains(this)) return new Accumulator(Empty, 0.0);
+            //seen.Add(this);
 
             var accumulator = new Accumulator(this, amount);
             if (ignore.Contains(this)) return accumulator;

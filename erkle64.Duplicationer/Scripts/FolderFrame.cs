@@ -164,7 +164,7 @@ namespace Duplicationer
         {
             if (_folderFrameIconImage != null)
             {
-                _folderFrameIconImage.sprite = _folderFrameIconItemTemplate?.icon_256 ?? _tool.iconEmpty.Sprite;
+                _folderFrameIconImage.sprite = _folderFrameIconItemTemplate?.icon ?? _tool.iconEmpty.Sprite;
             }
         }
 

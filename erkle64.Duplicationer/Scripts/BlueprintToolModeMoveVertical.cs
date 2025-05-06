@@ -13,9 +13,7 @@ namespace Duplicationer
 
         private Mode mode = Mode.Idle;
 
-        private int _idAction = -1;
-        private int _idModifier2 = -1;
-        private double _altHeldTime;
+        private float _altHeldTime = 0f;
 
         public BlueprintToolModeMoveVertical()
         {
@@ -25,9 +23,6 @@ namespace Duplicationer
 
         public override void Enter(BlueprintToolCHM tool, BlueprintToolMode fromMode)
         {
-            _idAction = InputHelpers.GetActionId("Action");
-            _idModifier2 = InputHelpers.GetActionId("Modifier 2");
-
             mode = Mode.Idle;
             tool.isDragArrowVisible = false;
             TabletHelper.SetTabletTextQuickActions("");
@@ -63,22 +58,24 @@ Tap {GameRoot.getHotkeyStringFromAction("Modifier 2")}: Repeat Mode");
 
                         if (InputHelpers.IsMouseInputAllowed && !tool.IsAnyFrameOpen)
                         {
-                            if (GlobalStateManager.getRewiredPlayer0().GetButtonDown(_idAction))
+                            if (GlobalStateManager.getRewiredPlayer0().GetButtonDown("Action"))
                             {
                                 mode = Mode.Move;
                             }
-                            else if (GlobalStateManager.getRewiredPlayer0().GetButtonUp(_idModifier2))
+                            else if (GlobalStateManager.getRewiredPlayer0().GetButtonUp("Modifier 2"))
                             {
-                                if (_altHeldTime < 0.5)
+                                if (_altHeldTime < 0.5f)
                                 {
                                     tool.SelectMode(tool.modeRepeat);
                                     AudioManager.playUISoundEffect(ResourceDB.resourceLinker.audioClip_UIButtonClick);
+                                    _altHeldTime = 0f;
                                     return;
                                 }
+                                _altHeldTime = 0f;
                             }
-                            else if (GlobalStateManager.getRewiredPlayer0().GetButton(_idModifier2))
+                            else if (GlobalStateManager.getRewiredPlayer0().GetButton("Modifier 2"))
                             {
-                                _altHeldTime = GlobalStateManager.getRewiredPlayer0().GetButtonTimePressed(_idModifier2);
+                                _altHeldTime += Time.unscaledDeltaTime;
                             }
                         }
                     }
@@ -91,7 +88,7 @@ Tap {GameRoot.getHotkeyStringFromAction("Modifier 2")}: Repeat Mode");
                     break;
 
                 case Mode.Move:
-                    if (!GlobalStateManager.getRewiredPlayer0().GetButton(_idAction))
+                    if (!GlobalStateManager.getRewiredPlayer0().GetButton("Action"))
                     {
                         mode = Mode.Idle;
                     }

@@ -76,8 +76,6 @@ namespace Duplicationer
         internal int NudgeY => CurrentBlueprint != null && InputHelpers.IsAltHeld ? CurrentBlueprint.SizeY : 1;
         internal int NudgeZ => CurrentBlueprint != null && InputHelpers.IsAltHeld ? CurrentBlueprint.SizeZ : 1;
 
-        private static List<BuildableObjectGO> _bogoQueryResult = new List<BuildableObjectGO>(0);
-
         private static List<ConstructionTaskGroup> _activeConstructionTaskGroups = new List<ConstructionTaskGroup>();
 
         private static List<bool> _terrainTypeRemovalMask = null;
@@ -178,16 +176,21 @@ namespace Duplicationer
             _frames.Add(frame);
         }
 
+        public static bool IsActive { get; private set; } = false;
         public override void Enter()
         {
             if (CurrentMode == null) SelectMode(modePlace);
 
             CurrentMode?.Enter(this, null);
+
+            IsActive = true;
         }
 
         public override void Exit()
         {
             CurrentMode?.Exit(this);
+
+            IsActive = false;
         }
 
         public override void ShowMenu()
@@ -330,9 +333,6 @@ namespace Duplicationer
         {
             if (IsBlueprintActive)
             {
-                var quadTree = StreamingSystem.getBuildableObjectGOQuadtreeArray();
-
-                AABB3D aabb = ObjectPoolManager.aabb3ds.getObject();
                 int count = Mathf.Min(Config.Events.maxBuildingValidationsPerFrame.value, buildingPlaceholders.Count);
                 if (buildingPlaceholderUpdateIndex >= buildingPlaceholders.Count) buildingPlaceholderUpdateIndex = 0;
                 for (int i = 0; i < count; i++)
@@ -344,7 +344,7 @@ namespace Duplicationer
                     var worldPos = new Vector3Int(buildableObjectData.worldX + CurrentBlueprintAnchor.x + repeatOffset.x, buildableObjectData.worldY + CurrentBlueprintAnchor.y + repeatOffset.y, buildableObjectData.worldZ + CurrentBlueprintAnchor.z + repeatOffset.z);
                     int wx, wy, wz;
                     if (placeholder.Template.canBeRotatedAroundXAxis)
-                        BuildingManager.getWidthFromUnlockedOrientation(placeholder.Template, buildableObjectData.orientationUnlocked, out wx, out wy, out wz);
+                        BuildingManager.getWidthFromUnlockedOrientation(placeholder.Template.size, buildableObjectData.orientationUnlocked, out wx, out wy, out wz);
                     else
                         BuildingManager.getWidthFromOrientation(placeholder.Template, (BuildingManager.BuildOrientation)buildableObjectData.orientationY, out wx, out wy, out wz);
 
@@ -356,7 +356,7 @@ namespace Duplicationer
                     {
                         foreach (var extraBox in placeholder.ExtraBoundingBoxes)
                         {
-                            aabb.reinitialize(
+                            AABB3D aabb = new(
                                 extraBox.position.x + CurrentBlueprintAnchor.x,
                                 extraBox.position.y + CurrentBlueprintAnchor.y,
                                 extraBox.position.z + CurrentBlueprintAnchor.z,
@@ -370,14 +370,15 @@ namespace Duplicationer
                                 break;
                             }
 
-                            _bogoQueryResult.Clear();
-                            quadTree.queryAABB3D(aabb, _bogoQueryResult, true);
-                            foreach (var bogo in _bogoQueryResult)
+                            using (var query = StreamingSystem.get().queryAABB3D(aabb))
                             {
-                                if (aabb.hasXYZIntersection(bogo._aabb))
+                                foreach (var bogo in query)
                                 {
-                                    errorCode = BuildingManager.CheckBuildableErrorCode.BlockedByReservedArea;
-                                    break;
+                                    if (aabb.hasXYZIntersection(bogo.aabb))
+                                    {
+                                        errorCode = BuildingManager.CheckBuildableErrorCode.BlockedByReservedArea;
+                                        break;
+                                    }
                                 }
                             }
 
@@ -419,7 +420,7 @@ namespace Duplicationer
                             break;
 
                         case BuildingManager.CheckBuildableErrorCode.BlockedByBuildableObject_Building:
-                            aabb.reinitialize(worldPos.x, worldPos.y, worldPos.z, wx, wy, wz);
+                            AABB3D aabb = new(worldPos.x, worldPos.y, worldPos.z, wx, wy, wz);
                             if (Blueprint.CheckIfBuildingExists(aabb, worldPos, buildableObjectData) > 0) positionFilled = true;
                             break;
                     }
@@ -441,7 +442,6 @@ namespace Duplicationer
 
                     if (++buildingPlaceholderUpdateIndex >= buildingPlaceholders.Count) buildingPlaceholderUpdateIndex = 0;
                 }
-                ObjectPoolManager.aabb3ds.returnObject(aabb); aabb = null;
 
                 count = Mathf.Min(Config.Events.maxTerrainValidationsPerFrame.value, terrainPlaceholders.Count);
                 if (terrainPlaceholderUpdateIndex >= terrainPlaceholders.Count) terrainPlaceholderUpdateIndex = 0;
@@ -453,7 +453,7 @@ namespace Duplicationer
                     bool positionClear = true;
                     bool positionFilled = false;
 
-                    var queryResult = quadTree.queryPointXYZ(worldPos);
+                    var queryResult = StreamingSystem.get().queryPointXYZ(worldPos);
                     if (queryResult != null)
                     {
                         positionClear = false;
@@ -731,11 +731,9 @@ namespace Duplicationer
 
             ulong usernameHash = GameRoot.getClientCharacter().usernameHash;
             DuplicationerSystem.log.Log(string.Format("Placing blueprint at {0}", targetPosition.ToString()));
-            AABB3D aabb = ObjectPoolManager.aabb3ds.getObject();
             var modularBaseCoords = new Dictionary<ulong, Vector3Int>();
             var constructionTaskGroup = new ConstructionTaskGroup((ConstructionTaskGroup taskGroup) => { _activeConstructionTaskGroups.Remove(taskGroup); });
             _activeConstructionTaskGroups.Add(constructionTaskGroup);
-            ObjectPoolManager.aabb3ds.returnObject(aabb); aabb = null;
 
             CurrentBlueprint.Place(targetPosition, constructionTaskGroup);
 
@@ -830,17 +828,15 @@ namespace Duplicationer
                 ConfirmationFrame.Show($"Overwrite '{name}'?", "Overwrite", () =>
                 {
                     DuplicationerSystem.log.Log($"Saving blueprint '{name}' to '{path}'");
-                    CurrentBlueprint.Save(path, Path.GetFileName(name), _saveFrame.IconItemTemplates.Take(_saveFrame.IconCount).ToArray());
-
-                    HideSaveFrame();
+                    if (CurrentBlueprint.Save(path, Path.GetFileName(name), _saveFrame.IconItemTemplates.Take(_saveFrame.IconCount).ToArray()))
+                        HideSaveFrame();
                 });
             }
             else
             {
                 DuplicationerSystem.log.Log($"Saving blueprint '{name}' to '{path}'");
-                CurrentBlueprint.Save(path, Path.GetFileName(name), _saveFrame.IconItemTemplates.Take(_saveFrame.IconCount).ToArray());
-
-                HideSaveFrame();
+                if (CurrentBlueprint.Save(path, Path.GetFileName(name), _saveFrame.IconItemTemplates.Take(_saveFrame.IconCount).ToArray()))
+                    HideSaveFrame();
             }
         }
 
@@ -924,13 +920,10 @@ namespace Duplicationer
 
                 if (doBuildings || doDecor)
                 {
-                    AABB3D aabb = ObjectPoolManager.aabb3ds.getObject();
-                    aabb.reinitialize(from.x, from.y, from.z, to.x - from.x + 1, to.y - from.y + 1, to.z - from.z + 1);
-                    _bogoQueryResult.Clear();
-                    StreamingSystem.getBuildableObjectGOQuadtreeArray().queryAABB3D(aabb, _bogoQueryResult, true);
-                    if (_bogoQueryResult.Count > 0)
+                    AABB3D aabb = new(from.x, from.y, from.z, to.x - from.x + 1, to.y - from.y + 1, to.z - from.z + 1);
+                    using (var query = StreamingSystem.get().queryAABB3D(aabb))
                     {
-                        foreach (var bogo in _bogoQueryResult)
+                        foreach (var bogo in query)
                         {
                             if (bogo.template.type == BuildableObjectTemplate.BuildableObjectType.WorldDecorMineAble)
                             {
@@ -945,7 +938,6 @@ namespace Duplicationer
                             }
                         }
                     }
-                    ObjectPoolManager.aabb3ds.returnObject(aabb); aabb = null;
                 }
 
                 if (doBlocks || doTerrain)
@@ -990,13 +982,10 @@ namespace Duplicationer
 
                 if (doBuildings || doDecor)
                 {
-                    AABB3D aabb = ObjectPoolManager.aabb3ds.getObject();
-                    aabb.reinitialize(from.x, from.y, from.z, to.x - from.x + 1, to.y - from.y + 1, to.z - from.z + 1);
-                    _bogoQueryResult.Clear();
-                    StreamingSystem.getBuildableObjectGOQuadtreeArray().queryAABB3D(aabb, _bogoQueryResult, true);
-                    if (_bogoQueryResult.Count > 0)
+                    AABB3D aabb = new(from.x, from.y, from.z, to.x - from.x + 1, to.y - from.y + 1, to.z - from.z + 1);
+                    using (var query = StreamingSystem.get().queryAABB3D(aabb))
                     {
-                        foreach (var bogo in _bogoQueryResult)
+                        foreach (var bogo in query)
                         {
                             if (bogo.template.type == BuildableObjectTemplate.BuildableObjectType.WorldDecorMineAble)
                             {
@@ -1017,7 +1006,6 @@ namespace Duplicationer
                             }
                         }
                     }
-                    ObjectPoolManager.aabb3ds.returnObject(aabb); aabb = null;
                 }
 
                 if (doBlocks || doTerrain)
@@ -1106,8 +1094,6 @@ namespace Duplicationer
             terrainPlaceholderUpdateIndex = 0;
 
             _activeConstructionTaskGroups.Clear();
-
-            _bogoQueryResult.Clear();
         }
 
         public void SetPlaceholderOpacity(float alpha)

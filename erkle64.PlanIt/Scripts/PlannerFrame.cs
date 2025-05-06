@@ -5,9 +5,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using System.IO;
 using TinyJSON;
-using System;
 using System.Diagnostics;
-using static AmazingAssets.AdvancedDissolve.AdvancedDissolveProperties;
 
 namespace PlanIt
 {
@@ -27,7 +25,6 @@ namespace PlanIt
 
         [SerializeField] private IconToggle[] _conveyorOptionButtons = new IconToggle[3];
         [SerializeField] private IconToggle[] _metallurgyOptionButtons = new IconToggle[3];
-        [SerializeField] private IconToggle[] _salesOptionButtons = new IconToggle[2];
         [SerializeField] private IconToggle[] _cementOptionButtons = new IconToggle[2];
         [SerializeField] private Image _blastFurnaceOptionImage;
         [SerializeField] private Image _stoveOptionImage;
@@ -50,14 +47,12 @@ namespace PlanIt
 
         [Header("Icons")]
         [SerializeField] private string[] _metallurgyIcons = new string[3];
-        [SerializeField] private string[] _salesIcons = new string[2];
         [SerializeField] private string[] _cementIcons = new string[2];
         [SerializeField] private string _blastFurnaceIcon = string.Empty;
         [SerializeField] private string _stoveIcon = string.Empty;
         [SerializeField] private string _airVentIcon = string.Empty;
 
         [Header("Tooltips")]
-        [SerializeField] private string[] _salesTooltip = new string[2];
         [SerializeField] private string[] _cementTooltip = new string[2];
         [SerializeField] private string _blastFurnaceTooltip = string.Empty;
         [SerializeField] private string _stoveTooltip = string.Empty;
@@ -68,8 +63,6 @@ namespace PlanIt
 
         private string _planFolder = string.Empty;
 
-        //private ItemElementTemplate[] _allItemElements = null;
-
         private Dictionary<ItemElementTemplate, ItemPanel> _inputPanels = new();
 
         public bool IsOpen => gameObject.activeSelf;
@@ -79,7 +72,6 @@ namespace PlanIt
         public void Setup(string planFolder)
         {
             _planFolder = planFolder;
-            //_itemSelectFrame = new ItemSelectFrame();
 
             _planContainer.SetActive(false);
 
@@ -94,7 +86,7 @@ namespace PlanIt
             {
                 var (conveyor, speed) = conveyorSpeed;
 
-                if (conveyor.identifier != "_base_conveyor_i" && conveyor.identifier != "_base_conveyor_ii" && conveyor.identifier != "_base_conveyor_iii") continue;
+                if (conveyor.identifier != "_base_conveyor_i" && conveyor.identifier != "_base_conveyor_ii" && conveyor.identifier != "_base_conveyor_iii" && conveyor.identifier != "_base_conveyor_iv") continue;
 
                 _conveyorOptionButtons[conveyorIndex].Setup(conveyor.icon, $"Use {conveyor.name}\nSpeed: {Mathf.RoundToInt((float)speed)}/m");
                 if (conveyorIndex++ >= _conveyorOptionButtons.Length) break;
@@ -103,37 +95,28 @@ namespace PlanIt
             var metallurgyIndex = 0;
             foreach (var metallurgyIcon in _metallurgyIcons)
             {
-                var icon = ResourceDB.getIcon(metallurgyIcon, 96);
+                var icon = ResourceDB.getIcon(metallurgyIcon);
 
                 _metallurgyOptionButtons[metallurgyIndex].Setup(icon, $"Use Metallurgy Tier {metallurgyIndex + 1}");
                 if (metallurgyIndex++ >= _metallurgyOptionButtons.Length) break;
             }
 
-            var salesIndex = 0;
-            foreach (var salesIcon in _salesIcons)
-            {
-                var icon = ResourceDB.getIcon(salesIcon, 96);
-
-                _salesOptionButtons[salesIndex].Setup(icon, _salesTooltip[salesIndex]);
-                if (salesIndex++ >= _salesOptionButtons.Length) break;
-            }
-
             var cementIndex = 0;
             foreach (var cementIcon in _cementIcons)
             {
-                var icon = ResourceDB.getIcon(cementIcon, 96);
+                var icon = ResourceDB.getIcon(cementIcon);
 
                 _cementOptionButtons[cementIndex].Setup(icon, _cementTooltip[cementIndex]);
                 if (cementIndex++ >= _cementOptionButtons.Length) break;
             }
 
-            _blastFurnaceOptionImage.sprite = ResourceDB.getIcon(_blastFurnaceIcon, 96);
+            _blastFurnaceOptionImage.sprite = ResourceDB.getIcon(_blastFurnaceIcon);
             _blastFurnaceOptionTooltip.tooltipText = _blastFurnaceTooltip;
 
-            _stoveOptionImage.sprite = ResourceDB.getIcon(_stoveIcon, 96);
+            _stoveOptionImage.sprite = ResourceDB.getIcon(_stoveIcon);
             _stoveOptionTooltip.tooltipText = _stoveTooltip;
 
-            _airVentOptionImage.sprite = ResourceDB.getIcon(_airVentIcon, 96);
+            _airVentOptionImage.sprite = ResourceDB.getIcon(_airVentIcon);
             _airVentOptionTooltip.tooltipText = _airVentTooltip;
         }
 
@@ -174,8 +157,6 @@ namespace PlanIt
             }
 
             builder.End();
-
-            //ProcessUpdaters();
         }
 
         public void OnToggleConveyorTier1(bool state)
@@ -202,6 +183,14 @@ namespace PlanIt
             UpdateSolution();
         }
 
+        public void OnToggleConveyorTier4(bool state)
+        {
+            if (!state || _currentPlan.conveyorTier == 3) return;
+            _currentPlan.conveyorTier = 3;
+
+            UpdateSolution();
+        }
+
         public void OnToggleMetallurgyTier1(bool state)
         {
             if (!state || _currentPlan.metallurgyTier == 0) return;
@@ -222,22 +211,6 @@ namespace PlanIt
         {
             if (!state || _currentPlan.metallurgyTier == 2) return;
             _currentPlan.metallurgyTier = 2;
-
-            UpdateSolution();
-        }
-
-        public void OnToggleSalesTier1(bool state)
-        {
-            if (!state || _currentPlan.salesTier == 0) return;
-            _currentPlan.salesTier = 0;
-
-            UpdateSolution();
-        }
-
-        public void OnToggleSalesTier2(bool state)
-        {
-            if (!state || _currentPlan.salesTier == 1) return;
-            _currentPlan.salesTier = 1;
 
             UpdateSolution();
         }
@@ -541,10 +514,7 @@ namespace PlanIt
 
             UpdateOptionButtons(_currentPlan.conveyorTier, _conveyorOptionButtons);
             UpdateOptionButtons(_currentPlan.metallurgyTier, _metallurgyOptionButtons);
-            UpdateOptionButtons(_currentPlan.salesTier, _salesOptionButtons);
             UpdateOptionButtons(_currentPlan.cementTier, _cementOptionButtons);
-
-            //_allowUnresearchedToggle.SetIsOnWithoutNotify(_currentPlan.allowUnresearched);
 
             _blastFurnaceTowerCounterLabel.text = _currentPlan.blastFurnaceTowers.ToString();
             _stoveTowerCounterLabel.text = _currentPlan.stoveTowers.ToString();
@@ -596,39 +566,13 @@ namespace PlanIt
                 if (inputElement.isValid)
                 {
                     var inputPanel = Instantiate(_inputPanelPrefab, _inputList.transform);
-                    inputPanel.Setup($"Input Button - {inputElement.name}", inputElement.icon, 0.0);
+                    inputPanel.Setup($"Input - {inputElement.name}", inputElement.icon, 0.0);
                     inputPanel.onClicked += () => RemoveInput(inputElement.fullIdentifier);
                     _inputPanels[inputElement] = inputPanel;
-
-                    /*TextMeshProUGUI label = null;
-                    builder = builder
-                        .Element($"Input Button Wrapper - {inputElement.name}")
-                            .SetVerticalLayout(new RectOffset(0, 0, 0, 0), 2.0f, TextAnchor.UpperLeft, false, true, true, false, false, false, false)
-                            .AutoSize(ContentSizeFitter.FitMode.PreferredSize, ContentSizeFitter.FitMode.PreferredSize)
-                            .Element_IconButton($"Input Button - {inputElement.name}", inputElement.icon, 48, 48)
-                                .Component_Tooltip(inputElement.name)
-                                .SetOnClick(() => { RemoveInput(inputElement.fullIdentifier); })
-                            .Done
-                            .Element_Label($"Input Label - {inputElement.name}", "", 58)
-                                .Keep(out label)
-                                .WithComponent<TextMeshProUGUI>(text => { text.fontSize = 12.0f; text.alignment = TextAlignmentOptions.Center; })
-                            .Done
-                        .Done;
-                    _inputLabels[inputElement] = label;*/
                 }
             }
 
             _extraInputList.SetActive(false);
-
-            /*builder = builder
-                .Element("Extra Inputs List")
-                    .Keep(out _extraInputList)
-                    .SetHorizontalLayout(new RectOffset(0, 0, 0, 0), 2.0f, TextAnchor.UpperLeft, false, true, true, false, false, false, false)
-                    .AutoSize(ContentSizeFitter.FitMode.PreferredSize, ContentSizeFitter.FitMode.PreferredSize)
-                    .Layout()
-                        .FlexibleWidth(0)
-                    .Done
-                .Done;*/
         }
 
         private static readonly string[][] _metallurgyTierRecipes = new string[][]
@@ -656,6 +600,11 @@ namespace PlanIt
                 "CR:_base_xf_plates_t3",
                 "CR:_base_technum_rods_t3",
                 "CR:_base_steel_t2"
+            },
+            new string[]
+            {
+                "CR:_base_technum_rods_t1_primitive",
+                "CR:_base_xf_plates_t1_primitive"
             }
         };
 
@@ -689,15 +638,6 @@ namespace PlanIt
                     continue;
                 }
                 disabledRecipes.Remove(itemElementRecipe.id);
-            }
-
-            if (_currentPlan.salesTier == 0)
-            {
-                disabledRecipes.Add(ItemElementRecipe.Get("RC:sales_base_robot_01").id);
-            }
-            else
-            {
-                disabledRecipes.Add(ItemElementRecipe.Get("RC:sales_base_maintenance_drone_i").id);
             }
 
             if (_currentPlan.cementTier == 0)
@@ -742,18 +682,25 @@ namespace PlanIt
             var result = solver.Solve(targets, ignore);
             sw.Stop();
             PlanItSystem.log.Log($"Solve: {sw.ElapsedMilliseconds}ms");
-
-            //result.Dump();
+            result.Dump();
 
             sw.Restart();
             sw.Start();
             var (conveyor, conveyorSpeed) = ItemElementRecipe.ConveyorSpeeds[Mathf.Clamp(_currentPlan.conveyorTier, 0, ItemElementRecipe.ConveyorSpeeds.Count - 1)];
             _planContent.transform.DestroyAllChildren();
-            //var builder = UIBuilder.BeginWith(_planContent);
             var inputAmounts = new Dictionary<ItemElementTemplate, double>();
-            foreach (var recipeAmount in result.recipeAmounts)
+            foreach (var recipeAmount in result.EachRecipe())
             {
                 var recipe = ItemElementRecipe.Get(recipeAmount.Key);
+
+                PlanItSystem.log.Log($"Recipe: {recipe.name} - {recipeAmount.Value}");
+
+                if (recipe.producers.Count == 0)
+                {
+                    PlanItSystem.log.LogWarning($"Recipe {recipe.name} has no producers");
+                    continue;
+                }
+
                 foreach (var input in recipe.inputs)
                 {
                     var itemElement = input.itemElement;
@@ -767,28 +714,20 @@ namespace PlanIt
                         inputAmounts[itemElement] = amount + recipeAmount.Value * input.amount;
                     }
                 }
-                if (recipe.inputs.Length > 0)
+
+                foreach (var output in recipe.outputs)
                 {
-                    foreach (var output in recipe.outputs)
+                    var itemElement = output.itemElement;
+                    if (itemElement.isValid)
                     {
-                        var itemElement = output.itemElement;
-                        if (itemElement.isValid)
+                        var amount = 0.0;
+                        if (inputAmounts.TryGetValue(itemElement, out var _amount))
                         {
-                            var amount = 0.0;
-                            if (inputAmounts.TryGetValue(itemElement, out var _amount))
-                            {
-                                amount = _amount;
-                            }
-                            inputAmounts[itemElement] = amount - recipeAmount.Value * output.amount;
+                            amount = _amount;
                         }
+                        inputAmounts[itemElement] = amount - recipeAmount.Value * output.amount;
                     }
                 }
-
-                /*builder = builder
-                    .Element($"Recipe - {recipe.name}")
-                        .SetHorizontalLayout(new RectOffset(6, 6, 6, 6), 4, TextAnchor.UpperLeft, false, true, true, false, false, false, false)
-                        .AutoSize(ContentSizeFitter.FitMode.PreferredSize, ContentSizeFitter.FitMode.PreferredSize)
-                        .Component_Image(_borderSprite, new Color(1.0f, 1.0f, 1.0f, 0.5f), Image.Type.Sliced, new Vector4(8, 8, 8, 8));*/
 
                 var recipeRow = Instantiate(_recipeRowPrefab, _planContent.transform);
 
@@ -796,27 +735,18 @@ namespace PlanIt
                 {
                     var itemElement = output.itemElement;
 
+                    var icon = conveyor.icon;
+                    var speed = conveyorSpeed;
+                    if (itemElement.isElement)
+                    {
+                        icon = ItemElementRecipe.PipeItem.icon;
+                        speed = 36000.0;
+                    }
+
                     var outputPanel = Instantiate(_recipeOutputPanelPrefab, recipeRow.OutputsTransform);
-                    outputPanel.Setup(itemElement.name, itemElement.icon, output.amount * recipeAmount.Value, conveyor.icon, output.amount * recipeAmount.Value / conveyorSpeed);
+                    outputPanel.Setup(itemElement.name, itemElement.icon, output.amount * recipeAmount.Value, icon, output.amount * recipeAmount.Value / speed);
                     outputPanel.onClicked += () => ToggleInput(itemElement.fullIdentifier);
                 }
-
-                /*builder = builder
-                    .Element("Gap")
-                        .Layout()
-                            .MinWidth(24)
-                            .PreferredWidth(24)
-                            .FlexibleWidth(0)
-                            .MinHeight(24)
-                            .PreferredHeight(24)
-                            .FlexibleHeight(0)
-                        .Done
-                        .Element("Arrow")
-                            .SetRectTransform(0, -16, 0, -16, 0, 1, 0, 1, 0, 1)
-                            .SetSizeDelta(24, 24)
-                            .Component_Image(_arrowLeftSprite, Color.white, Image.Type.Simple)
-                        .Done
-                    .Done;*/
 
                 foreach (var producer in recipe.producers)
                 {
@@ -824,161 +754,23 @@ namespace PlanIt
 
                     var producerPanel = Instantiate(_recipeMachinePanelPrefab, recipeRow.MachinesTransform);
                     producerPanel.Setup(producer.name, producer.icon, producerAmount, producer.powerUsage * producerAmount);
-
-                    /*builder = builder
-                        .Element("Producer Wrapper")
-                            .SetVerticalLayout(new RectOffset(0, 0, 0, 0), 2.0f, TextAnchor.UpperLeft, false, true, true, false, false, false, false)
-                            .AutoSize(ContentSizeFitter.FitMode.Unconstrained, ContentSizeFitter.FitMode.PreferredSize)
-                            .Layout()
-                                .MinWidth(58)
-                                .PreferredWidth(58)
-                                .FlexibleWidth(0)
-                            .Done
-                            .Element_IconButton($"Input - {producer.name}", producer.icon, 48, 48)
-                                .AutoSize(ContentSizeFitter.FitMode.PreferredSize, ContentSizeFitter.FitMode.PreferredSize)
-                                .Component_Tooltip(producer.name)
-                            .Done
-                            .Element_Label($"Amount - {producer.name}", $"{Math.Max(0.01, (double)producerAmount):0.##}", 58)
-                                .WithComponent<TextMeshProUGUI>(text => {
-                                    text.fontSize = 12.0f;
-                                    text.alignment = TextAlignmentOptions.Center;
-                                    text.enableAutoSizing = true;
-                                    text.fontSizeMax = 12.0f;
-                                    text.fontSizeMin = 6.0f;
-                                })
-                            .Done
-                            .Do(powerBuilder => {
-                                if (producer.powerUsage > 0.0 && producerAmount > 0.0)
-                                {
-                                    var power = (double)(producer.powerUsage * producerAmount);
-                                    string powerText;
-                                    if (power >= 10000000000.0)
-                                    {
-                                        powerText = $"{power / 1000000000.0:0.#}TW";
-                                    }
-                                    else if (power >= 10000000.0)
-                                    {
-                                        powerText = $"{power / 1000000.0:0.#}GW";
-                                    }
-                                    else if (power >= 10000.0)
-                                    {
-                                        powerText = $"{power / 1000.0:0.#}MW";
-                                    }
-                                    else
-                                    {
-                                        powerText = $"{Mathf.RoundToInt((float)power)}KW";
-                                    }
-
-                                    powerBuilder = powerBuilder
-                                        .Element_Label($"Power - {producer.name}", powerText, 58)
-                                            .WithComponent<TextMeshProUGUI>(text => {
-                                                text.fontSize = 12.0f;
-                                                text.alignment = TextAlignmentOptions.Center;
-                                                text.enableAutoSizing = true;
-                                                text.fontSizeMax = 12.0f;
-                                                text.fontSizeMin = 6.0f;
-                                            })
-                                        .Done;
-                                }
-                            })
-                        .Done;*/
                 }
 
-                if (recipe.inputs.Length > 0)
+                foreach (var input in recipe.inputs)
                 {
-                    /*builder = builder
-                        .Element("Gap")
-                            .Layout()
-                                .MinWidth(24)
-                                .PreferredWidth(24)
-                                .FlexibleWidth(0)
-                                .MinHeight(24)
-                                .PreferredHeight(24)
-                                .FlexibleHeight(0)
-                            .Done
-                            .Element("Arrow")
-                                .SetRectTransform(0, -16, 0, -16, 0, 1, 0, 1, 0, 1)
-                                .SetSizeDelta(24, 24)
-                                .Component_Image(_arrowLeftSprite, Color.white, Image.Type.Simple)
-                            .Done
-                        .Done;*/
+                    var itemElement = input.itemElement;
 
-                    foreach (var input in recipe.inputs)
+                    var icon = conveyor.icon;
+                    var speed = conveyorSpeed;
+                    if (itemElement.isElement)
                     {
-                        var itemElement = input.itemElement;
-
-                        var inputPanel = Instantiate(_recipeInputPanelPrefab, recipeRow.InputsTransform);
-                        inputPanel.Setup(itemElement.name, itemElement.icon, input.amount * recipeAmount.Value, conveyor.icon, input.amount * recipeAmount.Value / conveyorSpeed);
-                        inputPanel.onClicked += () => { ToggleInput(itemElement.fullIdentifier); };
-
-                        /*builder = builder
-                            .Element("Input Wrapper")
-                                .SetVerticalLayout(new RectOffset(0, 0, 0, 0), 2.0f, TextAnchor.UpperCenter, false, true, true, false, false, false, false)
-                                .AutoSize(ContentSizeFitter.FitMode.Unconstrained, ContentSizeFitter.FitMode.PreferredSize)
-                                .Layout()
-                                    .MinWidth(58)
-                                    .PreferredWidth(58)
-                                    .FlexibleWidth(0)
-                                .Done
-                                .Element_IconButton($"Input - {itemElement.name}", itemElement.icon, 48, 48)
-                                    .AutoSize(ContentSizeFitter.FitMode.PreferredSize, ContentSizeFitter.FitMode.PreferredSize)
-                                    .Component_Tooltip(itemElement.name)
-                                    .SetOnClick(() => { ToggleInput(itemElement.fullIdentifier); })
-                                .Done
-                                .Element_Label($"Amount - {itemElement.name}", $"{Math.Max(0.01, (double)(input.amount * recipeAmount.Value)):0.##}", 58)
-                                    .WithComponent<TextMeshProUGUI>(text =>
-                                    {
-                                        text.fontSize = 12.0f;
-                                        text.alignment = TextAlignmentOptions.Center;
-                                        text.enableAutoSizing = true;
-                                        text.fontSizeMax = 12.0f;
-                                        text.fontSizeMin = 6.0f;
-                                    })
-                                .Done
-                                .Do(beltAmountBuild => {
-                                    if (itemElement.isItem)
-                                    {
-                                        beltAmountBuild = beltAmountBuild
-                                            .Element("Belt Amount Wrapper")
-                                                .SetHorizontalLayout(new RectOffset(0, 0, 0, 0), 2.0f, TextAnchor.UpperLeft, false, true, true, false, false, false, false)
-                                                .AutoSize(ContentSizeFitter.FitMode.PreferredSize, ContentSizeFitter.FitMode.PreferredSize)
-                                                .Layout()
-                                                    .FlexibleWidth(0)
-                                                .Done
-                                                .Element("Belt Icon")
-                                                    .Component_Image(conveyor.icon, Color.white, Image.Type.Simple)
-                                                    .Layout()
-                                                        .MinWidth(16)
-                                                        .PreferredWidth(16)
-                                                        .FlexibleWidth(0)
-                                                        .MinHeight(16)
-                                                        .PreferredHeight(16)
-                                                        .FlexibleHeight(0)
-                                                    .Done
-                                                .Done
-                                                .Element($"Belt Amount - {itemElement.name}")
-                                                    .Component_Text($"{Math.Max(0.01, (double)(input.amount * recipeAmount.Value / conveyorSpeed)):0.##}", "Assets/CubeFactoryAssets/Fonts/OpenSans/Default/OpenSansSemibold SDF.asset", 12.0f, Color.white, TextAlignmentOptions.MidlineLeft)
-                                                    .WithComponent<TextMeshProUGUI>(text => {
-                                                        text.fontSize = 12.0f;
-                                                        text.alignment = TextAlignmentOptions.Center;
-                                                        text.enableAutoSizing = true;
-                                                        text.fontSizeMax = 12.0f;
-                                                        text.fontSizeMin = 6.0f;
-                                                    })
-                                                    .AutoSize(ContentSizeFitter.FitMode.PreferredSize, ContentSizeFitter.FitMode.Unconstrained)
-                                                    .Layout()
-                                                        .MinWidth(16)
-                                                        .FlexibleWidth(0)
-                                                        .MinHeight(16)
-                                                        .PreferredHeight(16)
-                                                        .FlexibleHeight(0)
-                                                    .Done
-                                                .Done
-                                            .Done;
-                                    }
-                                })
-                            .Done;*/
+                        icon = ItemElementRecipe.PipeItem.icon;
+                        speed = 36000.0;
                     }
+
+                    var inputPanel = Instantiate(_recipeInputPanelPrefab, recipeRow.InputsTransform);
+                    inputPanel.Setup(itemElement.name, itemElement.icon, input.amount * recipeAmount.Value, icon, input.amount * recipeAmount.Value / speed);
+                    inputPanel.onClicked += () => { ToggleInput(itemElement.fullIdentifier); };
                 }
             }
             sw.Stop();
@@ -1000,23 +792,10 @@ namespace PlanIt
                     var inputElement = input.Key;
 
                     var inputPanel = Instantiate(_inputPanelPrefab, _extraInputList.transform);
-                    inputPanel.Setup($"Input Button - {inputElement.name}", inputElement.icon, input.Value);
+                    inputPanel.Setup($"Input - {inputElement.name}", inputElement.icon, input.Value);
                     inputPanel.onClicked += () => ToggleInput(inputElement.fullIdentifier);
 
                     _extraInputList.SetActive(true);
-
-                    /*builder = builder
-                        .Element($"Input Button Wrapper - {inputElement.name}")
-                            .SetVerticalLayout(new RectOffset(0, 0, 0, 0), 2.0f, TextAnchor.UpperLeft, false, true, true, false, false, false, false)
-                            .AutoSize(ContentSizeFitter.FitMode.PreferredSize, ContentSizeFitter.FitMode.PreferredSize)
-                            .Element_IconButton($"Input Button - {inputElement.name}", inputElement.icon, 48, 48)
-                                .Component_Tooltip(inputElement.name)
-                                .SetOnClick(() => { ToggleInput(inputElement.fullIdentifier); })
-                            .Done
-                            .Element_Label($"Input Label - {inputElement.name}", $"{Math.Max(0.01, (double)input.Value):0.##}", 58)
-                                .WithComponent<TextMeshProUGUI>(text => { text.fontSize = 12.0f; text.alignment = TextAlignmentOptions.Center; })
-                            .Done
-                        .Done;*/
                 }
             }
 
@@ -1029,21 +808,9 @@ namespace PlanIt
                     var outputElement = output.Key;
 
                     var outputPanel = Instantiate(_inputPanelPrefab, _extraOutputList.transform);
-                    outputPanel.Setup($"Output Button - {outputElement.name}", outputElement.icon, output.Value);
+                    outputPanel.Setup($"Output - {outputElement.name}", outputElement.icon, output.Value);
 
                     _extraOutputList.SetActive(true);
-
-                    /*builder = builder
-                        .Element($"Output Button Wrapper - {outputElement.name}")
-                            .SetVerticalLayout(new RectOffset(0, 0, 0, 0), 2.0f, TextAnchor.UpperLeft, false, true, true, false, false, false, false)
-                            .AutoSize(ContentSizeFitter.FitMode.PreferredSize, ContentSizeFitter.FitMode.PreferredSize)
-                            .Element_IconButton($"Output Button - {outputElement.name}", outputElement.icon, 48, 48)
-                                .Component_Tooltip(outputElement.name)
-                            .Done
-                            .Element_Label($"Output Label - {outputElement.name}", $"{Math.Max(0.01, (double)output.Value):0.##}", 58)
-                                .WithComponent<TextMeshProUGUI>(text => { text.fontSize = 12.0f; text.alignment = TextAlignmentOptions.Center; })
-                            .Done
-                        .Done;*/
                 }
             }
             sw.Stop();

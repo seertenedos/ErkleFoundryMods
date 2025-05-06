@@ -26,6 +26,12 @@ MonoBehaviour:
   icon_identifier: erkle64_data_indicator
   stackSize: 50
   isHiddenItem: 0
+  itemCategoryIdentifier: 
+  itemCategorySortOrder: 0
+  canBeTradedOnStation: 0
+  market_buyPrice: 0
+  market_sellPrice: 0
+  _baseWeightInGrams: 1
   flags: 2
   toggleableModeType: 1
   toggleableModes:
@@ -111,11 +117,14 @@ MonoBehaviour:
   burnable_fuelValueKJ_str: 
   burnable_residualItemTemplate_str: 
   burnable_residualItemTemplate_count: 0
-  salesItem_currencyIdentifier: 
+  salesItem_salesItemCategoryIdentifier: 
+  salesItem_industryIdentifier: 
   salesItem_currencyAmount: 0
   salesItem_skyPlatformBaseCapacity: 0
   salesItem_sortOrderASC: 0
   salesItem_hiddenByResearchIdentifier: 
+  salesItem_salesPlatformBaseDemandPerDay: 25
+  salesItem_rdLabEfficiencyCrIdentifiers: []
   salesCurrency_skyPlatformBaseCapacity: 0
   salesCurrency_sortOrderASC: 0
   salesCurrency_hiddenByResearchIdentifier: 
@@ -128,6 +137,7 @@ MonoBehaviour:
   railMiner_terrainTargetList_str: []
   isMinecartItem: 0
   material_minecartMaterial: {fileID: 0}
+  trainSignal_templateIdentifier: 
   trainVehicle_templateIdentifier: 
   alStarter_alotIdentifier: 
   alStarter_sellItemTemplateIdentifier: 

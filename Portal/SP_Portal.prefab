@@ -34,7 +34,6 @@ RectTransform:
   - {fileID: 747374240597777506}
   - {fileID: 5945217839285891100}
   m_Father: {fileID: 2235286914975783579}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -46,6 +45,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1133145072315274, guid: 727417d13cc0d1442bd898536784b003, type: 3}
@@ -253,6 +253,18 @@ PrefabInstance:
       value: 60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 224186700932018018, guid: 727417d13cc0d1442bd898536784b003, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6992414405227421138}
+    - targetCorrespondingSourceObject: {fileID: 224186700932018018, guid: 727417d13cc0d1442bd898536784b003, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3183257710966720450}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1531549528890408, guid: 727417d13cc0d1442bd898536784b003, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 813249506016371553}
   m_SourcePrefab: {fileID: 100100000, guid: 727417d13cc0d1442bd898536784b003, type: 3}
 --- !u!1 &1782520168882824227 stripped
 GameObject:
@@ -382,12 +394,21 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 3183257710966720450}
     m_Modifications:
     - target: {fileID: 1020379823452867701, guid: 4442e2e10fd8a884fb1c007b992d006e, type: 3}
       propertyPath: m_Name
       value: SP_UITEXT_destination
       objectReference: {fileID: 0}
+    - target: {fileID: 7122018487082468655, guid: 4442e2e10fd8a884fb1c007b992d006e, type: 3}
+      propertyPath: tmp
+      value: 
+      objectReference: {fileID: 6815767151076241347}
+    - target: {fileID: 7122018487082468655, guid: 4442e2e10fd8a884fb1c007b992d006e, type: 3}
+      propertyPath: fontAssetSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 26c9c82dc3d65964bbadf128a2253a58, type: 2}
     - target: {fileID: 7122018487082468655, guid: 4442e2e10fd8a884fb1c007b992d006e, type: 3}
       propertyPath: useStaticPOT
       value: 0
@@ -505,6 +526,9 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4442e2e10fd8a884fb1c007b992d006e, type: 3}
 --- !u!114 &5917117343730715109 stripped
 MonoBehaviour:
@@ -522,13 +546,33 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7871913959664341239, guid: 4442e2e10fd8a884fb1c007b992d006e, type: 3}
   m_PrefabInstance: {fileID: 3516093925210164426}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6815767151076241347 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7952746537000592137, guid: 4442e2e10fd8a884fb1c007b992d006e, type: 3}
+  m_PrefabInstance: {fileID: 3516093925210164426}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4221228293680831419
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 3183257710966720450}
     m_Modifications:
+    - target: {fileID: 6337776326285681374, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
+      propertyPath: tmp
+      value: 
+      objectReference: {fileID: 7055794791081860931}
+    - target: {fileID: 6337776326285681374, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
+      propertyPath: fontAssetSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 26c9c82dc3d65964bbadf128a2253a58, type: 2}
     - target: {fileID: 6337776326285681374, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
       propertyPath: useStaticPOT
       value: 0
@@ -666,23 +710,46 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
 --- !u!224 &5945217839285891100 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7500033677491956647, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
   m_PrefabInstance: {fileID: 4221228293680831419}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7055794791081860931 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6593242633283355896, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
+  m_PrefabInstance: {fileID: 4221228293680831419}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5990823953984522056
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 3183257710966720450}
     m_Modifications:
     - target: {fileID: 1020379823452867701, guid: 4442e2e10fd8a884fb1c007b992d006e, type: 3}
       propertyPath: m_Name
       value: SP_UITEXT_name
       objectReference: {fileID: 0}
+    - target: {fileID: 7122018487082468655, guid: 4442e2e10fd8a884fb1c007b992d006e, type: 3}
+      propertyPath: tmp
+      value: 
+      objectReference: {fileID: 4431113714489713729}
+    - target: {fileID: 7122018487082468655, guid: 4442e2e10fd8a884fb1c007b992d006e, type: 3}
+      propertyPath: fontAssetSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 26c9c82dc3d65964bbadf128a2253a58, type: 2}
     - target: {fileID: 7122018487082468655, guid: 4442e2e10fd8a884fb1c007b992d006e, type: 3}
       propertyPath: useStaticPOT
       value: 0
@@ -800,6 +867,9 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4442e2e10fd8a884fb1c007b992d006e, type: 3}
 --- !u!114 &3600012937113551463 stripped
 MonoBehaviour:
@@ -812,6 +882,17 @@ MonoBehaviour:
   m_Script: {fileID: -1100706534, guid: 1c83dc1f03b8cf43812e942694488c9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4431113714489713729 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7952746537000592137, guid: 4442e2e10fd8a884fb1c007b992d006e, type: 3}
+  m_PrefabInstance: {fileID: 5990823953984522056}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &4475740954390517695 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7871913959664341239, guid: 4442e2e10fd8a884fb1c007b992d006e, type: 3}
@@ -822,8 +903,17 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 3183257710966720450}
     m_Modifications:
+    - target: {fileID: 6337776326285681374, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
+      propertyPath: tmp
+      value: 
+      objectReference: {fileID: 531892989145325459}
+    - target: {fileID: 6337776326285681374, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
+      propertyPath: fontAssetSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 26c9c82dc3d65964bbadf128a2253a58, type: 2}
     - target: {fileID: 6337776326285681374, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
       propertyPath: useStaticPOT
       value: 0
@@ -957,7 +1047,21 @@ PrefabInstance:
       value: SP_BTN_TXT_setName
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
+--- !u!114 &531892989145325459 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6593242633283355896, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
+  m_PrefabInstance: {fileID: 6637829646620023659}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &3750150495189610700 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7500033677491956647, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
@@ -968,8 +1072,17 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 3183257710966720450}
     m_Modifications:
+    - target: {fileID: 6337776326285681374, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
+      propertyPath: tmp
+      value: 
+      objectReference: {fileID: 4122389273243857725}
+    - target: {fileID: 6337776326285681374, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
+      propertyPath: fontAssetSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 26c9c82dc3d65964bbadf128a2253a58, type: 2}
     - target: {fileID: 6337776326285681374, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
       propertyPath: useStaticPOT
       value: 0
@@ -1103,19 +1216,38 @@ PrefabInstance:
       value: SP_BTN_TXT_setDestination
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
 --- !u!224 &747374240597777506 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7500033677491956647, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
   m_PrefabInstance: {fileID: 7082556986793162693}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4122389273243857725 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6593242633283355896, guid: 2a54f86037be37d42974f47ac4a932c5, type: 3}
+  m_PrefabInstance: {fileID: 7082556986793162693}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7923773676546380621
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2235286914975783579}
     m_Modifications:
+    - target: {fileID: 221868156190153543, guid: e185e854eb04f00439c44bc51bd1f233, type: 3}
+      propertyPath: tmp
+      value: 
+      objectReference: {fileID: 7091329963097304620}
     - target: {fileID: 221868156190153543, guid: e185e854eb04f00439c44bc51bd1f233, type: 3}
       propertyPath: styleIdx
       value: -1
@@ -1281,4 +1413,23 @@ PrefabInstance:
       value: UITextSPP_header
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e185e854eb04f00439c44bc51bd1f233, type: 3}
+--- !u!224 &6992414405227421138 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 935884471704800927, guid: e185e854eb04f00439c44bc51bd1f233, type: 3}
+  m_PrefabInstance: {fileID: 7923773676546380621}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7091329963097304620 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1125778045406084449, guid: e185e854eb04f00439c44bc51bd1f233, type: 3}
+  m_PrefabInstance: {fileID: 7923773676546380621}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -46,6 +46,9 @@ namespace Portal
 
         public void PlayTeleportEffects(float time)
         {
+            if (GlobalStateManager.isDedicatedServer)
+                return;
+
             if (teleportSound != null)
             {
                 var startTime = Mathf.Max(0f, Time.time - time);

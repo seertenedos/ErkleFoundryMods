@@ -56,8 +56,11 @@ namespace PlanIt
                 if (products.Contains(item)) continue;
                 items.Add(item);
                 var itemRecipes = item.GetRecipes();
-                if (itemRecipes.Length > 0) inputRecipes.AddRange(itemRecipes);
-                else inputRecipes.Add(null);
+                inputRecipes.AddRange(itemRecipes);
+                //inputRecipes.Add(itemRecipes[0]);
+                //if (itemRecipes.Length > 0) inputRecipes.Add(itemRecipes[0]);
+                //if (itemRecipes.Length > 0) inputRecipes.AddRange(itemRecipes);
+                //else inputRecipes.Add(null);
             }
             _items = items.ToArray();
             _inputRecipes = inputRecipes.ToArray();
@@ -149,12 +152,36 @@ namespace PlanIt
 
         public void SetCost(double[,] matrix)
         {
+            matrix[_recipes.Length, matrix.GetLength(1) - 1] = 1.0;
             //var ratio = GetPriorityRatio(matrix);
+            //var cost = ratio;
             for (int i = _recipes.Length - 1; i >= 0; i--)
             {
-                matrix[i, matrix.GetLength(1) - 1] = 2.0;
+                var totalOutput = 0.0;
+                var totalInput = 0.0;
+                for (int j = 0; j < _items.Length; j++)
+                {
+                    if (matrix[i, j] > 0.0)
+                    {
+                        totalOutput += matrix[i, j];
+                    }
+                    else if (matrix[i, j] < 0.0)
+                    {
+                        if (_items[j].identifier == "_base_biomass")
+                            totalInput -= matrix[i, j] * 100.0;
+                        else
+                            totalInput -= matrix[i, j];
+                    }
+                }
+
+                //var total = 1.0;
+                //for (int j = 0; j < _items.Length; j++)
+                //    if (matrix[i, j] < 0.0)
+                //        total -= matrix[i, j];
+
+                matrix[i, matrix.GetLength(1) - 1] = totalOutput * totalInput;
+                //cost *= ratio;
             }
-            matrix[_recipes.Length, matrix.GetLength(1) - 1] = 1.0;
         }
 
         public (Dictionary<ItemElementRecipe, double>, Dictionary<ItemElementTemplate, double>) Solve(Dictionary<ItemElementTemplate, double> products, IEnumerable<ulong> disabledRecipes)
@@ -216,7 +243,7 @@ namespace PlanIt
             var limit = 500;
             while (limit-- > 0)
             {
-                //PlanItSystem.log.Log($"Simplex:\n{MatrixToString(matrix)}");
+                PlanItSystem.log.Log($"Simplex:\n{MatrixToString(matrix)}");
                 var min = double.MaxValue;
                 var minColumn = -1;
                 for (var column = 0; column < matrix.GetLength(1) - 1; column++)
@@ -231,7 +258,6 @@ namespace PlanIt
                 if (min >= 0.0) return;
 
                 if (!PivotColumn(matrix, minColumn)) return;
-                //PivotColumn(matrix, minColumn);
             }
 
             PlanItSystem.log.LogWarning($"Reached limit!\n{MatrixToString(matrix)}");
@@ -282,38 +308,45 @@ namespace PlanIt
             }
         }
 
+        private void AppendCell(StringBuilder sb, string text, int width = 24)
+        {
+            var textWidth = Mathf.Min(width - 1, text.Length);
+            sb.Append(text[..textWidth]);
+            for (var i = textWidth; i < width; i++) sb.Append(" ");
+        }
+
         private string MatrixToString(double[,] matrix)
         {
             var sb = new StringBuilder();
-            sb.Append("\t");
+            AppendCell(sb, string.Empty);
             foreach (var item in _items)
             {
-                sb.Append(item.name.Substring(0, Mathf.Min(7, item.name.Length))).Append("\t");
+                AppendCell(sb, item.name);
             }
-            sb.Append("tax\t");
+            AppendCell(sb, "tax");
             foreach (var recipe in _recipes)
             {
-                sb.Append(recipe.name.Substring(0, Mathf.Min(7, recipe.name.Length))).Append("\t");
+                AppendCell(sb, recipe.name);
             }
-            sb.Append("cost");
+            AppendCell(sb, "cost");
             sb.AppendLine();
             for (var row = 0; row < matrix.GetLength(0); row++)
             {
                 if (row < _recipes.Length)
                 {
-                    sb.Append(_recipes[row].name.Substring(0, Mathf.Min(7, _recipes[row].name.Length))).Append("\t");
+                    AppendCell(sb, _recipes[row].name);
                 }
                 else if (row == _recipes.Length)
                 {
-                    sb.Append("tax\t");
+                    AppendCell(sb, "tax");
                 }
                 else
                 {
-                    sb.Append("target\t");
+                    AppendCell(sb, "target");
                 }
                 for (var column = 0; column < matrix.GetLength(1); column++)
                 {
-                    sb.Append($"{(float)(matrix[row, column]):0.##}").Append("\t");
+                    AppendCell(sb, $"{(float)matrix[row, column]:0.##}");
                 }
                 sb.AppendLine();
             }

@@ -9,6 +9,7 @@ using C3;
 
 namespace BulkDemolishTerrain
 {
+    [FoundryRPC]
     [AddSystemToGameSimulation]
     public class BulkDemolishTerrainSystem : SystemManager.System
     {
@@ -19,7 +20,6 @@ namespace BulkDemolishTerrain
 
         private static List<bool> shouldRemove = null;
         private static List<bool> isOre = null;
-        private static readonly List<BuildableObjectGO> bogoQueryResult = new List<BuildableObjectGO>(0);
 
         private static bool _confirmationFrameOpen = false;
 
@@ -254,6 +254,15 @@ namespace BulkDemolishTerrain
                 var currentTerrainMode = Config.Modes.currentTerrainMode.value;
                 var pos = __instance.demolitionAreaAABB_pos;
                 var size = __instance.demolitionAreaAABB_size;
+                if (pos.y < 2)
+                {
+                    size.y += pos.y - 2;
+                    pos.y = 2;
+                }
+                if (pos.y + size.y >= Chunk.CHUNKSIZE_Y)
+                {
+                    size.y = Chunk.CHUNKSIZE_Y - pos.y;
+                }
                 if (currentTerrainMode != TerrainMode.Ignore && currentTerrainMode != TerrainMode.LiquidOnly)
                 {
                     GenerateShouldRemoveArray(false);
@@ -264,12 +273,10 @@ namespace BulkDemolishTerrain
 
                     //if (GameRoot.IsMultiplayerEnabled) useDestroyMode = false;
 
-                    AABB3D aabb = ObjectPoolManager.aabb3ds.getObject();
-                    aabb.reinitialize(pos.x, pos.y, pos.z, size.x, size.y, size.z);
-                    StreamingSystem.getBuildableObjectGOQuadtreeArray().queryAABB3D(aabb, bogoQueryResult, true);
-                    if (bogoQueryResult.Count > 0)
+                    AABB3D aabb = new(pos.x, pos.y, pos.z, size.x, size.y, size.z);
+                    using (var query = StreamingSystem.get().queryAABB3D(aabb))
                     {
-                        foreach (var bogo in bogoQueryResult)
+                        foreach (var bogo in query)
                         {
                             if (bogo.template.type == BuildableObjectTemplate.BuildableObjectType.WorldDecorMineAble)
                             {
@@ -284,7 +291,6 @@ namespace BulkDemolishTerrain
                             }
                         }
                     }
-                    ObjectPoolManager.aabb3ds.returnObject(aabb); aabb = null;
 
                     ChunkManager.getChunkCoordsFromWorldCoords(pos.x, pos.z, out var fromChunkX, out var fromChunkZ);
                     ChunkManager.getChunkCoordsFromWorldCoords(pos.x + size.x - 1, pos.z + size.z - 1, out var toChunkX, out var toChunkZ);

@@ -11,30 +11,45 @@ BuildableObjectTemplate:
     __template: _base_terrain_dirt
     name: Grass
     terrainBlock_tbtIdentifier: _base_rocky_desert_surface_block
+  _erkle64_sandy_desert_surface_block:
+    __template: _base_terrain_dirt
+    name: Sand
+    terrainBlock_tbtIdentifier: _base_sandy_desert_surface_block
 ItemTemplate:
   _base_rocky_desert_dirt:
     toggleableModeType: MultipleBuildings
     toggleableModes:
       - name: Ground
-        icon_identifier: rocky_ground_transparent
+        icon: Assets/erkle64.LawnCare/Icons/rocky_ground_transparent.png
         isDefault: true
         identifier: _base_terrain_rocky_desert_dirt
       - name: Surface
-        icon_identifier: rocky_surface_transparent
+        icon: Assets/erkle64.LawnCare/Icons/rocky_surface_transparent.png
         isDefault: false
         identifier: _erkle64_rocky_desert_surface_block
   _base_dirt:
     toggleableModeType: MultipleBuildings
     toggleableModes:
       - name: Dirt
-        icon_identifier: dirt_transparent
+        icon: Assets/erkle64.LawnCare/Icons/dirt_transparent.png
         isDefault: true
         identifier: _base_terrain_dirt
       - name: Grass
-        icon_identifier: grass_transparent
+        icon: Assets/erkle64.LawnCare/Icons/grass_transparent.png
         isDefault: false
         identifier: _erkle64_boreal_forest_surface_block
       - name: Forest Grass
-        icon_identifier: grass_forest_transparent
+        icon: Assets/erkle64.LawnCare/Icons/grass_forest_transparent.png
         isDefault: false
         identifier: _erkle64_forest_surface_block
+  _base_sand:
+    toggleableModeType: MultipleBuildings
+    toggleableModes:
+      - name: Sand
+        icon: Assets/erkle64.LawnCare/Icons/sand_transparent.png
+        isDefault: true
+        identifier: _base_terrain_sand
+      - name: Surface
+        icon: Assets/erkle64.LawnCare/Icons/sand_surface_transparent.png
+        isDefault: false
+        identifier: _erkle64_sandy_desert_surface_block

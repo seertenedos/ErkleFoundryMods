@@ -45,6 +45,7 @@ MonoBehaviour:
     amount: 200
   - identifier: _base_science_pack_ii
     amount: 200
+  requiredCompanyRankIdentifier: 
   list_researchDependencies_str:
   - _base_explosives_i
   list_craftingUnlocks_str:
@@ -52,6 +53,9 @@ MonoBehaviour:
   list_blastFurnaceModes_str: []
   list_alots_str: []
   list_oreScannerUnlocks_str: []
+  list_skyPlatformItemVisibility_str: []
+  list_shippingPadItemVisibility_str: []
+  list_galacticMarketItemVisibility_str: []
   mapScanner_ore_identifier: 
   mapScanner_reservoir_identifier: 
   inventorySize_additionalInventorySlots: 0

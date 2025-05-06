@@ -76,9 +76,9 @@ namespace FoundryCommands
                         {
                             var data = new TankPollingUpdateData();
                             TankGO.tankEntity_queryPollingData(_monitorEntityId, ref data);
-                            delta = data.content_l - _monitorContent;
-                            _monitorContent = data.content_l;
-                            deltaTotal = data.content_l - _monitorContentStart;
+                            delta = data.content_l_fpm - _monitorContent;
+                            _monitorContent = data.content_l_fpm / (float)FixedPointMath.FPM_BASE;
+                            deltaTotal = data.content_l_fpm / (float)FixedPointMath.FPM_BASE - _monitorContentStart;
                         }
                         break;
 
@@ -86,9 +86,9 @@ namespace FoundryCommands
                         {
                             var data = new ModularFluidTankPollingUpdateData();
                             ModularFluidTankBaseGO.modularFluidTankEntity_queryPollingData(_monitorEntityId, ref data);
-                            delta = data.fbData.content_l - _monitorContent;
-                            _monitorContent = data.fbData.content_l;
-                            deltaTotal = data.fbData.content_l - _monitorContentStart;
+                            delta = data.fbData.content_l_fpm / (float)FixedPointMath.FPM_BASE - _monitorContent;
+                            _monitorContent = data.fbData.content_l_fpm / (float)FixedPointMath.FPM_BASE;
+                            deltaTotal = data.fbData.content_l_fpm / (float)FixedPointMath.FPM_BASE - _monitorContentStart;
                         }
                         break;
                 }
@@ -305,6 +305,7 @@ namespace FoundryCommands
                         out var hitTerrain,
                         out var bot,
                         out var isPlaceholder,
+                        out var isTrainPlaceholder,
                         out var placeholderId,
                         out var powerlineGO);
                     if (!hit || bogo == null || isPlaceholder) return;
@@ -327,7 +328,7 @@ namespace FoundryCommands
 
                         _monitorActive = true;
                         _monitorType = BuildableObjectTemplate.BuildableObjectType.Tank;
-                        _monitorContentStart = _monitorContent = data.content_l;
+                        _monitorContentStart = _monitorContent = data.content_l_fpm /(float) FixedPointMath.FPM_BASE;
                     }
                     else if (bogo is ChestGO)
                     {
@@ -359,7 +360,7 @@ namespace FoundryCommands
 
                         _monitorActive = true;
                         _monitorType = BuildableObjectTemplate.BuildableObjectType.ModularFluidTank;
-                        _monitorContentStart = _monitorContent = data.fbData.content_l;
+                        _monitorContentStart = _monitorContent = data.fbData.content_l_fpm /(float) FixedPointMath.FPM_BASE;
                     }
                 })
                 .SetHelpNames("monitor", "mon")
@@ -367,7 +368,7 @@ namespace FoundryCommands
 
                 // skyPlatform
                 new CommandHandler(@"^\/(?:(?:skyPlatform)|(?:sp))$", (string[] arguments) => {
-                    SkyPlatformFrame.showFrame();
+                    SkyPlatformRoot.showFrame(0);
                 })
                 .SetHelpNames("skyPlatform", "sp")
                 .SetHelpText("<b>/skyPlatform</b>\n<b>/sp</b>\nShow sky platform frame."),
@@ -491,11 +492,13 @@ namespace FoundryCommands
                         case 1:
                             var name = arguments[0].ToLower();
                             List<ItemTemplate> foundItems = new List<ItemTemplate>();
+                            bool foundExact = false;
                             foreach(var item in ItemTemplateManager.getAllItemTemplates().Values)
                             {
                                 if(item.identifier.ToLower() == name || item.name.ToLower() == name)
                                 {
                                     GiveItem(item, count);
+                                    foundExact = true;
                                     break;
                                 }
                                 else if(item.identifier.ToLower().Contains(name) || item.name.ToLower().Contains(name))
@@ -503,6 +506,7 @@ namespace FoundryCommands
                                     foundItems.Add(item);
                                 }
                             }
+                            if(foundExact) break;
                             switch(foundItems.Count)
                             {
                                 case 0: ChatFrame.addMessage("Found no matching item template", 0); break;

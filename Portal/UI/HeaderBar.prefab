@@ -35,7 +35,6 @@ RectTransform:
   - {fileID: 1490297982923097087}
   - {fileID: 6334219932804541989}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -70,7 +69,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3ab950dc30ab3d04da5cbe1d35e10fa3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8144c748cd5d9534cbed795093fbc763, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -92,7 +91,6 @@ MonoBehaviour:
   m_Script: {fileID: 354422009, guid: 1c83dc1f03b8cf43812e942694488c9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiImage_background: {fileID: 8493476408797150127}
   tmp_text: {fileID: 3200203841222167298}
   rectTransform: {fileID: 3392701641116771098}
   showCloseButton: 1
@@ -100,7 +98,6 @@ MonoBehaviour:
   layoutElement: {fileID: 5270709077156450272}
   useStaticPOT: 0
   potIdentifier: 
-  headerBarStyleIdx: 1
   title: Duplicationer
 --- !u!114 &5270709077156450272
 MonoBehaviour:
@@ -156,7 +153,6 @@ RectTransform:
   m_Children:
   - {fileID: 6903003024820434266}
   m_Father: {fileID: 3392701641116771098}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -247,7 +243,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3ab950dc30ab3d04da5cbe1d35e10fa3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8144c748cd5d9534cbed795093fbc763, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -300,7 +296,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3392701641116771098}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -435,7 +430,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6334219932804541989}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -470,7 +464,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6e4427e548e87ee479e00dbf1ec2b225, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c91a389f0b5417d4da66f9fb034d96d1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

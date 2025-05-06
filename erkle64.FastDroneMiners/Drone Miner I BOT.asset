@@ -254,6 +254,8 @@ MonoBehaviour:
   rotationAllowed: 1
   canBeRotatedAroundXAxis: 0
   additionalAABBs_input: []
+  hasToBeOnLava: 0
+  useNativeTileColliders: 1
   isModularBuilding: 0
   modularBuildingType: 2
   modularBuildingModule_descriptionName: 
@@ -352,6 +354,8 @@ MonoBehaviour:
   adjacentWalkwayOverridesPos: []
   hasConveyorConnectionManager: 0
   ccm_connectionData: []
+  hasAssemblyLineConnectionManager: 0
+  alcm_connectionData: []
   hasStrutManager: 0
   sm_strutPillars: []
   sm_strutPillarBotIdentifier: 
@@ -377,7 +381,7 @@ MonoBehaviour:
   - {x: 0, y: 1, z: 1}
   - {x: 0, y: 1, z: 0}
   - {x: 1, y: 1, z: 1}
-  dissolver_elementalConsumptionPerSecond: 0
+  dissolver_elementalConsumptionPerSecond_str: 
   dissolver_solidsPerSecond_str: 
   dissolver_isElemental: 0
   droneTransport_isStartStation: 0
@@ -429,6 +433,11 @@ MonoBehaviour:
   conveyor_material: {fileID: 0}
   conveyor_material_inv: {fileID: 0}
   conveyor_speed_slotsPerTick: 1
+  conveyor_mesh_straight: {fileID: 0}
+  conveyor_mesh_curve_left: {fileID: 0}
+  conveyor_mesh_curve_right: {fileID: 0}
+  conveyor_mesh_slope_up: {fileID: 0}
+  conveyor_mesh_slope_down: {fileID: 0}
   buildingPart_texture_albedo: {fileID: 0}
   buildingPart_hasSideTextures: 0
   buildingPart_texture_side_albedo: {fileID: 0}
@@ -436,10 +445,28 @@ MonoBehaviour:
   buildingPart_texture_bottom_albedo: {fileID: 0}
   voxelMeshCorner: {fileID: 0}
   battery_capacityKJ_str: 
-  shippingPad_inventorySlotCount: 0
-  shippingPad_requiredChargeKJ_str: 
-  shippingPad_chargePerSecondKJ_str: 
-  shippingPad_timeInSpaceSec: 0
+  shippingPad_cargoCapacity_weightInKg_str: 
+  shippingPad_padSize: 10
+  shippingPad_renderedCratePrefab: {fileID: 0}
+  shippingPad_crateRenderingStartPos:
+    x: 0
+    y: 0
+    z: 0
+  shippingPad_crateRenderingEndPos:
+    x: 0
+    y: 0
+    z: 0
+  shippingPad_shipLandingPosOffset_fpm:
+    x: 0
+    y: 0
+    z: 0
+  shippingPad_shipRotationModifierDegrees: 0
+  shippingPad_cargoTower_cargoPrefab: {fileID: 0}
+  shippingPad_cargoTower_positions: []
+  shippingPad_cargoTower_maxCargoPrefabs: 4
+  shippingPad_cargoTower_cargoPrefabHeight: 1
+  shippingPad_cargoTower_cargoMovementSpeed: 1
+  shippingPad_spp_preventDownShipping: 0
   pipe_hasVisualUpdate: 0
   pipe_visualUpdateFluidBoxTemplateIdx: 0
   transformer_transmissionRate_kjPerS_str: 
@@ -462,10 +489,12 @@ MonoBehaviour:
   worldDecor_specialDrops: []
   worldDecor_scratchColor: {r: 1, g: 1, b: 1, a: 1}
   worldDecor_canGrow: 0
+  worldDecor_checkForStalagmiteCeilingFixup: 0
   worldDecor_growTimeSec: 1800
   worldDecor_growStartScale: 0.1
   worldDecor_plantSeedIdentifier: 
   worldDecor_allowedGrowableTerrainBlocks: []
+  worldDecor_anchorType: 0
   superBuilding_levels: []
   superBuilding_researchUnlocks_str: []
   superBuilding_allowedLoaderPositions: []
@@ -541,16 +570,16 @@ MonoBehaviour:
     z: 0
   frackingTower_maxDrillLength: 0
   frackingTower_powerConsumptionPercentagePerOptionalTowerModule: 0
-  frackingTower_fluidThroughputPerTowerPerSecond: 0
+  frackingTower_fluidThroughputPerTowerPerSecond_str: 
   frackingTower_towerModuleBOT_identifier: 
-  modularFluidTank_baseFluidCapacity: 0
+  modularFluidTank_baseFluidCapacity_str: 
   modularFluidTank_towerModuleBOT_identifier: 
   modularFluidTank_topModuleBOT_identifier: 
-  modularFluidTank_fluidCapacityPerTower: 0
+  modularFluidTank_fluidCapacityPerTower_str: 
   trainLoadingStation_itemType: 0
-  trainLoadingStation_trackSearchOffset01: {x: 0, y: 0, z: 0}
-  trainLoadingStation_trackSearchOffset02: {x: 0, y: 0, z: 0}
-  trainLoadingStation_compatibleTrackTemplates: []
+  trainTrackLinkable_trackSearchOffset01: {x: 0, y: 0, z: 0}
+  trainTrackLinkable_trackSearchOffset02: {x: 0, y: 0, z: 0}
+  trainTrackLinkable_compatibleTrackTemplates: []
   al_start_slotWidth: 0
   al_start_speedInSlotsPerTick: 0
   al_start_localOffset_outputOrigin: {x: 0, y: 0, z: 0}
@@ -663,8 +692,8 @@ MonoBehaviour:
   oreVeinMiner_powerConsumptionMining_kjPerSec: 0
   boiler_elementTemplateIdentifier_source: 
   boiler_elementTemplateIdentifier_output: 
-  boiler_consumptionPerSecond: 0
-  boiler_outputPerSecond: 0
+  boiler_consumptionPerSecond_str: 
+  boiler_outputPerSecond_str: 
   boiler_energyConsumption_kjPerS_str: 
   constructionDronePort_itemContributionPerSecond_str: 
   constructionDronePort_dronePrefab: {fileID: 0}
@@ -681,6 +710,11 @@ MonoBehaviour:
   transportDronePort_droneTravelHeight: 0
   transportDronePort_droneTravelSpeed_mPerS: 0
   transportDronePort_droneTravelRotation_degPerS: 0
+  archiveCenter_spawnPointoffset:
+    x: 0
+    y: 0
+    z: 0
+  archiveCenter_spawnPointOrientation: 0
   constructionWarehouse_interactionPoints: []
   constructionWarehouse_recyclingSpeedItemsPerSecond: 0
   constructionWarehouse_powerDemandRecycling_kjPerS_str: 
@@ -711,8 +745,39 @@ MonoBehaviour:
   dataSourceEntity_mode: 0
   nppReactor_arrayInputs: []
   nppReactor_coolingLiquid_identifier: 
-  nppReactor_coolingLiquidDemandPerTick: 0
+  nppReactor_baseCoolingLiquidDemandPerTick: 0
+  nppReactor_additionalCoolingLiquidDemandPerTick: 0
   nppReactor_optionalCoolingLiquid_identifier: 
   nppReactor_output_elementalTemplate_identifier: 
   nppReactor_outputPerTick: 0
+  nppReactor_nominalTemperature: 0
   nppReactor_targetTemperature: 0
+  nppReactor_criticalTemperature: 0
+  nppReactor_catastrophicTemperature: 0
+  nppReactor_cooldownTemperature: 0
+  nppReactor_heatGainPerTick: 0
+  nppReactor_heatLossPerTick: 0
+  nppReactor_emergencyVentBoTIdentifier: 
+  nppReactor_controlRodsMovePercentagePerTick: 0
+  nppSteamGenerator_reactorLoop_input_identifier: 
+  nppSteamGenerator_reactorLoop_output_identifier: 
+  nppSteamGenerator_coolingLoop_input_identifier: 
+  nppSteamGenerator_coolingLoop_output_identifier: 
+  nppSteamGenerator_conversionRate_reactorInputToCoolInput: 0
+  nppSteamGenerator_conversionRate_reactorInputToReactorOutput: 0
+  nppSteamGenerator_conversionRate_reactorInputToCoolingOutput: 0
+  nppSteamGenerator_maxInputPertick: 0
+  nppSteamTurbine_input_identifier: 
+  nppSteamTurbine_maxInputAmountPerTick: 0
+  nppSteamTurbine_output_identifier: 
+  nppSteamTurbine_inputToOutputConversionRate: 0
+  nppSteamTurbine_powerGenertaionRate_kjPerSec: 0
+  nppSteamTurbine_efficiency: 0
+  nppCoolingTower_inputTurbine_identifier: 
+  nppCoolingTower_inputTurbine_maxInputPerTick: 0
+  nppCoolingTower_inputExtra_identifier: 
+  nppCoolingTower_turbineInputToExtraInputConversionRate: 0
+  nppCoolingTower_inputCooling_identifier: 
+  nppCoolingTower_turbineInputToCoolingInputConversionRate: 0
+  nppCoolingTower_output_identifier: 
+  nppCoolingTower_turbineInputToOutputConversionRate: 0

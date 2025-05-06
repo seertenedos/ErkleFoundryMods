@@ -34,7 +34,6 @@ RectTransform:
   - {fileID: 8967752420757329116}
   - {fileID: 1664331504172620042}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -88,6 +87,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 9185056870024356222}
     m_Modifications:
     - target: {fileID: 4743903207922771871, guid: 3d493d442d7411b45ab39915e5d47abd, type: 3}
@@ -235,6 +235,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d493d442d7411b45ab39915e5d47abd, type: 3}
 --- !u!114 &4942636711684348171 stripped
 MonoBehaviour:
@@ -257,6 +260,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 9185056870024356222}
     m_Modifications:
     - target: {fileID: 1597645735817848597, guid: 6c6200cbfeb514d47b6d8da114d6ada6, type: 3}
@@ -376,6 +380,9 @@ PrefabInstance:
       value: IconButton
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c6200cbfeb514d47b6d8da114d6ada6, type: 3}
 --- !u!114 &1483759368860780683 stripped
 MonoBehaviour:
@@ -409,6 +416,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 9185056870024356222}
     m_Modifications:
     - target: {fileID: 4743903207922771871, guid: 3d493d442d7411b45ab39915e5d47abd, type: 3}
@@ -556,6 +564,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d493d442d7411b45ab39915e5d47abd, type: 3}
 --- !u!224 &1664331504172620042 stripped
 RectTransform:

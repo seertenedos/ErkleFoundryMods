@@ -237,10 +237,18 @@ namespace Duplicationer
                                 {
                                     ActionManager.AddQueuedEvent(() =>
                                     {
-                                        Hide();
                                         _tool.ClearBlueprintPlaceholders();
                                         _tool.LoadBlueprintFromFile(path);
-                                        _tool.SelectMode(_tool.modePlace);
+                                        if (_tool.CurrentBlueprint != null)
+                                        {
+                                            _tool.SelectMode(_tool.modePlace);
+                                            Hide();
+                                        }
+                                        else
+                                        {
+                                            MessageBox.showBox("Error", "Failed to decompress blueprint data");
+                                            _tool.SelectMode(_tool.modeSelectArea);
+                                        }
                                     });
                                 }));
                             }

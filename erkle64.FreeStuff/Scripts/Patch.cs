@@ -1,5 +1,4 @@
 using C3;
-using C3.ModKit;
 using HarmonyLib;
 using System.Collections;
 using System.Collections.Generic;
@@ -144,7 +143,7 @@ namespace FreeStuff
 
             voidChestDissolverGO._particleSystemManager = new ParticleSystemManager()
             {
-                particleSystems = new ParticleSystem[0] { }
+                gpuParticleSystems = new GPUParticleSystem[0] { }
             };
 
             voidChestDissolverGO._audioSourceFaderManager = new AudioSourceFaderManager()
@@ -185,35 +184,32 @@ namespace FreeStuff
             creativeTank.fbm_ioFluidBoxes = new BuildableObjectTemplate.IOFluidBoxData[] {
                 new BuildableObjectTemplate.IOFluidBoxData()
                 {
-                    capacity_l = 100000.0f,
+                    capacity_liter = 100000 * FixedPointMath.FPM_BASE,
                     isInput = false,
                     type = BuildableObjectTemplate.IOFluidBoxData.IOFBType.Generic,
-                    transferRatePerSecond_l = Config.CreativeTank.rate.value,
+                    pipeTypeIdentifier = "_base_pipe",
+                    transferRatePerSecond_liter = (long)(Config.CreativeTank.rate.value * FixedPointMath.FPM_BASE),
                     transferSpeedType = BuildableObjectTemplate.IOFluidBoxData.IOFBTransferSpeedType.AlwaysMax,
                     fixedElementTemplateIdentifier = string.Empty,
                     connectors = new BuildableObjectTemplate.IOFluidBoxData.IOFluidBoxConnectionData[]
                     {
                         new BuildableObjectTemplate.IOFluidBoxData.IOFluidBoxConnectionData()
                         {
-                            groupIdentifier = "_base_pipe",
                             localOffset_origin = new Vector3Int(0, 0, 1),
                             localOffset_target = new Vector3Int(-1, 0, 1)
                         },
                         new BuildableObjectTemplate.IOFluidBoxData.IOFluidBoxConnectionData()
                         {
-                            groupIdentifier = "_base_pipe",
                             localOffset_origin = new Vector3Int(6, 0, 1),
                             localOffset_target = new Vector3Int(7, 0, 1)
                         },
                         new BuildableObjectTemplate.IOFluidBoxData.IOFluidBoxConnectionData()
                         {
-                            groupIdentifier = "_base_pipe",
                             localOffset_origin = new Vector3Int(3, 0, 0),
                             localOffset_target = new Vector3Int(3, 0, -1)
                         },
                         new BuildableObjectTemplate.IOFluidBoxData.IOFluidBoxConnectionData()
                         {
-                            groupIdentifier = "_base_pipe",
                             localOffset_origin = new Vector3Int(3, 0, 2),
                             localOffset_target = new Vector3Int(3, 0, 3)
                         },
@@ -267,7 +263,7 @@ namespace FreeStuff
             voidTank.identifier = voidTankIdentifier;
             voidTank.size = new Vector3Int(7, 4, 3);
             voidTank.energyConsumptionKW_str = "0";
-            voidTank.dissolver_elementalConsumptionPerSecond = Config.VoidTank.rate.value / 60.0f;
+            voidTank.dissolver_elementalConsumptionPerSecond_str = (Config.VoidTank.rate.value / 60.0f).ToString(System.Globalization.CultureInfo.InvariantCulture);
 
             var voidTankPrefab = Object.Instantiate(tank.prefabOnDisk);
             Object.DontDestroyOnLoad(voidTankPrefab);
@@ -278,17 +274,17 @@ namespace FreeStuff
             voidTank.fbm_ioFluidBoxes = new BuildableObjectTemplate.IOFluidBoxData[] {
                 new BuildableObjectTemplate.IOFluidBoxData()
                 {
-                    capacity_l = 100000.0f,
+                    capacity_liter = 100000 * FixedPointMath.FPM_BASE,
                     isInput = true,
                     type = BuildableObjectTemplate.IOFluidBoxData.IOFBType.Generic,
-                    transferRatePerSecond_l = Config.VoidTank.rate.value / 30.0f,
+                    pipeTypeIdentifier = "_base_pipe",
+                    transferRatePerSecond_liter = (long)((Config.VoidTank.rate.value / 30.0f) * FixedPointMath.FPM_BASE),
                     transferSpeedType = BuildableObjectTemplate.IOFluidBoxData.IOFBTransferSpeedType.AlwaysMax,
                     fixedElementTemplateIdentifier = string.Empty,
                     connectors = new BuildableObjectTemplate.IOFluidBoxData.IOFluidBoxConnectionData[]
                     {
                         new BuildableObjectTemplate.IOFluidBoxData.IOFluidBoxConnectionData()
                         {
-                            groupIdentifier = "_base_pipe",
                             localOffset_origin = new Vector3Int(6, 0, 1),
                             localOffset_target = new Vector3Int(7, 0, 1)
                         }
@@ -324,7 +320,7 @@ namespace FreeStuff
 
             voidTankDissolverGO._particleSystemManager = new ParticleSystemManager()
             {
-                particleSystems = new ParticleSystem[0] { }
+                gpuParticleSystems = new GPUParticleSystem[0] { }
             };
 
             voidTankDissolverGO._audioSourceFaderManager = new AudioSourceFaderManager()
@@ -398,36 +394,36 @@ namespace FreeStuff
                         }
 
                         AddCreativeItemRecipe(
-                            AssetManager.getAsset<CraftingRecipe>(CraftingRecipe.generateStringHash("_base_firmarlite_sheet_t1")),
-                            AssetManager.getAsset<ItemTemplate>(ItemTemplate.generateStringHash("_base_firmarlite_bar"))
+                            AssetManager.getAsset<CraftingRecipe>("_base_firmarlite_sheet_t0"),
+                            AssetManager.getAsset<ItemTemplate>("_base_firmarlite_bar")
                             );
 
                         AddCreativeItemRecipe(
-                            AssetManager.getAsset<CraftingRecipe>(CraftingRecipe.generateStringHash("_base_ore_xenoferrite")),
-                            AssetManager.getAsset<ItemTemplate>(ItemTemplate.generateStringHash("_base_rubble_xenoferrite"))
+                            AssetManager.getAsset<CraftingRecipe>("_base_ore_xenoferrite"),
+                            AssetManager.getAsset<ItemTemplate>("_base_rubble_xenoferrite")
                             );
 
                         AddCreativeItemRecipe(
-                            AssetManager.getAsset<CraftingRecipe>(CraftingRecipe.generateStringHash("_base_ore_technum")),
-                            AssetManager.getAsset<ItemTemplate>(ItemTemplate.generateStringHash("_base_rubble_technum"))
+                            AssetManager.getAsset<CraftingRecipe>("_base_ore_technum"),
+                            AssetManager.getAsset<ItemTemplate>("_base_rubble_technum")
                             );
 
                         AddCreativeItemRecipe(
-                            AssetManager.getAsset<CraftingRecipe>(CraftingRecipe.generateStringHash("_base_ore_ignium")),
-                            AssetManager.getAsset<ItemTemplate>(ItemTemplate.generateStringHash("_base_rubble_ignium"))
+                            AssetManager.getAsset<CraftingRecipe>("_base_ore_ignium"),
+                            AssetManager.getAsset<ItemTemplate>("_base_rubble_ignium")
                             );
 
                         AddCreativeItemRecipe(
-                            AssetManager.getAsset<CraftingRecipe>(CraftingRecipe.generateStringHash("_base_concrete")),
-                            AssetManager.getAsset<ItemTemplate>(ItemTemplate.generateStringHash("_base_ore_mineral_rock"))
+                            AssetManager.getAsset<CraftingRecipe>("_base_concrete"),
+                            AssetManager.getAsset<ItemTemplate>("_base_ore_mineral_rock")
                             );
 
                         AddCreativeItemRecipe(
-                            AssetManager.getAsset<CraftingRecipe>(CraftingRecipe.generateStringHash("_base_ore_telluxite")),
-                            AssetManager.getAsset<ItemTemplate>(ItemTemplate.generateStringHash("_base_rubble_telluxite"))
+                            AssetManager.getAsset<CraftingRecipe>("_base_ore_telluxite"),
+                            AssetManager.getAsset<ItemTemplate>("_base_rubble_telluxite")
                             );
 
-                        var baseElementRecipe = AssetManager.getAsset<CraftingRecipe>(CraftingRecipe.generateStringHash("_base_olumic_acid"));
+                        var baseElementRecipe = AssetManager.getAsset<CraftingRecipe>("_base_olumic_acid");
                         foreach (var element in ItemTemplateManager.getAllElementTemplates())
                         {
                             AddCreativeElementRecipe(baseElementRecipe, element.Value);
@@ -491,16 +487,22 @@ namespace FreeStuff
             }
         }
 
-        [HarmonyPatch(typeof(TextureStreamingProcessor), nameof(TextureStreamingProcessor.OnAddedToManager))]
+        /*[HarmonyPatch(typeof(TextureStreamingProcessor), nameof(TextureStreamingProcessor.OnAddedToManager))]
         [HarmonyPostfix]
         public static void TextureStreamingProcessorOnAddedToManager(TextureStreamingProcessor __instance)
         {
-            var botIdToTextureArray = typeof(TextureStreamingProcessor).GetField("botIdToTextureArray", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance) as Dictionary<ulong, Texture2D[]>;
-            botIdToTextureArray[BuildableObjectTemplate.generateStringHash(creativeChestIdentifier)] = new Texture2D[] { };
-            botIdToTextureArray[BuildableObjectTemplate.generateStringHash(voidChestIdentifier)] = new Texture2D[] { };
-            botIdToTextureArray[BuildableObjectTemplate.generateStringHash(creativeTankIdentifier)] = new Texture2D[] { };
-            botIdToTextureArray[BuildableObjectTemplate.generateStringHash(voidTankIdentifier)] = new Texture2D[] { };
-        }
+            int AddTextureArray(string identifier, Texture2D[] textureArray = null)
+            {
+                int id = __instance.textureArraysById.Count;
+                __instance.textureArraysById.Add(id, textureArray ?? new Texture2D[] { });
+                return id;
+            }
+
+            AddTextureArray(creativeChestIdentifier);
+            AddTextureArray(voidChestIdentifier);
+            AddTextureArray(creativeTankIdentifier);
+            AddTextureArray(voidTankIdentifier);
+        }*/
 
         [HarmonyPatch(typeof(CraftingRecipe), nameof(CraftingRecipe.onLoad))]
         [HarmonyPostfix]
@@ -522,19 +524,19 @@ namespace FreeStuff
         {
             if (__instance.identifier == creativeChestIdentifier)
             {
-                __instance.icon = __instance.icon_64 = __instance.icon_256 = _creativeChestIcon;
+                __instance.icon = _creativeChestIcon;
             }
             else if (__instance.identifier == voidChestIdentifier)
             {
-                __instance.icon = __instance.icon_64 = __instance.icon_256 = _voidChestIcon;
+                __instance.icon = _voidChestIcon;
             }
             else if (__instance.identifier == creativeTankIdentifier)
             {
-                __instance.icon = __instance.icon_64 = __instance.icon_256 = _creativeTankIcon;
+                __instance.icon = _creativeTankIcon;
             }
             else if (__instance.identifier == voidTankIdentifier)
             {
-                __instance.icon = __instance.icon_64 = __instance.icon_256 = _voidTankIcon;
+                __instance.icon = _voidTankIcon;
             }
         }
 

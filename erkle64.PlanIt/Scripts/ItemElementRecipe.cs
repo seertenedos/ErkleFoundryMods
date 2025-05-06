@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Windows;
 
 namespace PlanIt
 {
@@ -27,6 +26,7 @@ namespace PlanIt
         public static int AirVentMinVents => _airVentMinVents;
         public static int AirVentMaxVents => _airVentMaxVents;
         public static List<(ItemElementTemplate, double)> ConveyorSpeeds => _conveyorSpeeds;
+        public static ItemElementTemplate PipeItem => _pipeItem;
 
         public static double BlastFurnaceHotAirPerCraft => _blastFurnaceHotAirPerCraft;
         public static ItemElementTemplate HotAirTemplate => _hotAirTemplate;
@@ -49,6 +49,8 @@ namespace PlanIt
 
         private static List<(ItemElementTemplate, double)> _conveyorSpeeds = new List<(ItemElementTemplate, double)>();
 
+        private static ItemElementTemplate _pipeItem;
+
         public static ItemElementRecipe Get(string identifier)
         {
             if (_recipesByIdentifier.TryGetValue(identifier, out var recipe)) return recipe;
@@ -61,6 +63,20 @@ namespace PlanIt
             if (_recipesById.TryGetValue(id, out var recipe)) return recipe;
             PlanItSystem.log.LogWarning($"Missing recipe '{id}'!");
             return null;
+        }
+
+        public static bool TryGet(string identifier, out ItemElementRecipe recipe)
+        {
+            if (_recipesByIdentifier.TryGetValue(identifier, out recipe)) return true;
+            PlanItSystem.log.LogWarning($"Missing recipe '{identifier}'!");
+            return false;
+        }
+
+        public static bool TryGet(ulong id, out ItemElementRecipe recipe)
+        {
+            if (_recipesById.TryGetValue(id, out recipe)) return true;
+            PlanItSystem.log.LogWarning($"Missing recipe '{id}'!");
+            return false;
         }
 
         public static ItemElementRecipe Get(CraftingRecipe recipe) => Get($"CR:{recipe.identifier}");
@@ -82,6 +98,8 @@ namespace PlanIt
 
             AddRecipeByTags(tags);
             AddProducers(tags);
+
+            PlanItSystem.log.Log($"Added resource item recipe '{identifier}' with outputs[{string.Join(", ", outputs.Select(x => x.itemElement.name))}] and inputs[{string.Join(", ", inputs.Select(x => x.itemElement.name))}]");
         }
 
         private ItemElementRecipe(string identifier, string name, Sprite icon, double time, string[] tags, ElementTemplate output, double outputAmount)
@@ -100,6 +118,8 @@ namespace PlanIt
 
             AddRecipeByTags(tags);
             AddProducers(tags);
+
+            PlanItSystem.log.Log($"Added resource element recipe '{identifier}' with outputs[{string.Join(", ", outputs.Select(x => x.itemElement.name))}] and inputs[{string.Join(", ", inputs.Select(x => x.itemElement.name))}]");
         }
 
         private ItemElementRecipe(string identifier, string name, Sprite icon, double time, string[] tags, ItemElementTemplate.Amount[] outputs, ItemElementTemplate.Amount[] inputs)
@@ -118,6 +138,8 @@ namespace PlanIt
 
             AddRecipeByTags(tags);
             AddProducers(tags);
+
+            PlanItSystem.log.Log($"Added resource conversion '{identifier}' with outputs[{string.Join(", ", outputs.Select(x => x.itemElement.name))}] and inputs[{string.Join(", ", inputs.Select(x => x.itemElement.name))}]");
         }
 
         private ItemElementRecipe(CraftingRecipe recipe)
@@ -144,6 +166,8 @@ namespace PlanIt
 
             AddRecipeByTags(recipe.tags);
             AddProducers(recipe.tags);
+
+            PlanItSystem.log.Log($"Added recipe '{identifier}' with outputs[{string.Join(", ", outputs.Select(x => x.itemElement.name))}] and inputs[{string.Join(", ", inputs.Select(x => x.itemElement.name))}]");
         }
 
         private ItemElementRecipe(BlastFurnaceModeTemplate recipe, ItemElementTemplate.Amount hotAir)
@@ -169,6 +193,8 @@ namespace PlanIt
 
             AddRecipeByTags("blast_furnace");
             AddProducers("blast_furnace");
+
+            PlanItSystem.log.Log($"Added blast furnace recipe '{identifier}' with outputs[{string.Join(", ", outputs.Select(x => x.itemElement.name))}] and inputs[{string.Join(", ", inputs.Select(x => x.itemElement.name))}]");
         }
 
         public double GetOutputAmount(ItemElementTemplate itemElement)
@@ -241,7 +267,7 @@ namespace PlanIt
         };
         private static readonly (string, string)[] _vanillaElementResources =
         {
-            ("_base_water", "intake"),
+            ("_base_water", "pipe_intake"),
             ("_base_olumite", "pumpjack")
         };
         public static void Init(int blastFurnaceTowers, int stoveTowers, int airVentVents)
@@ -255,6 +281,8 @@ namespace PlanIt
             _recipesByIdentifier = new Dictionary<string, ItemElementRecipe>();
             _recipesById = new Dictionary<ulong, ItemElementRecipe>();
             _recipesByTag = new Dictionary<string, List<ItemElementRecipe>>();
+
+            _pipeItem = new ItemElementTemplate(ItemTemplateManager.getItemTemplate("_base_pipe"));
 
             _blastFurnaceHotAirPerCraft = 0.0;
             _producersByTag.Clear();
@@ -392,7 +420,7 @@ namespace PlanIt
                         {
                             if (building.fbm_ioFluidBoxes.Length > 0)
                             {
-                                var waterPerCraft = building.fbm_ioFluidBoxes[0].transferRatePerSecond_l;
+                                var waterPerCraft = (float)(building.fbm_ioFluidBoxes[0].transferRatePerSecond_liter / (double)FixedPointMath.FPM_BASE);
 
                                 var producer = new ItemElementProducer(
                                     building.identifier,
@@ -433,7 +461,7 @@ namespace PlanIt
             foreach (var alot in ItemTemplateManager.getAllAssemblyLineObjectTemplates().Values)
             {
                 var alRequirements = new Dictionary<ItemElementTemplate, double>();
-                alRequirements[new ItemElementTemplate(ItemTemplateManager.getItemTemplate("_base_robot01_torso"))] = 1.0;
+                alRequirements[new ItemElementTemplate(alot.parentItemTemplate)] = 1.0;
                 foreach (var stage in alot.stages)
                 {
                     foreach (var subAction in stage.stageSubActions)
@@ -458,38 +486,8 @@ namespace PlanIt
                     alot.icon,
                     60.0 / 32.0,
                     new string[] { "assembly_line" },
-                    new ItemElementTemplate.Amount[] { new ItemElementTemplate.Amount(ItemTemplateManager.getItemTemplate("_base_robot_01"), 1.0) },
+                    new ItemElementTemplate.Amount[] { new ItemElementTemplate.Amount(new ItemElementTemplate(alot.parentItemTemplate.alStarter_sellItemTemplate), 1.0) },
                     alRequirements.Select(x => new ItemElementTemplate.Amount(x.Key, x.Value)).ToArray());
-            }
-
-            var salesProducer = new ItemElementProducer(
-                "sales",
-                "Sales",
-                ResourceDB.getIcon("ss_sales"),
-                10000.0,
-                0.0);
-            AddProducer($"sales", salesProducer);
-
-            foreach (var item in ItemTemplateManager.getAllItemTemplates().Values)
-            {
-                if (item.flags.HasFlagNonAlloc(ItemTemplate.ItemTemplateFlags.SALES_ITEM)
-                    || item.flags.HasFlagNonAlloc(ItemTemplate.ItemTemplateFlags.SALES_ITEM_ASSEMBLY_LINE))
-                {
-                    new ItemElementRecipe(
-                        $"sales{item.identifier}",
-                        $"{item.name} Sales",
-                        item.icon,
-                        1.0,
-                        new string[] { "sales" },
-                        new ItemElementTemplate.Amount[]
-                        {
-                            new ItemElementTemplate.Amount(item.salesItem_currencyItemTemplate, item.salesItem_currencyAmount)
-                        },
-                        new ItemElementTemplate.Amount[]
-                        {
-                            new ItemElementTemplate.Amount(item, 1.0)
-                        });
-                }
             }
 
             _conveyorSpeeds.Sort((a, b) =>
@@ -501,6 +499,7 @@ namespace PlanIt
 
             foreach (var recipe in ItemTemplateManager.getAllCraftingRecipes().Values)
             {
+                if (recipe.name.Contains("Empty Barreled")) continue;
                 if (recipe.name.Contains("Unbarrel")) continue;
                 if (recipe.tags.Contains("recycler")) continue;
                 if (recipe.tags.Contains("creative_chest")) continue;
@@ -529,9 +528,13 @@ namespace PlanIt
             foreach (var elementResource in _vanillaElementResources)
             {
                 var (elementIdentifier, tag) = elementResource;
-                var hash = ItemTemplate.generateStringHash(elementIdentifier);
+                var hash = ElementTemplate.generateStringHash(elementIdentifier);
                 var element = ItemTemplateManager.getElementTemplate(hash);
-                if (element == null) continue;
+                if (element == null)
+                {
+                    PlanItSystem.log.LogWarning($"Missing resource element template '{elementIdentifier}'!");
+                    continue;
+                }
 
                 new ItemElementRecipe(elementIdentifier, element.name, element.icon, 1.0, new string[] { tag }, element, 1.0);
             }

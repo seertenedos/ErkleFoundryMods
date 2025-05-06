@@ -18,9 +18,7 @@ namespace Duplicationer
 
         private Mode mode = Mode.Idle;
 
-        private int _idAction = -1;
-        private int _idModifier2 = -1;
-        private double _altHeldTime;
+        private float _altHeldTime = 0f;
 
         public BlueprintToolModeRepeat()
         {
@@ -30,9 +28,6 @@ namespace Duplicationer
 
         public override void Enter(BlueprintToolCHM tool, BlueprintToolMode fromMode)
         {
-            _idAction = InputHelpers.GetActionId("Action");
-            _idModifier2 = InputHelpers.GetActionId("Modifier 2");
-
             mode = Mode.Idle;
             tool.isDragArrowVisible = false;
             TabletHelper.SetTabletTextQuickActions("");
@@ -109,24 +104,26 @@ Tap {GameRoot.getHotkeyStringFromAction("Modifier 2")}: Move Mode");
 
                             if (InputHelpers.IsMouseInputAllowed && !tool.IsAnyFrameOpen)
                             {
-                                if (GlobalStateManager.getRewiredPlayer0().GetButtonDown(_idAction))
+                                if (GlobalStateManager.getRewiredPlayer0().GetButtonDown("Action"))
                                 {
                                     mode = Mode.XPos + faceIndex;
                                     tool.dragFaceRay = new Ray(tool.dragFaceRay.origin, normal);
                                     tool.dragArrowOffset = 0.5f;
                                 }
-                                else if (GlobalStateManager.getRewiredPlayer0().GetButtonUp(_idModifier2))
+                                else if (GlobalStateManager.getRewiredPlayer0().GetButtonUp("Modifier 2"))
                                 {
                                     if (_altHeldTime < 0.5)
                                     {
                                         tool.SelectMode(tool.modeMove);
                                         AudioManager.playUISoundEffect(ResourceDB.resourceLinker.audioClip_UIButtonClick);
+                                        _altHeldTime = 0f;
                                         return;
                                     }
+                                    _altHeldTime = 0f;
                                 }
-                                else if (GlobalStateManager.getRewiredPlayer0().GetButton(_idModifier2))
+                                else if (GlobalStateManager.getRewiredPlayer0().GetButton("Modifier 2"))
                                 {
-                                    _altHeldTime = GlobalStateManager.getRewiredPlayer0().GetButtonTimePressed(_idModifier2);
+                                    _altHeldTime += Time.unscaledDeltaTime;
                                 }
                             }
                         }

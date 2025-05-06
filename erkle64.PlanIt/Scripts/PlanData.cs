@@ -10,7 +10,6 @@ public struct PlanData
     public List<double> outputAmounts;
     public int conveyorTier;
     public int metallurgyTier;
-    public int salesTier;
     public int cementTier;
     public bool allowUnresearched;
     public int blastFurnaceTowers;
@@ -26,12 +25,11 @@ public struct PlanData
             outputAmounts = new List<double>(),
             conveyorTier = 0,
             metallurgyTier = 0,
-            salesTier = 0,
             cementTier = 0,
             allowUnresearched = false,
-            blastFurnaceTowers = 1,
-            stoveTowers = 1,
-            airVentVents = 2
+            blastFurnaceTowers = ItemElementRecipe.BlastFurnaceMaxTowers,
+            stoveTowers = ItemElementRecipe.StoveMaxTowers,
+            airVentVents = ItemElementRecipe.AirVentMaxVents
         };
     }
 

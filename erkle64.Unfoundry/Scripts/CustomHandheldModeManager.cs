@@ -259,6 +259,13 @@ namespace Unfoundry
 
                 return false;
             }
+
+            [HarmonyPatch(typeof(PipeNetworkInfoFrame), nameof(PipeNetworkInfoFrame.toggleFrame))]
+            [HarmonyPrefix]
+            public static bool PipeNetworkInfoFrame_toggleFrame()
+            {
+                return !IsCustomHandheldModeActive;
+            }
         }
     }
 }

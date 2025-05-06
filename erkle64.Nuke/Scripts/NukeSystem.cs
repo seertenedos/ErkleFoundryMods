@@ -6,6 +6,7 @@ using UnityEngine;
 namespace ErkleNuke
 {
 
+    [FoundryRPC]
     [AddSystemToGameSimulation]
     public class NukeSystem : SystemManager.System
     {

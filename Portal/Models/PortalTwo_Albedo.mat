@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: PortalTwo_Albedo
   m_Shader: {fileID: 4800000, guid: fdf089107f59a1c4aab1c6e1d3ec29b3, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _NORMALMAP
   m_InvalidKeywords:
@@ -25,6 +27,7 @@ Material:
   - TransparentDepthPrepass
   - TransparentDepthPostpass
   - TransparentBackface
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:

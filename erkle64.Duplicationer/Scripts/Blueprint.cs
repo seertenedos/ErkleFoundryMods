@@ -14,7 +14,7 @@ namespace Duplicationer
     public class Blueprint
     {
         public const uint FileMagicNumber = 0x42649921u;
-        public const uint LatestBlueprintVersion = 4u;
+        public const uint LatestBlueprintVersion = 5u;
 
         public string Name => _name;
         public Vector3Int Size => _data.blocks.Size;
@@ -36,7 +36,6 @@ namespace Duplicationer
         private bool _hasRecipes = false;
         public bool HasRecipes => _hasRecipes;
 
-        private static List<BuildableObjectGO> _bogoQueryResult = new List<BuildableObjectGO>(0);
         private static List<ConstructionTaskGroup.ConstructionTask> _dependenciesTemp = new List<ConstructionTaskGroup.ConstructionTask>();
         private static Dictionary<ConstructionTaskGroup.ConstructionTask, List<ulong>> _genericDependencies = new Dictionary<ConstructionTaskGroup.ConstructionTask, List<ulong>>();
 
@@ -118,29 +117,27 @@ namespace Duplicationer
             }
 
             var buildings = new HashSet<BuildableObjectGO>(new BuildableObjectGOComparer());
-            AABB3D aabb = ObjectPoolManager.aabb3ds.getObject();
-            aabb.reinitialize(from.x, from.y, from.z, to.x - from.x, to.y - from.y, to.z - from.z);
-            QuadtreeArray<BuildableObjectGO> quadTree = StreamingSystem.getBuildableObjectGOQuadtreeArray();
-            _bogoQueryResult.Clear();
-            quadTree.queryAABB3D(aabb, _bogoQueryResult, true);
-            foreach (var bogo in _bogoQueryResult)
+            AABB3D aabb = new(from.x, from.y, from.z, to.x - from.x, to.y - from.y, to.z - from.z);
+            using (var query = StreamingSystem.get().queryAABB3D(aabb))
             {
-                if (aabb.hasXYZIntersection(bogo._aabb))
+                foreach (var bogo in query)
                 {
-                    switch (bogo.template.type)
+                    if (aabb.hasXYZIntersection(bogo.aabb))
                     {
-                        case BuildableObjectTemplate.BuildableObjectType.BuildingPart:
-                        case BuildableObjectTemplate.BuildableObjectType.WorldDecorMineAble:
-                        case BuildableObjectTemplate.BuildableObjectType.ModularEntityModule:
-                            break;
+                        switch (bogo.template.type)
+                        {
+                            case BuildableObjectTemplate.BuildableObjectType.BuildingPart:
+                            case BuildableObjectTemplate.BuildableObjectType.WorldDecorMineAble:
+                            case BuildableObjectTemplate.BuildableObjectType.ModularEntityModule:
+                                break;
 
-                        default:
-                            buildings.Add(bogo);
-                            break;
+                            default:
+                                buildings.Add(bogo);
+                                break;
+                        }
                     }
                 }
             }
-            ObjectPoolManager.aabb3ds.returnObject(aabb); aabb = null;
 
             return Create(from, size, buildings, blocks);
         }
@@ -221,7 +218,7 @@ namespace Duplicationer
                     }
                 }
 
-                if (bogo is IHasColorManager hasColorManager && hasColorManager.ColorManager != null && hasColorManager.ColorManager.hasAnyColorableObject())
+                if (bogo is IHasColorManager hasColorManager && hasColorManager.ColorManager != null && hasColorManager.ColorManager.colorMeshRenderers.Length > 0)
                 {
                     byte r = 0, g = 0, b = 0;
                     buildableEntity_getObjectColor(bogo.relatedEntityId, ref r, ref g, ref b);
@@ -319,9 +316,8 @@ namespace Duplicationer
             header = new FileHeader();
             name = "";
 
-            var headerSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(FileHeader));
             var allBytes = File.ReadAllBytes(path);
-            if (allBytes.Length < headerSize) return false;
+            if (allBytes.Length < 20) return false;
 
             var reader = new BinaryReader(new MemoryStream(allBytes, false));
 
@@ -366,9 +362,8 @@ namespace Duplicationer
 
             var shoppingList = new Dictionary<ulong, ShoppingListData>();
 
-            var headerSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(FileHeader));
             var allBytes = File.ReadAllBytes(path);
-            if (allBytes.Length < headerSize) throw new FileLoadException(path);
+            if (allBytes.Length < 20) throw new FileLoadException(path);
 
             var reader = new BinaryReader(new MemoryStream(allBytes, false));
 
@@ -405,14 +400,49 @@ namespace Duplicationer
 
             var name = reader.ReadString();
 
-            ulong dataSize;
-            var rawData = SaveManager.decompressByteArray(reader.ReadBytes(allBytes.Length - headerSize), out dataSize);
-            var blueprintData = LoadDataFromString(Encoding.UTF8.GetString(rawData.Take((int)dataSize).ToArray()), shoppingList);
+            try
+            {
+                if (version <= 4u)
+                {
+                    ulong dataSize;
+                    var rawData = SaveManager.decompressByteArray(ReadAllRemainingBytes(reader), out dataSize);
+                    if (rawData == null || dataSize >= (ulong.MaxValue >> 1))
+                    {
+                        DuplicationerSystem.log.LogError("Failed to decompress blueprint data");
+                        return null;
+                    }
+                    var blueprintData = LoadDataFromString(Encoding.UTF8.GetString(rawData.Take((int)dataSize).ToArray()), shoppingList);
 
-            reader.Close();
-            reader.Dispose();
+                    reader.Close();
+                    reader.Dispose();
 
-            return new Blueprint(name, blueprintData, shoppingList, iconItemTemplates.ToArray());
+                    return new Blueprint(name, blueprintData, shoppingList, iconItemTemplates.ToArray());
+                }
+                else // latest version
+                {
+                    var compressedSize = reader.ReadInt32();
+                    var compressed = ReadAllRemainingBytes(reader);
+                    if (compressedSize != compressed.Length)
+                    {
+                        DuplicationerSystem.log.LogError($"Failed to read blueprint: size {compressedSize} != {compressed.Length}");
+                        return null;
+                    }
+
+                    var rawData = Decompress(compressed);
+                    var blueprintData = LoadDataFromString(rawData, shoppingList);
+
+                    reader.Close();
+                    reader.Dispose();
+
+                    return new Blueprint(name, blueprintData, shoppingList, iconItemTemplates.ToArray());
+                }
+            }
+            catch (Exception e)
+            {
+                DuplicationerSystem.log.LogError($"Failed to decompress blueprint data: {e}");
+            }
+
+            return null;
         }
 
         private static BlueprintData LoadDataFromString(string blueprint, Dictionary<ulong, ShoppingListData> shoppingList)
@@ -424,15 +454,14 @@ namespace Duplicationer
             return blueprintData;
         }
 
-        public void Save(string path, string name, ItemElementTemplate[] iconItemTemplates)
+        public bool Save(string path, string name, ItemElementTemplate[] iconItemTemplates)
         {
             _name = name;
             _iconItemTemplates = iconItemTemplates;
 
             var json = JSON.Dump(_data, EncodeOptions.PrettyPrint | EncodeOptions.NoTypeHints);
-
-            var uncompressed = Encoding.UTF8.GetBytes(json);
-            var compressed = SaveManager.compressByteArrayInPlace(uncompressed, out ulong dataSize);
+            var compressed = Compress(json);
+            Debug.Log($"Compressed blueprint: {json.Length} -> {compressed.Length}");
 
             var writer = new BinaryWriter(new FileStream(path, FileMode.Create, FileAccess.Write));
 
@@ -451,10 +480,46 @@ namespace Duplicationer
 
             writer.Write(name);
 
-            writer.Write(compressed.Take((int)dataSize).ToArray());
+            writer.Write(compressed.Length);
+            writer.Write(compressed);
 
             writer.Close();
             writer.Dispose();
+
+            return true;
+        }
+
+        private static byte[] ReadAllRemainingBytes(BinaryReader reader)
+        {
+            using (var ms = new MemoryStream())
+            {
+                reader.BaseStream.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
+
+        private static byte[] Compress(string src)
+        {
+            var data = Encoding.UTF8.GetBytes(src);
+
+            using (var compressedStream = new MemoryStream())
+            using (var zipStream = new System.IO.Compression.GZipStream(compressedStream, System.IO.Compression.CompressionMode.Compress))
+            {
+                zipStream.Write(data, 0, data.Length);
+                zipStream.Close();
+                return compressedStream.ToArray();
+            }
+        }
+
+        private static string Decompress(byte[] data)
+        {
+            using (var compressedStream = new MemoryStream(data))
+            using (var zipStream = new System.IO.Compression.GZipStream(compressedStream, System.IO.Compression.CompressionMode.Decompress))
+            using (var outputStream = new MemoryStream())
+            {
+                zipStream.CopyTo(outputStream);
+                return Encoding.UTF8.GetString(outputStream.ToArray());
+            }
         }
 
         public void Place(Vector3Int anchorPosition, ConstructionTaskGroup constructionTaskGroup) => Place(GameRoot.getClientUsernameHash(), anchorPosition, constructionTaskGroup);
@@ -464,11 +529,8 @@ namespace Duplicationer
             _powerlineConnectionPairs.Clear();
             var entityIdMap = new Dictionary<ulong, ulong>();
 
-            AABB3D aabb = ObjectPoolManager.aabb3ds.getObject();
-
             if (_data.blocks.ids == null) throw new System.ArgumentNullException(nameof(_data.blocks.ids));
 
-            var quadTreeArray = StreamingSystem.getBuildableObjectGOQuadtreeArray();
             int blockIndex = 0;
             for (int z = 0; z < _data.blocks.sizeZ; z++)
             {
@@ -483,7 +545,7 @@ namespace Duplicationer
                             ChunkManager.getChunkIdxAndTerrainArrayIdxFromWorldCoords(worldPos.x, worldPos.y, worldPos.z, out ulong worldChunkIndex, out uint worldBlockIndex);
                             var terrainData = ChunkManager.chunks_getTerrainData(worldChunkIndex, worldBlockIndex);
 
-                            if (terrainData == 0 && quadTreeArray.queryPointXYZ(worldPos) == null)
+                            if (terrainData == 0 && StreamingSystem.get().queryPointXYZ(worldPos) == null)
                             {
                                 if (blockId >= GameRoot.BUILDING_PART_ARRAY_IDX_START)
                                 {
@@ -580,7 +642,7 @@ namespace Duplicationer
 
                 int wx, wy, wz;
                 if (template.canBeRotatedAroundXAxis)
-                    BuildingManager.getWidthFromUnlockedOrientation(template, buildableObjectData.orientationUnlocked, out wx, out wy, out wz);
+                    BuildingManager.getWidthFromUnlockedOrientation(template.size, buildableObjectData.orientationUnlocked, out wx, out wy, out wz);
                 else
                     BuildingManager.getWidthFromOrientation(template, (BuildingManager.BuildOrientation)buildableObjectData.orientationY, out wx, out wy, out wz);
 
@@ -614,7 +676,7 @@ namespace Duplicationer
                     }
                 }
 
-                aabb.reinitialize(worldPos.x, worldPos.y, worldPos.z, wx, wy, wz);
+                AABB3D aabb = new(worldPos.x, worldPos.y, worldPos.z, wx, wy, wz);
                 var existingEntityId = CheckIfBuildingExists(aabb, worldPos, buildableObjectData);
                 if (existingEntityId > 0)
                 {
@@ -673,7 +735,6 @@ namespace Duplicationer
 
                 ++buildingIndex;
             }
-            ObjectPoolManager.aabb3ds.returnObject(aabb); aabb = null;
 
 
             buildingIndex = 0;
@@ -770,42 +831,43 @@ namespace Duplicationer
 
         internal static ulong CheckIfBuildingExists(AABB3D aabb, Vector3Int worldPos, BlueprintData.BuildableObjectData buildableObjectData)
         {
-            _bogoQueryResult.Clear();
-            StreamingSystem.getBuildableObjectGOQuadtreeArray().queryAABB3D(aabb, _bogoQueryResult, false);
-            if (_bogoQueryResult.Count > 0)
+            using (var query = StreamingSystem.get().queryAABB3D(aabb))
             {
-                var template = ItemTemplateManager.getBuildableObjectTemplate(buildableObjectData.templateId);
-                foreach (var wbogo in _bogoQueryResult)
+                if (query.results.Count > 0)
                 {
-                    if (Traverse.Create(wbogo).Field("renderMode").GetValue<int>() != 1)
+                    var template = ItemTemplateManager.getBuildableObjectTemplate(buildableObjectData.templateId);
+                    foreach (var wbogo in query)
                     {
-                        bool match = true;
-
-                        BuildableEntity.BuildableEntityGeneralData generalData = default;
-                        if (wbogo.template != template)
+                        if (Traverse.Create(wbogo).Field("renderMode").GetValue<int>() != 1)
                         {
-                            match = false;
-                        }
-                        else if (BuildingManager.buildingManager_getBuildableEntityGeneralData(wbogo.relatedEntityId, ref generalData) == IOBool.iotrue)
-                        {
-                            if (generalData.pos != worldPos) match = false;
+                            bool match = true;
 
-                            if (template.canBeRotatedAroundXAxis)
+                            BuildableEntity.BuildableEntityGeneralData generalData = default;
+                            if (wbogo.template != template)
                             {
-                                if (generalData.orientationUnlocked != buildableObjectData.orientationUnlocked) match = false;
+                                match = false;
+                            }
+                            else if (BuildingManager.buildingManager_getBuildableEntityGeneralData(wbogo.relatedEntityId, ref generalData) == IOBool.iotrue)
+                            {
+                                if (generalData.pos != worldPos) match = false;
+
+                                if (template.canBeRotatedAroundXAxis)
+                                {
+                                    if (generalData.orientationUnlocked != buildableObjectData.orientationUnlocked) match = false;
+                                }
+                                else
+                                {
+                                    if (generalData.orientationY != buildableObjectData.orientationY) match = false;
+                                }
                             }
                             else
                             {
-                                if (generalData.orientationY != buildableObjectData.orientationY) match = false;
+                                DuplicationerSystem.log.LogWarning("data not found");
+                                match = false;
                             }
-                        }
-                        else
-                        {
-                            DuplicationerSystem.log.LogWarning("data not found");
-                            match = false;
-                        }
 
-                        if (match) return wbogo.relatedEntityId;
+                            if (match) return wbogo.relatedEntityId;
+                        }
                     }
                 }
             }
@@ -848,7 +910,7 @@ namespace Duplicationer
                     {
                         var oldOrientation = buildableObjectData.orientationUnlocked;
                         var newOrientation = Quaternion.Euler(0.0f, 90.0f, 0.0f) * oldOrientation;
-                        BuildingManager.getWidthFromUnlockedOrientation(template, newOrientation, out _, out _, out int wz);
+                        BuildingManager.getWidthFromUnlockedOrientation(template.size, newOrientation, out _, out _, out int wz);
                         newZ -= wz;
                         buildableObjectData.orientationUnlocked = newOrientation;
                     }
@@ -1121,7 +1183,7 @@ namespace Duplicationer
 
                             int wx, wy, wz;
                             if (template.canBeRotatedAroundXAxis)
-                                BuildingManager.getWidthFromUnlockedOrientation(template, buildableObjectData.orientationUnlocked, out wx, out wy, out wz);
+                                BuildingManager.getWidthFromUnlockedOrientation(template.size, buildableObjectData.orientationUnlocked, out wx, out wy, out wz);
                             else
                                 BuildingManager.getWidthFromOrientation(template, (BuildingManager.BuildOrientation)buildableObjectData.orientationY, out wx, out wy, out wz);
 
@@ -1148,10 +1210,8 @@ namespace Duplicationer
 
                                 var extraBoundingBoxes = new List<BoundsInt>();
 
-                                AABB3D aabb = ObjectPoolManager.aabb3ds.getObject();
-                                aabb.reinitialize(0, 0, 0, wx, wy, wz);
+                                AABB3D aabb = new(0, 0, 0, wx, wy, wz);
                                 BuildModularBuildPlaceholders(anchorPosition, handles, placeholderRenderGroup, buildingPlaceholders, repeatIndex, buildingIndex, template, baseTransform, position + centerOffset, orientation, aabb, modularBuildingData, extraBoundingBoxes);
-                                ObjectPoolManager.aabb3ds.returnObject(aabb);
 
                                 buildingPlaceholders.Add(new BlueprintPlaceholder(buildingIndex, repeatIndex, template, position, rotation, orientation, handles.ToArray(), extraBoundingBoxes.ToArray()));
                             }
@@ -1282,10 +1342,8 @@ namespace Duplicationer
                         BuildingManager.getWidthFromOrientation(attachmentTemplate, attachmentOrientation, out wx, out wy, out wz);
                         var centerOffset = new Vector3(wx, 0.0f, wz) * -0.5f;
 
-                        AABB3D attachmentAabb = ObjectPoolManager.aabb3ds.getObject();
-                        attachmentAabb.reinitialize(0, 0, 0, wx, wy, wz);
+                        AABB3D attachmentAabb = new(0, 0, 0, wx, wy, wz);
                         BuildModularBuildPlaceholders(anchorPosition, handles, placeholderRenderGroup, buildingPlaceholders, repeatIndex, buildingIndex, attachmentTemplate, baseTransform, attachmentPosition + centerOffset, attachmentOrientation, attachmentAabb, attachment, extraBoundingBoxes);
-                        ObjectPoolManager.aabb3ds.returnObject(attachmentAabb);
 
                         extraBoundingBoxes.Add(new BoundsInt(Vector3Int.RoundToInt(attachmentPosition + centerOffset) - anchorPosition, new Vector3Int(wx, wy, wz)));
 

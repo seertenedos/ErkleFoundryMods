@@ -1,17 +1,17 @@
 using C3;
-using HarmonyLib;
 using MessagePack;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
 
 namespace Portal
 {
-
-    [AddSystemToGameClient]
+    [FoundryRPC]
+    [AddSystemToGameSimulation]
     public class PortalSystem : SystemManager.System, IHasSystemSaveData<PortalSystem.SaveData>
     {
+        private const int SAVEDATA_VERSION = 1;
+
         static PortalSystem singleton;
 
         public override void OnAddedToWorld()
@@ -24,15 +24,18 @@ namespace Portal
             singleton = null;
         }
 
-        [EventHandler]
-        public void EntityRemoved(OnEntityDestroyed<PortalGO> evt)
+        [EventHandler(filterOnType = typeof(PortalGO))]
+        public void EntityRemoved(OnEntitiesDestroyed evt)
         {
-            RemovePortal(evt.entityId);
-            portalDestinationsByEntityId.Remove(evt.entityId);
+            foreach (var entityId in evt.entities)
+            {
+                RemovePortal(entityId);
+                portalDestinationsByEntityId.Remove(entityId);
+            }
         }
 
-        [EventHandler]
-        public void EntityStreamedIn(OnEntityStreamedIn<PortalGO> evt)
+        [EventHandler(filterOnType = typeof(PortalGO))]
+        public void EntityStreamedIn(OnEntityStreamedIn evt)
         {
             if (!portalEffectTimesByEntityId.TryGetValue(evt.entityId, out float time))
                 return;
@@ -42,7 +45,7 @@ namespace Portal
             if (Time.time > time + 3f)
                 return;
 
-            evt.cmp.PlayTeleportEffects(time);
+            (evt.bgo as PortalGO).PlayTeleportEffects(time);
         }
 
         public static string GetPortalName(ulong entityId)
@@ -119,6 +122,9 @@ namespace Portal
         [FoundryRPC]
         public static void PlayTeleportEffectsRPC(ulong entityId)
         {
+            if (singleton == null)
+                return;
+
             var bogo = StreamingSystem.getBuildableObjectGOByEntityId(entityId);
             if (bogo == null)
             {
@@ -126,13 +132,14 @@ namespace Portal
                 return;
             }
 
-            if (!(bogo is PortalGO portalGO))
-                return;
+            var portalGO = bogo as PortalGO;
 
-            portalGO.PlayTeleportEffects(Time.time);
+            if (portalGO != null)
+                portalGO.PlayTeleportEffects(Time.time);
         }
 
         [MessagePackObject(true)]
+        [SystemSaveData(SAVEDATA_VERSION)]
         public class SaveData
         {
             [Save]
@@ -155,16 +162,30 @@ namespace Portal
         public void load(SaveData saveData, int version)
         {
             portalEntityIdsByName.Clear();
-            foreach (var kvp in saveData.portalNames)
+            portalDestinationsByEntityId.Clear();
+
+            if (saveData == null)
+                return;
+
+            if (saveData.portalNames != null)
             {
-                AddPortal(kvp.Key, kvp.Value);
+                foreach (var kvp in saveData.portalNames)
+                {
+                    AddPortal(kvp.Key, kvp.Value);
+                }
             }
 
-            portalDestinationsByEntityId.Clear();
-            foreach (var kvp in saveData.portalDestinations)
+            if (saveData.portalDestinations != null)
             {
-                portalDestinationsByEntityId[kvp.Key] = kvp.Value;
+                foreach (var kvp in saveData.portalDestinations)
+                {
+                    portalDestinationsByEntityId[kvp.Key] = kvp.Value;
+                }
             }
+        }
+
+        public void finalizeAfterLoad(SaveData saveData, int version)
+        {
         }
 
         private void AddPortal(ulong entityId, string name)
@@ -297,7 +318,7 @@ namespace Portal
         Dictionary<ulong, float> portalEffectTimesByEntityId = new();
     }
 
-    [HarmonyPatch]
+    /*[HarmonyPatch]
     public static class Patch
     {
         private const int SAVEDATA_VERSION = 1;
@@ -323,6 +344,6 @@ namespace Portal
 
             return false;
         }
-    }
+    }*/
 
 }

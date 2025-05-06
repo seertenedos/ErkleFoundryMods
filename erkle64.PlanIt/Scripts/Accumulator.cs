@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Planit;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace PlanIt
@@ -9,7 +10,7 @@ namespace PlanIt
         public readonly Dictionary<ulong, double> recipeAmounts;
         public readonly Dictionary<ItemElementTemplate, double> itemAmounts;
         public readonly Dictionary<ItemElementTemplate, double> wasteAmounts;
-        public ulong[] recipeOrder;
+        public readonly List<ulong> recipeOrder;
 
         public bool HasItems => itemAmounts.Count > 0;
 
@@ -19,30 +20,33 @@ namespace PlanIt
             recipeAmounts = new Dictionary<ulong, double>();
             itemAmounts = new Dictionary<ItemElementTemplate, double>();
             wasteAmounts = new Dictionary<ItemElementTemplate, double>();
-            recipeOrder = new ulong[0];
+            recipeOrder = new();
         }
 
         public void Merge(Accumulator other, bool addDependency)
         {
-            if (addDependency) required.AddDependency(other.required);
+            PlanItSystem.log.Log($"Accumulator Merge: {required.itemElement.name}:{required.amount} + {other.required.itemElement.name}:{other.required.amount}");
+            //Dump();
+            //other.Dump();
 
-            var newRecipeOrder = new List<ulong>();
-            foreach (var recipeId in recipeOrder)
-            {
-                if (!other.recipeOrder.Any(x => x == recipeId)) newRecipeOrder.Add(recipeId);
-            }
-            newRecipeOrder.AddRange(other.recipeOrder);
-            recipeOrder = newRecipeOrder.ToArray();
+            if (required.itemElement.isValid && addDependency) required.AddDependency(other.required);
 
-            foreach (var recipe in other.recipeAmounts) AddRecipe(recipe.Key, recipe.Value);
+            foreach (var recipe in other.EachRecipe()) AddRecipe(recipe.Key, recipe.Value);
             foreach (var item in other.itemAmounts) AddItem(item.Key, item.Value);
             foreach (var item in other.wasteAmounts) AddWaste(item.Key, item.Value);
         }
 
         public void AddRecipe(ulong recipeId, double amount)
         {
-            if (recipeAmounts.ContainsKey(recipeId)) recipeAmounts[recipeId] += amount;
-            else recipeAmounts[recipeId] = amount;
+            if (recipeAmounts.ContainsKey(recipeId))
+            {
+                recipeAmounts[recipeId] += amount;
+            }
+            else
+            {
+                recipeAmounts[recipeId] = amount;
+                recipeOrder.Add(recipeId);
+            }
         }
 
         public void AddItem(ItemElementTemplate itemElement, double amount)
@@ -69,9 +73,67 @@ namespace PlanIt
 
         public void Dump()
         {
+            PlanItSystem.log.Log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            PlanItSystem.log.Log($"Accumulator Dump: {required.itemElement.name} - {required.amount}");
             foreach (var recipe in recipeAmounts) PlanItSystem.log.Log($"Recipe: {ItemElementRecipe.Get(recipe.Key).name} - {recipe.Value}");
             foreach (var item in itemAmounts) PlanItSystem.log.Log($"Item: {item.Key.name} - {item.Value}");
             foreach (var waste in wasteAmounts) PlanItSystem.log.Log($"Waste: {waste.Key.name} - {waste.Value}");
+            PlanItSystem.log.Log("-----------------------------------------------------------------------");
+        }
+
+        public void SortRecipes()
+        {
+            ulong GetRecipeForItem(ItemElementTemplate item, IEnumerable<ulong> recipeIds)
+            {
+                foreach (var recipeId in recipeIds)
+                {
+                    if (ItemElementRecipe.TryGet(recipeId, out var recipe))
+                    {
+                        foreach (var output in recipe.outputs)
+                        {
+                            if (output.itemElement.Equals(item)) return recipeId;
+                        }
+                    }
+                }
+
+                return 0uL;
+            }
+
+            HashSet<(ulong, ulong)> edges = new();
+            foreach (var recipeId in recipeAmounts.Keys)
+            {
+                if (ItemElementRecipe.TryGet(recipeId, out var recipe))
+                {
+                    foreach (var ingredient in recipe.inputs)
+                    {
+                        var recipeIdForItem = GetRecipeForItem(ingredient.itemElement, recipeAmounts.Keys);
+                        if (recipeIdForItem == 0uL) PlanItSystem.log.Log($"Recipe {recipe.name} has no recipe for {ingredient.itemElement.name}");
+                        else PlanItSystem.log.Log($"Recipe {recipe.name} has recipe {ItemElementRecipe.Get(recipeIdForItem).name} for {ingredient.itemElement.name}");
+
+                        if (recipeIdForItem != 0uL && recipeIdForItem != recipeId)
+                        {
+                            edges.Add((recipeId, recipeIdForItem));
+                        }
+                    }
+                }
+            }
+
+            var sortedRecipeIdGroups = TopoSort<ulong>.CyclicTopoSort(edges);
+            recipeOrder.Clear();
+            foreach (var group in sortedRecipeIdGroups) recipeOrder.AddRange(group);
+        }
+
+        public IEnumerable<KeyValuePair<ulong, double>> EachRecipe()
+        {
+            PlanItSystem.log.Log($"Accumulator EachRecipe: {recipeOrder.Count} == {recipeAmounts.Count}");
+
+            foreach (var recipeId in recipeOrder)
+            {
+                if (recipeAmounts.TryGetValue(recipeId, out var amount))
+                {
+                    yield return new KeyValuePair<ulong, double>(recipeId, amount);
+                }
+            }
         }
 
         internal class Required

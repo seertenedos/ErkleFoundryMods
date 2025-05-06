@@ -14,7 +14,7 @@ namespace Unfoundry
 
         private Sprite FetchSprite()
         {
-            sprite = ResourceDB.getIcon(iconName, 0);
+            sprite = ResourceDB.getIcon(iconName);
             if (sprite == null) Debug.LogWarning((string)$"Failed to find icon '{iconName}'");
 
             return sprite;

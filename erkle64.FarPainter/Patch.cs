@@ -14,7 +14,6 @@ namespace FarPainter
         private static Vector3Int _bulkPaintStartPosition = Vector3Int.zero;
         private static BulkPaintOrientation _bulkPaintOrientation = BulkPaintOrientation.X;
         private static Plane _bulkPaintPlane = new Plane();
-        private static readonly List<BuildableObjectGO> _bulkPaintQueryResult = new List<BuildableObjectGO>(0);
 
         private enum BulkPaintOrientation
         {
@@ -110,21 +109,17 @@ namespace FarPainter
                         byte color_b = (byte)Mathf.Clamp(Mathf.RoundToInt(__instance.relatedCharacter.clientData.lastSelectedColor.b * byte.MaxValue), 0, byte.MaxValue);
 
                         var pos = new Vector3Int(Mathf.Min(_bulkPaintStartPosition.x, targetCube.x), Mathf.Min(_bulkPaintStartPosition.y, targetCube.y), Mathf.Min(_bulkPaintStartPosition.z, targetCube.z));
-                        AABB3D aabb = ObjectPoolManager.aabb3ds.getObject();
-                        aabb.reinitialize(pos.x, pos.y, pos.z, size.x, size.y, size.z);
-                        _bulkPaintQueryResult.Clear();
-                        StreamingSystem.getBuildableObjectGOQuadtreeArray().queryAABB3D(aabb, _bulkPaintQueryResult, true);
-                        if (_bulkPaintQueryResult.Count > 0)
+                        AABB3D aabb = new AABB3D(pos.x, pos.y, pos.z, size.x, size.y, size.z);
+                        using (var query = StreamingSystem.get().queryAABB3D(aabb))
                         {
-                            foreach (var bogo in _bulkPaintQueryResult)
+                            foreach (var bogo in query)
                             {
-                                if (bogo is IHasColorManager hasColorManager && hasColorManager.ColorManager.hasAnyColorableObject())
+                                if (bogo is IHasColorManager hasColorManager && hasColorManager.ColorManager.colorMeshRenderers.Length > 0)
                                 {
                                     GameRoot.addLockstepEvent(new ColorizeObjectEvent(__instance.relatedCharacter.usernameHash, bogo.relatedEntityId, color_r, color_g, color_b, false));
                                 }
                             }
                         }
-                        ObjectPoolManager.aabb3ds.returnObject(aabb);
 
                         lastPlayedAudioClipIdx.SetValue(__instance, (int)lastPlayedAudioClipIdx.GetValue(__instance) + 1);
                         lastPlayedAudioClipIdx.SetValue(__instance, (int)lastPlayedAudioClipIdx.GetValue(__instance) % ResourceDB.resourceLinker.audioClip_paintingStrokes.Length);
@@ -194,7 +189,7 @@ namespace FarPainter
                     if (componentInParent != null && componentInParent.template != null)
                     {
                         lookingAtBuilding = true;
-                        if (componentInParent is IHasColorManager hasColorManager && hasColorManager.ColorManager.hasAnyColorableObject())
+                        if (componentInParent is IHasColorManager hasColorManager && hasColorManager.ColorManager.colorMeshRenderers.Length > 0)
                         {
                             lookingAtColorizableBuilding = true;
                             if (actionHeld)

@@ -201,7 +201,7 @@ namespace Duplicationer
                 case Mode.QuickCopy:
                     if (!GlobalStateManager.getRewiredPlayer0().GetButton("Action"))
                     {
-                        var bogo = StreamingSystem.getBuildableObjectGOQuadtreeArray().queryPointXYZ(tool.selectionFrom);
+                        var bogo = StreamingSystem.get().queryPointXYZ(tool.selectionFrom);
                         if (bogo != null)
                         {
                             var bot = bogo.template;
@@ -264,7 +264,7 @@ namespace Duplicationer
 
         private LoaderGO FindLoader(Vector3Int worldPos, BuildingManager.BuildOrientation buildOrientation)
         {
-            var bogo = StreamingSystem.getBuildableObjectGOQuadtreeArray().queryPointXYZ(worldPos);
+            var bogo = StreamingSystem.get().queryPointXYZ(worldPos);
             return bogo is LoaderGO loader && loader.buildOrientation == buildOrientation ? loader : null;
         }
 
