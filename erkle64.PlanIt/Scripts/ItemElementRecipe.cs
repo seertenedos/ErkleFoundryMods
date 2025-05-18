@@ -99,7 +99,7 @@ namespace PlanIt
             AddRecipeByTags(tags);
             AddProducers(tags);
 
-            PlanItSystem.log.Log($"Added resource item recipe '{identifier}' with outputs[{string.Join(", ", outputs.Select(x => x.itemElement.name))}] and inputs[{string.Join(", ", inputs.Select(x => x.itemElement.name))}]");
+            //PlanItSystem.log.Log($"Added resource item recipe '{identifier}' with outputs[{string.Join(", ", outputs.Select(x => x.itemElement.name))}] and inputs[{string.Join(", ", inputs.Select(x => x.itemElement.name))}]");
         }
 
         private ItemElementRecipe(string identifier, string name, Sprite icon, double time, string[] tags, ElementTemplate output, double outputAmount)
@@ -119,7 +119,7 @@ namespace PlanIt
             AddRecipeByTags(tags);
             AddProducers(tags);
 
-            PlanItSystem.log.Log($"Added resource element recipe '{identifier}' with outputs[{string.Join(", ", outputs.Select(x => x.itemElement.name))}] and inputs[{string.Join(", ", inputs.Select(x => x.itemElement.name))}]");
+            //PlanItSystem.log.Log($"Added resource element recipe '{identifier}' with outputs[{string.Join(", ", outputs.Select(x => x.itemElement.name))}] and inputs[{string.Join(", ", inputs.Select(x => x.itemElement.name))}]");
         }
 
         private ItemElementRecipe(string identifier, string name, Sprite icon, double time, string[] tags, ItemElementTemplate.Amount[] outputs, ItemElementTemplate.Amount[] inputs)
@@ -139,7 +139,7 @@ namespace PlanIt
             AddRecipeByTags(tags);
             AddProducers(tags);
 
-            PlanItSystem.log.Log($"Added resource conversion '{identifier}' with outputs[{string.Join(", ", outputs.Select(x => x.itemElement.name))}] and inputs[{string.Join(", ", inputs.Select(x => x.itemElement.name))}]");
+            //PlanItSystem.log.Log($"Added resource conversion '{identifier}' with outputs[{string.Join(", ", outputs.Select(x => x.itemElement.name))}] and inputs[{string.Join(", ", inputs.Select(x => x.itemElement.name))}]");
         }
 
         private ItemElementRecipe(CraftingRecipe recipe)
@@ -167,7 +167,7 @@ namespace PlanIt
             AddRecipeByTags(recipe.tags);
             AddProducers(recipe.tags);
 
-            PlanItSystem.log.Log($"Added recipe '{identifier}' with outputs[{string.Join(", ", outputs.Select(x => x.itemElement.name))}] and inputs[{string.Join(", ", inputs.Select(x => x.itemElement.name))}]");
+            //PlanItSystem.log.Log($"Added recipe '{identifier}' with outputs[{string.Join(", ", outputs.Select(x => x.itemElement.name))}] and inputs[{string.Join(", ", inputs.Select(x => x.itemElement.name))}]");
         }
 
         private ItemElementRecipe(BlastFurnaceModeTemplate recipe, ItemElementTemplate.Amount hotAir)
@@ -194,7 +194,7 @@ namespace PlanIt
             AddRecipeByTags("blast_furnace");
             AddProducers("blast_furnace");
 
-            PlanItSystem.log.Log($"Added blast furnace recipe '{identifier}' with outputs[{string.Join(", ", outputs.Select(x => x.itemElement.name))}] and inputs[{string.Join(", ", inputs.Select(x => x.itemElement.name))}]");
+            //PlanItSystem.log.Log($"Added blast furnace recipe '{identifier}' with outputs[{string.Join(", ", outputs.Select(x => x.itemElement.name))}] and inputs[{string.Join(", ", inputs.Select(x => x.itemElement.name))}]");
         }
 
         public double GetOutputAmount(ItemElementTemplate itemElement)

@@ -682,7 +682,7 @@ namespace PlanIt
             var result = solver.Solve(targets, ignore);
             sw.Stop();
             PlanItSystem.log.Log($"Solve: {sw.ElapsedMilliseconds}ms");
-            result.Dump();
+            //result.Dump();
 
             sw.Restart();
             sw.Start();
@@ -693,7 +693,7 @@ namespace PlanIt
             {
                 var recipe = ItemElementRecipe.Get(recipeAmount.Key);
 
-                PlanItSystem.log.Log($"Recipe: {recipe.name} - {recipeAmount.Value}");
+                //PlanItSystem.log.Log($"Recipe: {recipe.name} - {recipeAmount.Value}");
 
                 if (recipe.producers.Count == 0)
                 {
@@ -715,17 +715,20 @@ namespace PlanIt
                     }
                 }
 
-                foreach (var output in recipe.outputs)
+                if (recipe.inputs.Length > 0)
                 {
-                    var itemElement = output.itemElement;
-                    if (itemElement.isValid)
+                    foreach (var output in recipe.outputs)
                     {
-                        var amount = 0.0;
-                        if (inputAmounts.TryGetValue(itemElement, out var _amount))
+                        var itemElement = output.itemElement;
+                        if (itemElement.isValid)
                         {
-                            amount = _amount;
+                            var amount = 0.0;
+                            if (inputAmounts.TryGetValue(itemElement, out var _amount))
+                            {
+                                amount = _amount;
+                            }
+                            inputAmounts[itemElement] = amount - recipeAmount.Value * output.amount;
                         }
-                        inputAmounts[itemElement] = amount - recipeAmount.Value * output.amount;
                     }
                 }
 

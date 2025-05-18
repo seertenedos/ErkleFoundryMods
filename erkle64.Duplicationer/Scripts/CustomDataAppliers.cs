@@ -672,4 +672,50 @@ namespace Duplicationer
 
         private int GetToggleCount(byte priorityIdx) => (priorityIdx + 2) % 3;
     }
+
+    public class CDA_ShippingPad : CustomDataApplier
+    {
+        public override bool ShouldApply(BuildableObjectTemplate bot, CustomDataWrapper customData)
+            => customData.HasCustomData("configuredItemTemplateId");
+
+        public override void Apply(
+            BuildableObjectTemplate bot, 
+            CustomDataWrapper customData,
+            List<PostBuildAction> postBuildActions,
+            ulong usernameHash,
+            ref bool usePasteConfigSettings,
+            ref ulong pasteConfigSettings_01,
+            ref ulong pasteConfigSettings_02,
+            ref ulong additionalData_ulong_01,
+            ref ulong additionalData_ulong_02,
+            ref byte[] dcsData,
+            ref BlueprintData blueprintData,
+            Dictionary<ulong, ulong> entityIdMap)
+        {
+            var configuredItemTemplateId = customData.GetCustomData<ulong>("configuredItemTemplateId");
+            if (configuredItemTemplateId > 0)
+            {
+                postBuildActions.Add((ConstructionTaskGroup taskGroup, ConstructionTaskGroup.ConstructionTask task) =>
+                {
+                    if (task.entityId > 0)
+                    {
+                        var direction = customData.GetCustomData<byte>("buildingState");
+                        var minAmountToMove = customData.GetCustomData<uint>("minAmountToMove");
+                        var allowedShipTypesString = customData.GetCustomData<string>("allowedShipTypes");
+
+                        var allowedShipTypes = new List<ulong>();
+                        foreach (var entry in allowedShipTypesString.Split("|", StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            if (ulong.TryParse(entry, out var shipTypeId))
+                            {
+                                allowedShipTypes.Add(shipTypeId);
+                            }
+                        }
+
+                        GameRoot.addLockstepEvent(new ShippingPadConfigureEvent(usernameHash, task.entityId, direction, configuredItemTemplateId, (int)minAmountToMove, allowedShipTypes));
+                    }
+                });
+            }
+        }
+    }
 }

@@ -39,7 +39,7 @@ namespace PlanIt
                 accumulator.Merge(amount.Key.Accumulate(amount.Value, ignore, this, new HashSet<ItemElementTemplate>()), true);
             }
 
-            accumulator.Dump();
+            //accumulator.Dump();
 
             foreach (var solver in _matrixSolvers)
             {
@@ -75,7 +75,7 @@ namespace PlanIt
                     accumulator.AddWaste(wasteItem.Key, wasteItem.Value);
                 }
 
-                accumulator.Dump();
+                //accumulator.Dump();
             }
 
             if (maxDepth > 0 && accumulator.HasItems)

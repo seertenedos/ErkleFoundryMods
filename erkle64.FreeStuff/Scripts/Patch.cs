@@ -9,7 +9,7 @@ using UnityEngine;
 namespace FreeStuff
 {
 
-    [HarmonyPatch]
+    /*[HarmonyPatch]
     public static class Patch
     {
         private static Sprite _creativeChestIcon;
@@ -487,7 +487,7 @@ namespace FreeStuff
             }
         }
 
-        /*[HarmonyPatch(typeof(TextureStreamingProcessor), nameof(TextureStreamingProcessor.OnAddedToManager))]
+        [HarmonyPatch(typeof(TextureStreamingProcessor), nameof(TextureStreamingProcessor.OnAddedToManager))]
         [HarmonyPostfix]
         public static void TextureStreamingProcessorOnAddedToManager(TextureStreamingProcessor __instance)
         {
@@ -502,7 +502,7 @@ namespace FreeStuff
             AddTextureArray(voidChestIdentifier);
             AddTextureArray(creativeTankIdentifier);
             AddTextureArray(voidTankIdentifier);
-        }*/
+        }
 
         [HarmonyPatch(typeof(CraftingRecipe), nameof(CraftingRecipe.onLoad))]
         [HarmonyPostfix]
@@ -548,6 +548,6 @@ namespace FreeStuff
             var myEnumerator = new InitOnApplicationStartEnumerator(__result);
             __result = myEnumerator.GetEnumerator();
         }
-    }
+    }*/
 
 }

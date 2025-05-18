@@ -25,7 +25,7 @@ namespace PlanIt
 
         public void Merge(Accumulator other, bool addDependency)
         {
-            PlanItSystem.log.Log($"Accumulator Merge: {required.itemElement.name}:{required.amount} + {other.required.itemElement.name}:{other.required.amount}");
+            //PlanItSystem.log.Log($"Accumulator Merge: {required.itemElement.name}:{required.amount} + {other.required.itemElement.name}:{other.required.amount}");
             //Dump();
             //other.Dump();
 
@@ -107,8 +107,8 @@ namespace PlanIt
                     foreach (var ingredient in recipe.inputs)
                     {
                         var recipeIdForItem = GetRecipeForItem(ingredient.itemElement, recipeAmounts.Keys);
-                        if (recipeIdForItem == 0uL) PlanItSystem.log.Log($"Recipe {recipe.name} has no recipe for {ingredient.itemElement.name}");
-                        else PlanItSystem.log.Log($"Recipe {recipe.name} has recipe {ItemElementRecipe.Get(recipeIdForItem).name} for {ingredient.itemElement.name}");
+                        //if (recipeIdForItem == 0uL) PlanItSystem.log.Log($"Recipe {recipe.name} has no recipe for {ingredient.itemElement.name}");
+                        //else PlanItSystem.log.Log($"Recipe {recipe.name} has recipe {ItemElementRecipe.Get(recipeIdForItem).name} for {ingredient.itemElement.name}");
 
                         if (recipeIdForItem != 0uL && recipeIdForItem != recipeId)
                         {

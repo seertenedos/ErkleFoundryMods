@@ -243,7 +243,7 @@ namespace PlanIt
             var limit = 500;
             while (limit-- > 0)
             {
-                PlanItSystem.log.Log($"Simplex:\n{MatrixToString(matrix)}");
+                //PlanItSystem.log.Log($"Simplex:\n{MatrixToString(matrix)}");
                 var min = double.MaxValue;
                 var minColumn = -1;
                 for (var column = 0; column < matrix.GetLength(1) - 1; column++)

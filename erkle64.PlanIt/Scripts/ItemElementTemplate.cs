@@ -175,7 +175,7 @@ namespace PlanIt
 
         public Accumulator Accumulate(double amount, HashSet<ItemElementTemplate> ignore, Solver solver, HashSet<ItemElementTemplate> seen)
         {
-            PlanItSystem.log.Log($"Accumulate: {name} - {amount}");
+            //PlanItSystem.log.Log($"Accumulate: {name} - {amount}");
 
             //if (seen.Contains(this)) return new Accumulator(Empty, 0.0);
             //seen.Add(this);

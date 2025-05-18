@@ -6,8 +6,6 @@ using System;
 using System.Linq;
 using MessagePack;
 using UnityEngine;
-using static CharacterTabletUsabilityManager;
-using static UnityEngine.GraphicsBuffer;
 
 namespace Duplicationer
 {
@@ -503,6 +501,34 @@ namespace Duplicationer
 
                     customData.Add("colorVariants", string.Join("|", colorVariants.Select(x => $"{x.Key}={x.Value}")));
                 }
+            }
+        }
+    }
+
+    public class CDG_ShippingPad : TypedCustomDataGatherer<ShippingPadGO>
+    {
+        public override void Gather(BuildableObjectGO bogo, CustomDataWrapper customData, HashSet<BuildableObjectGO> powerGridBuildings)
+        {
+            var data = new ShippingPadPollingUpdateData();
+            if (ShippingPadGO.shippingPad_queryPollingData(bogo.relatedEntityId, ref data) == IOBool.iofalse)
+                return;
+
+            if (data.configuredItemTemplateId != 0)
+            {
+                customData.Add("configuredItemTemplateId", data.configuredItemTemplateId);
+                customData.Add("buildingState", data.buildingState);
+                customData.Add("minAmountToMove", data.minAmountToMove);
+
+                List<ulong> allowedShipTypes = new();
+                foreach (var shipTemplate in ItemTemplateManager.getAllSpaceShipTemplates().Values)
+                {
+                    if (shipTemplate.spaceShipType != SpaceShipTemplate.SpaceShipType.TransportShip)
+                        continue;
+
+                    if (ShippingPadConfigFrame.shippingPad_checkIfShipTypeIsAllowed(bogo.relatedEntityId, shipTemplate.id))
+                        allowedShipTypes.Add(shipTemplate.id);
+                }
+                customData.Add("allowedShipTypes", string.Join("|", allowedShipTypes));
             }
         }
     }

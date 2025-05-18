@@ -15,6 +15,30 @@ BuildableObjectTemplate:
     __template: _base_terrain_dirt
     name: Sand
     terrainBlock_tbtIdentifier: _base_sandy_desert_surface_block
+  _erkle64_tundra_ground_block:
+    __template: _base_terrain_dirt
+    name: Dirt
+    terrainBlock_tbtIdentifier: _base_tundra_ground_block
+  _erkle64_tundra_surface_block:
+    __template: _base_terrain_dirt
+    name: Dirt
+    terrainBlock_tbtIdentifier: _base_tundra_dirt_surface_block
+  _erkle64_tundra_surface_snow_block:
+    __template: _base_terrain_dirt
+    name: Dirt
+    terrainBlock_tbtIdentifier: _base_tundra_surface_block
+  _erkle64_tropical_rainforest_ground_block:
+    __template: _base_terrain_dirt
+    name: Dirt
+    terrainBlock_tbtIdentifier: _base_tropical_rainforest_ground_block
+  _erkle64_tropical_rainforest_dirt_surface_block:
+    __template: _base_terrain_dirt
+    name: Dirt
+    terrainBlock_tbtIdentifier: _base_tropical_rainforest_dirt_surface_block
+  _erkle64_rock_1:
+    __template: _base_terrain_stone_i
+    name: Porous Rock
+    terrainBlock_tbtIdentifier: _base_rock_1
 ItemTemplate:
   _base_rocky_desert_dirt:
     toggleableModeType: MultipleBuildings
@@ -27,6 +51,21 @@ ItemTemplate:
         icon: Assets/erkle64.LawnCare/Icons/rocky_surface_transparent.png
         isDefault: false
         identifier: _erkle64_rocky_desert_surface_block
+  _base_tropical_rainforest_dirt:
+    toggleableModeType: MultipleBuildings
+    toggleableModes:
+      - name: Surface
+        icon: Assets/erkle64.LawnCare/Icons/tropical_rainforest_surface_transparent.png
+        isDefault: true
+        identifier: _base_terrain_tropical_rainforest_dirt
+      - name: Ground
+        icon: Assets/erkle64.LawnCare/Icons/tropical_rainforest_ground_transparent.png
+        isDefault: false
+        identifier: _erkle64_tropical_rainforest_ground_block
+      - name: Dirt
+        icon: Assets/erkle64.LawnCare/Icons/tropical_rainforest_dirt_transparent.png
+        isDefault: false
+        identifier: _erkle64_tropical_rainforest_dirt_surface_block
   _base_dirt:
     toggleableModeType: MultipleBuildings
     toggleableModes:
@@ -42,6 +81,18 @@ ItemTemplate:
         icon: Assets/erkle64.LawnCare/Icons/grass_forest_transparent.png
         isDefault: false
         identifier: _erkle64_forest_surface_block
+      - name: Tundra Ground
+        icon: Assets/erkle64.LawnCare/Icons/tundra_ground_transparent.png
+        isDefault: true
+        identifier: _erkle64_tundra_ground_block
+      - name: Tundra Surface
+        icon: Assets/erkle64.LawnCare/Icons/tundra_surface_transparent.png
+        isDefault: false
+        identifier: _erkle64_tundra_surface_block
+      - name: Tundra Snow
+        icon: Assets/erkle64.LawnCare/Icons/tundra_snow_transparent.png
+        isDefault: false
+        identifier: _erkle64_tundra_surface_snow_block
   _base_sand:
     toggleableModeType: MultipleBuildings
     toggleableModes:
@@ -53,3 +104,14 @@ ItemTemplate:
         icon: Assets/erkle64.LawnCare/Icons/sand_surface_transparent.png
         isDefault: false
         identifier: _erkle64_sandy_desert_surface_block
+  _base_stone:
+    toggleableModeType: MultipleBuildings
+    toggleableModes:
+      - name: Stone
+        icon: Assets/erkle64.LawnCare/Icons/stone_transparent.png
+        isDefault: true
+        identifier: _base_terrain_stone_i
+      - name: Porous Rock
+        icon: Assets/erkle64.LawnCare/Icons/porous_rock_transparent.png
+        isDefault: false
+        identifier: _erkle64_rock_1
