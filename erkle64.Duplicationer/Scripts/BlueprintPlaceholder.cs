@@ -5,9 +5,11 @@ using Unfoundry;
 namespace Duplicationer
 {
     public class BlueprintPlaceholder {
+        public ulong OriginalEntityId { get; set; }
         public int Index { get; private set; }
         public Vector3Int RepeatIndex { get; private set; }
         public BuildableObjectTemplate Template { get; private set; }
+        public ItemTemplate ItemTemplate { get; private set; }
         public Vector3 Position { get; private set; }
         public Quaternion Rotation { get; private set; }
         public BuildingManager.BuildOrientation Orientation { get; private set; }
@@ -48,11 +50,13 @@ namespace Duplicationer
             null
         };
 
-        public BlueprintPlaceholder(int index, Vector3Int repeatIndex, BuildableObjectTemplate template, Vector3 position, Quaternion rotation, BuildingManager.BuildOrientation orientation, BatchRenderingHandle[] batchRenderingHandles, BoundsInt[] extraBoundingBoxes = null, State state = State.Untested)
+        public BlueprintPlaceholder(ulong originalEntityId, int index, Vector3Int repeatIndex, BuildableObjectTemplate template, ItemTemplate itemTemplate, Vector3 position, Quaternion rotation, BuildingManager.BuildOrientation orientation, BatchRenderingHandle[] batchRenderingHandles, BoundsInt[] extraBoundingBoxes = null, State state = State.Untested)
         {
+            OriginalEntityId = originalEntityId;
             Index = index;
             RepeatIndex = repeatIndex;
             Template = template;
+            ItemTemplate = itemTemplate;
             Position = position;
             Rotation = rotation;
             Orientation = orientation;
@@ -85,7 +89,7 @@ namespace Duplicationer
             yield return new KeyValuePair<string, int[]>("Total", stateCounts);
             foreach(var kv in stateCountsByTemplateId)
             {
-                var template = ItemTemplateManager.getBuildableObjectTemplate(kv.Key);
+                var template = ItemTemplateManager.getItemTemplate(kv.Key);
                 if(template != null) yield return new KeyValuePair<string, int[]>(template.name, kv.Value);
             }
         }
@@ -94,7 +98,7 @@ namespace Duplicationer
         {
             if (state == CurrentState) return;
 
-            var counts = (Template != null && Template.parentItemTemplate != null) ? ForceStateCount(Template.parentItemTemplate.id) : null;
+            var counts = ForceStateCount((ItemTemplate != null) ? ItemTemplate.id : 0uL);
 
             if (CurrentState != State.Invalid)
             {
@@ -157,8 +161,7 @@ namespace Duplicationer
 
         private static int[] ForceStateCount(ulong templateId)
         {
-            int[] counts;
-            return stateCountsByTemplateId.TryGetValue(templateId, out counts) ? counts : (stateCountsByTemplateId[templateId] = new int[System.Enum.GetValues(typeof(State)).Length - 1]);
+            return stateCountsByTemplateId.TryGetValue(templateId, out var counts) ? counts : (stateCountsByTemplateId[templateId] = new int[System.Enum.GetValues(typeof(State)).Length - 1]);
         }
 
         public void Move(Vector3 offset)

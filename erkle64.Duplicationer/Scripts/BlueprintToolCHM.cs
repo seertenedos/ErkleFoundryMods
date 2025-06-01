@@ -329,6 +329,50 @@ namespace Duplicationer
             AudioManager.playUISoundEffect(ResourceDB.resourceLinker.audioClip_recipeCopyTool_copy);
         }
 
+        private BlueprintPlaceholder FindPlaceholder(int index)
+        {
+            for (int i = 0; i < buildingPlaceholders.Count; i++)
+            {
+                if (buildingPlaceholders[i].Index == index && buildingPlaceholders[i].Template != null)
+                {
+                    return buildingPlaceholders[i];
+                }
+            }
+
+            return null;
+        }
+
+        private BlueprintPlaceholder FindPlaceholderByOriginalId(ulong entityId)
+        {
+            for (int i = 0; i < buildingPlaceholders.Count; i++)
+                if (buildingPlaceholders[i].OriginalEntityId == entityId && buildingPlaceholders[i].Template != null)
+                    return buildingPlaceholders[i];
+
+            return null;
+        }
+
+        private ulong FindExistingEntityId(ulong originalEntityId)
+        {
+            var placeholder = FindPlaceholderByOriginalId(originalEntityId);
+            if (placeholder == null || placeholder.Template == null)
+                return 0uL;
+
+            var template = placeholder.Template;
+            var buildableObjectData = CurrentBlueprint.GetBuildableObjectData(placeholder.Index);
+
+            int wx, wy, wz;
+            if (template.canBeRotatedAroundXAxis)
+                BuildingManager.getWidthFromUnlockedOrientation(template.size, buildableObjectData.orientationUnlocked, out wx, out wy, out wz);
+            else
+                BuildingManager.getWidthFromOrientation(template, (BuildingManager.BuildOrientation)buildableObjectData.orientationY, out wx, out wy, out wz);
+
+            var repeatOffset = new Vector3Int(placeholder.RepeatIndex.x * CurrentBlueprintSize.x, placeholder.RepeatIndex.y * CurrentBlueprintSize.y, placeholder.RepeatIndex.z * CurrentBlueprintSize.z);
+            var worldPos = new Vector3Int(buildableObjectData.worldX + CurrentBlueprintAnchor.x + repeatOffset.x, buildableObjectData.worldY + CurrentBlueprintAnchor.y + repeatOffset.y, buildableObjectData.worldZ + CurrentBlueprintAnchor.z + repeatOffset.z);
+
+            AABB3D aabb = new(worldPos.x, worldPos.y, worldPos.z, wx, wy, wz);
+            return Blueprint.CheckIfBuildingExists(aabb, worldPos, buildableObjectData);
+        }
+
         public override void UpdateBehavoir()
         {
             if (IsBlueprintActive)
@@ -339,22 +383,27 @@ namespace Duplicationer
                 {
                     var placeholder = buildingPlaceholders[buildingPlaceholderUpdateIndex];
                     var buildableObjectData = CurrentBlueprint.GetBuildableObjectData(placeholder.Index);
+                    var buildableObjectPlaceholder = placeholder;
+                    if (placeholder.Template == null)
+                        buildableObjectPlaceholder = FindPlaceholder(placeholder.Index);
 
-                    var repeatOffset = new Vector3Int(placeholder.RepeatIndex.x * CurrentBlueprintSize.x, placeholder.RepeatIndex.y * CurrentBlueprintSize.y, placeholder.RepeatIndex.z * CurrentBlueprintSize.z);
+                    var buildableObjectTemplate = ItemTemplateManager.getBuildableObjectTemplate(buildableObjectData.templateId);
+
+                    var repeatOffset = new Vector3Int(buildableObjectPlaceholder.RepeatIndex.x * CurrentBlueprintSize.x, buildableObjectPlaceholder.RepeatIndex.y * CurrentBlueprintSize.y, buildableObjectPlaceholder.RepeatIndex.z * CurrentBlueprintSize.z);
                     var worldPos = new Vector3Int(buildableObjectData.worldX + CurrentBlueprintAnchor.x + repeatOffset.x, buildableObjectData.worldY + CurrentBlueprintAnchor.y + repeatOffset.y, buildableObjectData.worldZ + CurrentBlueprintAnchor.z + repeatOffset.z);
                     int wx, wy, wz;
-                    if (placeholder.Template.canBeRotatedAroundXAxis)
-                        BuildingManager.getWidthFromUnlockedOrientation(placeholder.Template.size, buildableObjectData.orientationUnlocked, out wx, out wy, out wz);
+                    if (buildableObjectTemplate.canBeRotatedAroundXAxis)
+                        BuildingManager.getWidthFromUnlockedOrientation(buildableObjectTemplate.size, buildableObjectData.orientationUnlocked, out wx, out wy, out wz);
                     else
-                        BuildingManager.getWidthFromOrientation(placeholder.Template, (BuildingManager.BuildOrientation)buildableObjectData.orientationY, out wx, out wy, out wz);
+                        BuildingManager.getWidthFromOrientation(buildableObjectTemplate, (BuildingManager.BuildOrientation)buildableObjectData.orientationY, out wx, out wy, out wz);
 
                     byte errorCodeRaw = 0;
                     BuildingManager.buildingManager_validateConstruction_buildableEntityWrapper(new v3i(worldPos.x, worldPos.y, worldPos.z), buildableObjectData.orientationY, buildableObjectData.orientationUnlocked, buildableObjectData.templateId, ref errorCodeRaw, IOBool.iofalse);
                     var errorCode = (BuildingManager.CheckBuildableErrorCode)errorCodeRaw;
 
-                    if (placeholder.ExtraBoundingBoxes != null)
+                    if (buildableObjectPlaceholder.ExtraBoundingBoxes != null)
                     {
-                        foreach (var extraBox in placeholder.ExtraBoundingBoxes)
+                        foreach (var extraBox in buildableObjectPlaceholder.ExtraBoundingBoxes)
                         {
                             AABB3D aabb = new(
                                 extraBox.position.x + CurrentBlueprintAnchor.x,
@@ -408,7 +457,7 @@ namespace Duplicationer
                     }
 
                     bool positionClear = false;
-                    bool positionFilled = false;
+                    ulong positionFilledByEntityId = 0uL;
 
                     switch (errorCode)
                     {
@@ -421,11 +470,31 @@ namespace Duplicationer
 
                         case BuildingManager.CheckBuildableErrorCode.BlockedByBuildableObject_Building:
                             AABB3D aabb = new(worldPos.x, worldPos.y, worldPos.z, wx, wy, wz);
-                            if (Blueprint.CheckIfBuildingExists(aabb, worldPos, buildableObjectData) > 0) positionFilled = true;
+                            positionFilledByEntityId = Blueprint.CheckIfBuildingExists(aabb, worldPos, buildableObjectData);
                             break;
                     }
 
-                    if (positionFilled)
+                    if (placeholder.Template == null)
+                    {
+                        var entityData = new BuildableEntity.BuildableEntityGeneralData();
+                        var targetEntityId = FindExistingEntityId(placeholder.OriginalEntityId);
+                        if (targetEntityId != 0uL && BuildingManager.buildingManager_getBuildableEntityGeneralData(targetEntityId, ref entityData) == IOBool.iotrue)
+                        {
+                            if (PowerLineHH.buildingManager_powerlineHandheld_checkIfAlreadyConnected(targetEntityId, positionFilledByEntityId) == IOBool.iotrue)
+                            {
+                                placeholder.SetState(BlueprintPlaceholder.State.Done);
+                            }
+                            else
+                            {
+                                placeholder.SetState(BlueprintPlaceholder.State.Clear);
+                            }
+                        }
+                        else
+                        {
+                            placeholder.SetState(BlueprintPlaceholder.State.Clear);
+                        }
+                    }
+                    else if (positionFilledByEntityId != 0uL)
                     {
                         placeholder.SetState(BlueprintPlaceholder.State.Done);
                     }
@@ -725,6 +794,14 @@ namespace Duplicationer
             }
         }
 
+        internal void ClearConstructionTaskGroups()
+        {
+            foreach (var taskGroup in _activeConstructionTaskGroups)
+                taskGroup.ClearTasks();
+
+            _activeConstructionTaskGroups.Clear();
+        }
+
         internal void PlaceBlueprint(Vector3Int targetPosition)
         {
             if (CurrentBlueprint == null) throw new System.ArgumentNullException(nameof(CurrentBlueprint));
@@ -974,72 +1051,86 @@ namespace Duplicationer
             }
         }
 
-        internal void DemolishArea(bool doBuildings, bool doBlocks, bool doTerrain, bool doDecor)
+        internal void DemolishArea(bool doBuildings, bool doBlocks, bool doTerrain, bool doDecor, Vector3Int from, Vector3Int to, HashSet<ulong> ignoreSet)
         {
-            if (TryGetSelectedArea(out Vector3Int from, out Vector3Int to))
-            {
-                ulong characterHash = GameRoot.getClientCharacter().usernameHash;
+            ulong characterHash = GameRoot.getClientCharacter().usernameHash;
 
-                if (doBuildings || doDecor)
+            if (doBuildings || doDecor)
+            {
+                AABB3D aabb = new(from.x, from.y, from.z, to.x - from.x + 1, to.y - from.y + 1, to.z - from.z + 1);
+                using (var query = StreamingSystem.get().queryAABB3D(aabb))
                 {
-                    AABB3D aabb = new(from.x, from.y, from.z, to.x - from.x + 1, to.y - from.y + 1, to.z - from.z + 1);
-                    using (var query = StreamingSystem.get().queryAABB3D(aabb))
+                    foreach (var bogo in query)
                     {
-                        foreach (var bogo in query)
+                        if (ignoreSet != null && ignoreSet.Contains(bogo.relatedEntityId))
+                            continue;
+
+                        if (bogo.template.type == BuildableObjectTemplate.BuildableObjectType.WorldDecorMineAble)
                         {
-                            if (bogo.template.type == BuildableObjectTemplate.BuildableObjectType.WorldDecorMineAble)
-                            {
-                                if (doDecor)
-                                {
-                                    ActionManager.AddQueuedEvent(() =>
-                                    {
-                                        GameRoot.addLockstepEvent(new Character.RemoveWorldDecorEvent(characterHash, bogo.relatedEntityId, 0));
-                                    });
-                                }
-                            }
-                            else if (doBuildings)
+                            if (doDecor)
                             {
                                 ActionManager.AddQueuedEvent(() =>
                                 {
-                                    GameRoot.addLockstepEvent(new Character.DemolishBuildingEvent(characterHash, bogo.relatedEntityId, bogo.placeholderId, 0));
+                                    GameRoot.addLockstepEvent(new Character.RemoveWorldDecorEvent(characterHash, bogo.relatedEntityId, 0));
                                 });
+
+                                if (ignoreSet != null)
+                                    ignoreSet.Add(bogo.relatedEntityId);
                             }
                         }
-                    }
-                }
-
-                if (doBlocks || doTerrain)
-                {
-                    var shouldRemove = GetTerrainTypeRemovalMask();
-
-                    int blocksRemoved = 0;
-                    for (int wz = from.z; wz <= to.z; ++wz)
-                    {
-                        for (int wy = from.y; wy <= to.y; ++wy)
+                        else if (doBuildings)
                         {
-                            for (int wx = from.x; wx <= to.x; ++wx)
+                            ActionManager.AddQueuedEvent(() =>
                             {
-                                ChunkManager.getChunkIdxAndTerrainArrayIdxFromWorldCoords(wx, wy, wz, out ulong chunkIndex, out uint blockIndex);
-                                var terrainData = ChunkManager.chunks_getTerrainData(chunkIndex, blockIndex);
+                                GameRoot.addLockstepEvent(new Character.DemolishBuildingEvent(characterHash, bogo.relatedEntityId, bogo.placeholderId, 0));
+                            });
 
-                                if (terrainData >= GameRoot.BUILDING_PART_ARRAY_IDX_START && doBlocks)
-                                {
-                                    var worldPos = new Vector3Int(wx, wy, wz);
-                                    ulong entityId = 0;
-                                    ChunkManager.chunks_getBuildingPartBlock(chunkIndex, blockIndex, ref entityId);
-                                    ActionManager.AddQueuedEvent(() => GameRoot.addLockstepEvent(new Character.DemolishBuildingEvent(characterHash, entityId, 0, 0)));
-                                    ++blocksRemoved;
-                                }
-                                else if (doTerrain && terrainData > 0 && terrainData < GameRoot.BUILDING_PART_ARRAY_IDX_START && terrainData < shouldRemove.Count && shouldRemove[terrainData])
-                                {
-                                    var worldPos = new Vector3Int(wx, wy, wz);
-                                    ActionManager.AddQueuedEvent(() => GameRoot.addLockstepEvent(new Character.RemoveTerrainEvent(characterHash, worldPos, 0)));
-                                    ++blocksRemoved;
-                                }
+                            if (ignoreSet != null)
+                                ignoreSet.Add(bogo.relatedEntityId);
+                        }
+                    }
+                }
+            }
+
+            if (doBlocks || doTerrain)
+            {
+                var shouldRemove = GetTerrainTypeRemovalMask();
+
+                int blocksRemoved = 0;
+                for (int wz = from.z; wz <= to.z; ++wz)
+                {
+                    for (int wy = from.y; wy <= to.y; ++wy)
+                    {
+                        for (int wx = from.x; wx <= to.x; ++wx)
+                        {
+                            ChunkManager.getChunkIdxAndTerrainArrayIdxFromWorldCoords(wx, wy, wz, out ulong chunkIndex, out uint blockIndex);
+                            var terrainData = ChunkManager.chunks_getTerrainData(chunkIndex, blockIndex);
+
+                            if (terrainData >= GameRoot.BUILDING_PART_ARRAY_IDX_START && doBlocks)
+                            {
+                                var worldPos = new Vector3Int(wx, wy, wz);
+                                ulong entityId = 0;
+                                ChunkManager.chunks_getBuildingPartBlock(chunkIndex, blockIndex, ref entityId);
+                                ActionManager.AddQueuedEvent(() => GameRoot.addLockstepEvent(new Character.DemolishBuildingEvent(characterHash, entityId, 0, 0)));
+                                ++blocksRemoved;
+                            }
+                            else if (doTerrain && terrainData > 0 && terrainData < GameRoot.BUILDING_PART_ARRAY_IDX_START && terrainData < shouldRemove.Count && shouldRemove[terrainData])
+                            {
+                                var worldPos = new Vector3Int(wx, wy, wz);
+                                ActionManager.AddQueuedEvent(() => GameRoot.addLockstepEvent(new Character.RemoveTerrainEvent(characterHash, worldPos, 0)));
+                                ++blocksRemoved;
                             }
                         }
                     }
                 }
+            }
+        }
+
+        internal void DemolishArea(bool doBuildings, bool doBlocks, bool doTerrain, bool doDecor, HashSet<ulong> ignoreSet = null)
+        {
+            if (TryGetSelectedArea(out Vector3Int from, out Vector3Int to))
+            {
+                DemolishArea(doBuildings, doBlocks, doTerrain, doDecor, from, to, ignoreSet);
             }
         }
 

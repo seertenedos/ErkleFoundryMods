@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
 using UnityEngine;
 
 namespace Duplicationer
@@ -66,6 +67,11 @@ namespace Duplicationer
             {
                 foreach (var customDataEntry in customData) if (customDataEntry.identifier == identifier) return true;
                 return false;
+            }
+
+            public void GetCustomDataList<T>(string identifier, List<T> list)
+            {
+                foreach (var customDataEntry in customData) if (customDataEntry.identifier == identifier) list.Add((T)System.Convert.ChangeType(customDataEntry.value, typeof(T)));
             }
 
             public bool TryGetCustomData(string identifier, out string value)

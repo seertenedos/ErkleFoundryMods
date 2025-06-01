@@ -22,6 +22,10 @@ namespace BulkDemolishTerrain
             [ModSettingTitle("Ignore Mining Level")]
             [ModSettingDescription("Ignore mining level research and remove terrain anyway.")]
             public static ModSetting<bool> ignoreMiningLevel = false;
+
+            [ModSettingServerSync]
+            [ModSettingTitle("Allow Removing Bedrock")]
+            public static ModSetting<bool> allowRemoveBedrock = false;
         }
 
         [ModSettingGroup]

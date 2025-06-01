@@ -11,7 +11,7 @@ namespace FreeStuff
         {
             [ModSettingTitle("Rate")]
             [ModSettingDescription("Items per minute output for creative chest.")]
-            public static ModSetting<int> rate = 1200;
+            public static ModSetting<int> rate = 1280;
         }
 
         [ModSettingGroup]
@@ -20,7 +20,7 @@ namespace FreeStuff
         {
             [ModSettingTitle("Rate")]
             [ModSettingDescription("Items per minute input for void chest.")]
-            public static ModSetting<int> rate = 1200;
+            public static ModSetting<int> rate = 1280;
         }
 
         [ModSettingGroup]
@@ -29,7 +29,7 @@ namespace FreeStuff
         {
             [ModSettingTitle("Rate")]
             [ModSettingDescription("Litres per minute output for creative tank.")]
-            public static ModSetting<float> rate = 100000f;
+            public static ModSetting<float> rate = 36000f;
 
         }
 
@@ -39,7 +39,7 @@ namespace FreeStuff
         {
             [ModSettingTitle("Rate")]
             [ModSettingDescription("Litres per minute input for void tank.")]
-            public static ModSetting<float> rate = 200000f;
+            public static ModSetting<float> rate = 36000f;
         }
     }
 

@@ -7,6 +7,13 @@ namespace Duplicationer
     public static class Config
     {
         [ModSettingGroup]
+        [ModSettingHidden]
+        public static class Hidden
+        {
+            public static ModSetting<bool> demolishBounds = true;
+        }
+
+        [ModSettingGroup]
         public static class Events
         {
             [ModSettingTitle("Maximum Building Validations Per Frame")]

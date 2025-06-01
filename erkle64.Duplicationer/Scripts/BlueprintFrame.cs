@@ -1,5 +1,4 @@
-﻿using HarmonyLib;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using Unfoundry;
 using UnityEngine;
@@ -10,25 +9,29 @@ namespace Duplicationer
     internal class BlueprintFrame : DuplicationerFrame
     {
         [Header("Blueprint Frame")]
-        [SerializeField] private TextMeshProUGUI _textMaterialReport = null;
         [SerializeField] private TextMeshProUGUI _textPositionX = null;
         [SerializeField] private TextMeshProUGUI _textPositionY = null;
         [SerializeField] private TextMeshProUGUI _textPositionZ = null;
+        [SerializeField] private TextMeshProUGUI _textDemolishMode = null;
+        [SerializeField] private TextMeshProUGUI _textQueuePause = null;
+        [SerializeField] private TextMeshProUGUI _textCheatMode = null;
         [SerializeField] private GameObject _rowCheats;
         [SerializeField] private Button _buttonCheatMode;
         [SerializeField] private Button _buttonSave;
         [SerializeField] private Button _buttonConfirmCopy;
         [SerializeField] private Button _buttonConfirmPaste;
         [SerializeField] private GameObject _containerClearRecipes;
+        [SerializeField] private GameObject _containerQueueControls;
         [SerializeField] private GameObject _containerDemolish;
         [SerializeField] private GameObject _containerDestroy;
         [SerializeField] private GameObject _containerPosition;
         [SerializeField] private GameObject _containerMaterialReport;
+        [SerializeField] private GameObject _containerMaterialReportEntries;
+        [SerializeField] private MaterialReportEntry _materialReportEntryPrefab;
 
         private float _nextUpdateTimeCountTexts = 0.0f;
-        private int _materialReportMarkedLine = -1;
-        private List<ulong> _materialReportTemplateIds = new List<ulong>();
 
+        private string QueuePauseButtonText => ActionManager.IsQueuePaused ? "Resume Queue" : "Pause Queue";
         private string CheatModeButtonText => DuplicationerSystem.IsCheatModeEnabled ? "Disable Cheat Mode" : "Enable Cheat Mode";
 
         public void Show()
@@ -45,14 +48,14 @@ namespace Duplicationer
             }
             else
             {
-                var textComponent = _buttonCheatMode.GetComponentInChildren<TextMeshProUGUI>();
-                if (textComponent != null) textComponent.text = CheatModeButtonText;
+                if (_textCheatMode != null) _textCheatMode.text = CheatModeButtonText;
             }
 
             Shown();
 
             UpdateBlueprintPositionText();
             ForceUpdateMaterialReport();
+            UpdateDemolishMode();
         }
 
         void Update()
@@ -60,6 +63,7 @@ namespace Duplicationer
             if (!IsOpen) return;
 
             _containerClearRecipes.gameObject.SetActive(_tool.CurrentBlueprint != null && _tool.CurrentBlueprint.HasRecipes);
+            _containerQueueControls.gameObject.SetActive(!GameRoot.IsMultiplayerEnabled && ActionManager.HasQueuedEvents);
             _containerDemolish.gameObject.SetActive(_tool.boxMode != BlueprintToolCHM.BoxMode.None && _tool.CurrentMode != _tool.modeSelectArea);
             //_containerDestroy.gameObject.SetActive(_tool.boxMode != BlueprintToolCHM.BoxMode.None && _tool.CurrentMode != _tool.modeSelectArea);
             _containerDestroy.gameObject.SetActive(false);
@@ -67,6 +71,12 @@ namespace Duplicationer
             _buttonSave.interactable = _tool.IsBlueprintLoaded;
             _buttonConfirmPaste.interactable = _tool.CurrentMode != null && _tool.CurrentMode.AllowPaste(_tool);
             _buttonConfirmCopy.interactable = _tool.CurrentMode != null && _tool.CurrentMode.AllowCopy(_tool);
+        }
+
+        public void OnClick_DemolishMode()
+        {
+            Config.Hidden.demolishBounds.value = !Config.Hidden.demolishBounds.value;
+            UpdateDemolishMode();
         }
 
         public void OnClick_Save()
@@ -94,6 +104,20 @@ namespace Duplicationer
             _tool.ClearBlueprintRecipes();
         }
 
+        public void OnClick_QueuePause()
+        {
+            ActionManager.IsQueuePaused = !ActionManager.IsQueuePaused;
+            if (_textQueuePause != null)
+                _textQueuePause.text = QueuePauseButtonText;
+        }
+
+        public void OnClick_QueueClear()
+        {
+            ActionManager.ClearQueuedEvents();
+            _tool.ClearConstructionTaskGroups();
+            ActionManager.IsQueuePaused = false;
+        }
+
         public void OnClick_MoveX(bool negative)
         {
             _tool.MoveBlueprint(_tool.CurrentBlueprintAnchor + new Vector3Int(negative ? -1 : 1, 0, 0) * _tool.NudgeX);
@@ -114,9 +138,8 @@ namespace Duplicationer
             if (_buttonCheatMode == null) return;
             if (!Config.Cheats.cheatModeAllowed.value) return;
             Config.Cheats.cheatModeEnabled.value = !Config.Cheats.cheatModeEnabled.value;
-            var textComponent = _buttonCheatMode.GetComponentInChildren<TextMeshProUGUI>();
-            if (textComponent == null) return;
-            textComponent.text = CheatModeButtonText;
+            if (_textCheatMode == null) return;
+            _textCheatMode.text = CheatModeButtonText;
         }
 
         public void OnClick_DemolishDestroy(DemolishDestroyButtonMode mode)
@@ -126,9 +149,35 @@ namespace Duplicationer
                 ConfirmationFrame.Show($"Permanently destroy {mode.label} in selection?",
                     () => _tool.DestroyArea(mode.includeBuildings, mode.includeBlocks, mode.includeTerrain, mode.includeDecor));
             }
-            else
+            if (Config.Hidden.demolishBounds.value)
             {
                 _tool.DemolishArea(mode.includeBuildings, mode.includeBlocks, mode.includeTerrain, mode.includeDecor);
+            }
+            else
+            {
+                var blueprint = _tool.CurrentBlueprint;
+                if (blueprint == null)
+                    return;
+
+                var ignoreSet = new HashSet<ulong>();
+                var repeatFrom = _tool.repeatFrom;
+                var repeatTo = _tool.repeatTo;
+                for (int y = repeatFrom.y; y <= repeatTo.y; ++y)
+                {
+                    for (int z = repeatFrom.z; z <= repeatTo.z; ++z)
+                    {
+                        for (int x = repeatFrom.x; x <= repeatTo.x; ++x)
+                        {
+                            var position = _tool.CurrentBlueprintAnchor + new Vector3Int(x * _tool.CurrentBlueprintSize.x, y * _tool.CurrentBlueprintSize.y, z * _tool.CurrentBlueprintSize.z);
+                            foreach (var aabb in blueprint.EachAABB(position))
+                            {
+                                var from = new Vector3Int(aabb.x0, aabb.y0, aabb.z0);
+                                var to = new Vector3Int(aabb.x1 - 1, aabb.y1 - 1, aabb.z1 - 1);
+                                _tool.DemolishArea(mode.includeBuildings, mode.includeBlocks, mode.includeTerrain, mode.includeDecor, from, to, ignoreSet);
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -138,21 +187,10 @@ namespace Duplicationer
             _tool.SetPlaceholderOpacity(value);
         }
 
-        public void OnLineChanged_MaterialReport(int line)
+        public void OnEntryClicked_MaterialReport(ItemTemplate itemTemplate)
         {
-            _materialReportMarkedLine = line;
-        }
-
-        public void OnLineClicked_MaterialReport(int line)
-        {
-            if (line < 0 || line >= _materialReportTemplateIds.Count) return;
-
-            var templateId = _materialReportTemplateIds[line];
-            var template = ItemTemplateManager.getItemTemplate(templateId);
-            if (template == null) return;
-
-            ConfirmationFrame.Show($"Remove all '{template.name}'?", "Remove", () => {
-                _tool.RemoveItemFromBlueprint(template);
+            ConfirmationFrame.Show($"Remove all '{itemTemplate.name}'?", "Remove", () => {
+                _tool.RemoveItemFromBlueprint(itemTemplate);
             });
 
             ForceUpdateMaterialReport();
@@ -174,6 +212,7 @@ namespace Duplicationer
             ForceUpdateMaterialReport();
         }
 
+        private List<MaterialReportEntry> materialReportEntries = new();
         internal void ForceUpdateMaterialReport()
         {
             _nextUpdateTimeCountTexts = Time.time + 0.5f;
@@ -188,16 +227,25 @@ namespace Duplicationer
             ulong inventoryId = GameRoot.getClientCharacter().inventoryId;
             ulong inventoryPtr = inventoryId != 0 ? InventoryManager.inventoryManager_getInventoryPtr(inventoryId) : 0;
 
-            var materialReportBuilder = new System.Text.StringBuilder();
-            var lineIndex = 0;
-            void AppendLine(string text)
+            int entryIndex = 0;
+            MaterialReportEntry AppendEntry(string label, int inventory, int done, int total, MaterialReportEntry.MaterialReportEntryClicked onClicked = null)
             {
-                if (lineIndex == _materialReportMarkedLine) materialReportBuilder.AppendLine($"<mark>{text}</mark>");
-                else materialReportBuilder.AppendLine(text);
-                lineIndex++;
-            }
+                MaterialReportEntry materialReportEntry = null;
+                if (entryIndex >= materialReportEntries.Count)
+                {
+                    materialReportEntry = Instantiate(_materialReportEntryPrefab, _containerMaterialReportEntries.transform);
+                    materialReportEntries.Add(materialReportEntry);
+                }
+                else
+                {
+                    materialReportEntry = materialReportEntries[entryIndex];
+                }
 
-            _materialReportTemplateIds.Clear();
+                materialReportEntry.Setup(label, inventory, done, total, onClicked);
+                materialReportEntry.gameObject.SetActive(true);
+                entryIndex++;
+                return materialReportEntry;
+            }
 
             int totalItemCount = 0;
             int totalDoneCount = 0;
@@ -206,58 +254,51 @@ namespace Duplicationer
                 var itemCount = kv.Value.count * repeatCount;
                 if (itemCount > 0)
                 {
-                    totalItemCount += itemCount;
-
                     var name = kv.Value.name;
                     var templateId = kv.Value.itemTemplateId;
                     if (templateId != 0)
                     {
+                        totalItemCount += itemCount;
+
+                        var itemTemplate = ItemTemplateManager.getItemTemplate(templateId);
+
                         var doneCount = BlueprintPlaceholder.GetStateCount(templateId, BlueprintPlaceholder.State.Done);
                         totalDoneCount += doneCount;
 
-                        _materialReportTemplateIds.Add(templateId);
-
                         if (inventoryPtr != 0)
                         {
-                            var inventoryCount = InventoryManager.inventoryManager_countByItemTemplateByPtr(inventoryPtr, templateId, IOBool.iotrue);
+                            var inventoryCount = (int)InventoryManager.inventoryManager_countByItemTemplateByPtr(inventoryPtr, templateId, IOBool.iotrue);
 
-                            if (doneCount > 0)
-                            {
-                                AppendLine($"<color=#CCCCCC>{name}:</color> {itemCount - doneCount} <color=#FFFFAA>({inventoryCount})</color> (<color=#AACCFF>{doneCount}</color>/{itemCount})");
-                            }
-                            else
-                            {
-                                AppendLine($"<color=#CCCCCC>{name}:</color> {itemCount} <color=#FFFFAA>({inventoryCount})</color>");
-                            }
+                            AppendEntry(name, inventoryCount, doneCount, itemCount, (entry) => OnEntryClicked_MaterialReport(itemTemplate));
                         }
                         else
                         {
-                            AppendLine($"<color=#CCCCCC>{name}:</color> {itemCount} <color=#FFFFAA>(###)</color>");
+                            AppendEntry(name, 0, doneCount, itemCount, (entry) => OnEntryClicked_MaterialReport(itemTemplate));
                         }
                     }
                     else
                     {
-                        AppendLine($"<color=#CCCCCC>{name}:</color> {itemCount}");
+                        AppendEntry(name, 0, 0, itemCount);
                     }
                 }
             }
 
             if (totalItemCount > 0)
             {
-                if (totalDoneCount > 0)
-                {
-                    materialReportBuilder.AppendLine($"<color=#CCCCCC>Total:</color> {totalItemCount - totalDoneCount} (<color=#AACCFF>{totalDoneCount}</color>/{totalItemCount})");
-                }
-                else
-                {
-                    materialReportBuilder.AppendLine($"<color=#CCCCCC>Total:</color> {totalItemCount}");
-                }
+                AppendEntry("Total:", 0, totalDoneCount, totalItemCount);
             }
 
-            var text = materialReportBuilder.ToString();
-            _textMaterialReport.text = text;
+            for (int i = entryIndex; i < materialReportEntries.Count; i++)
+            {
+                materialReportEntries[i].gameObject.SetActive(false);
+            }
 
-            _containerMaterialReport.SetActive(!string.IsNullOrEmpty(text));
+            _containerMaterialReport.SetActive(totalItemCount > 0);
+        }
+
+        private void UpdateDemolishMode()
+        {
+            _textDemolishMode.text = Config.Hidden.demolishBounds.value ? "Full Bounds" : "Minimal";
         }
     }
 }

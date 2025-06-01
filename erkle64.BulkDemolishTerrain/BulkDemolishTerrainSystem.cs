@@ -20,6 +20,7 @@ namespace BulkDemolishTerrain
 
         private static List<bool> shouldRemove = null;
         private static List<bool> isOre = null;
+        private static int bedrockByteIdx = 0;
 
         private static bool _confirmationFrameOpen = false;
 
@@ -251,13 +252,32 @@ namespace BulkDemolishTerrain
                 ulong characterHash = __instance.characterHash;
                 if (characterHash != clientCharacterHash) return;
 
+                var removeBedrock = Config.General.allowRemoveBedrock.value;
+
                 var currentTerrainMode = Config.Modes.currentTerrainMode.value;
                 var pos = __instance.demolitionAreaAABB_pos;
                 var size = __instance.demolitionAreaAABB_size;
-                if (pos.y < 2)
+                if (removeBedrock)
                 {
-                    size.y += pos.y - 2;
-                    pos.y = 2;
+                    if (bedrockByteIdx == 0)
+                    {
+                        bedrockByteIdx = GameRoot.TerrainIdxLookupTable.getKeyByValue(TerrainBlockType.generateStringHash("_base_bedrock"));
+                        log.Log($"Bedrock Byte Index: {bedrockByteIdx}");
+                    }
+
+                    if (pos.y < 1)
+                    {
+                        size.y += pos.y - 1;
+                        pos.y = 1;
+                    }
+                }
+                else
+                {
+                    if (pos.y < 2)
+                    {
+                        size.y += pos.y - 2;
+                        pos.y = 2;
+                    }
                 }
                 if (pos.y + size.y >= Chunk.CHUNKSIZE_Y)
                 {
@@ -317,7 +337,11 @@ namespace BulkDemolishTerrain
                                     {
                                         var coords = new Vector3Int(x, pos.y + y, z);
                                         var terrainData = ChunkManager.getTerrainDataForWorldCoord(coords, out Chunk _, out uint _);
-                                        if (terrainData < shouldRemove.Count && shouldRemove[terrainData])
+                                        if (removeBedrock && terrainData == bedrockByteIdx)
+                                        {
+                                            ActionManager.AddQueuedEvent(() => _queuedTerrainRemovals.Enqueue(coords));
+                                        }
+                                        else if (terrainData < shouldRemove.Count && shouldRemove[terrainData])
                                         {
                                             if (useDestroyMode)
                                             {

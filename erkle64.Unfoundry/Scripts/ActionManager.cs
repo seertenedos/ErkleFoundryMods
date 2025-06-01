@@ -12,9 +12,13 @@ namespace Unfoundry
         public static int MaxQueuedEventsPerFrame => Config.maxQueuedEventsPerFrame.value;
         public delegate void QueuedEventDelegate();
         private static Queue<QueuedEventDelegate> queuedEvents = new Queue<QueuedEventDelegate>();
+        public static bool HasQueuedEvents => queuedEvents.Count > 0;
 
         private static TimedAction timedActions = null;
         private static TimedAction timedActionFreeList = null;
+
+        private static bool _isQueuePaused = false;
+        public static bool IsQueuePaused { get => _isQueuePaused; set => _isQueuePaused = value; }
 
         public static string StatusText { get; private set; } = "";
 
@@ -60,6 +64,11 @@ namespace Unfoundry
                 handler(entityId);
                 buildEvents.Remove(worldPos);
             }
+        }
+
+        public static void ClearQueuedEvents()
+        {
+            queuedEvents.Clear();
         }
 
         public static void AddQueuedEvent(QueuedEventDelegate queuedEvent)
@@ -111,11 +120,14 @@ namespace Unfoundry
 
         public static void Update()
         {
-            int toProcess = queuedEvents.Count;
-            if (toProcess > MaxQueuedEventsPerFrame) toProcess = MaxQueuedEventsPerFrame;
-            while (toProcess-- > 0)
+            if (!_isQueuePaused)
             {
-                queuedEvents.Dequeue().Invoke();
+                int toProcess = queuedEvents.Count;
+                if (toProcess > MaxQueuedEventsPerFrame) toProcess = MaxQueuedEventsPerFrame;
+                while (toProcess-- > 0)
+                {
+                    queuedEvents.Dequeue().Invoke();
+                }
             }
 
             var time = Time.time;

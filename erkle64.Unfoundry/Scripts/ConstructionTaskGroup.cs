@@ -21,6 +21,14 @@ namespace Unfoundry
             this.taskGroupComplete = taskGroupComplete;
         }
 
+        public void ClearTasks()
+        {
+            tasksById.Clear();
+            unsortedTasks.Clear();
+            sortedTasks.Clear();
+            stack.Clear();
+        }
+
         public ConstructionTask GetTask(ulong id)
         {
             ConstructionTask task;

@@ -769,6 +769,57 @@ namespace Duplicationer
             }
         }
 
+        // iterate each aabb
+        public IEnumerable<AABB3D> EachAABB(Vector3Int origin)
+        {
+            for (int i = 0; i < _data.buildableObjects.Length; ++i)
+            {
+                var buildableObjectData = _data.buildableObjects[i];
+                var template = ItemTemplateManager.getBuildableObjectTemplate(buildableObjectData.templateId);
+                if (template == null) continue;
+
+                int wx, wy, wz;
+                if (template.canBeRotatedAroundXAxis)
+                    BuildingManager.getWidthFromUnlockedOrientation(template.size, buildableObjectData.orientationUnlocked, out wx, out wy, out wz);
+                else
+                    BuildingManager.getWidthFromOrientation(template, (BuildingManager.BuildOrientation)buildableObjectData.orientationY, out wx, out wy, out wz);
+
+                yield return new AABB3D(
+                    buildableObjectData.worldX + origin.x,
+                    buildableObjectData.worldY + origin.y,
+                    buildableObjectData.worldZ + origin.z,
+                    wx,
+                    wy,
+                    wz
+                );
+            }
+
+            if (_data.blocks.ids != null)
+            {
+                for (int x = 0; x < _data.blocks.sizeX; ++x)
+                {
+                    for (int y = 0; y < _data.blocks.sizeY; ++y)
+                    {
+                        for (int z = 0; z < _data.blocks.sizeZ; ++z)
+                        {
+                            var blockId = _data.blocks.ids[x + (y + z * _data.blocks.sizeY) * _data.blocks.sizeX];
+                            if (blockId > 0)
+                            {
+                                yield return new AABB3D(
+                                    x + origin.x,
+                                    y + origin.y,
+                                    z + origin.z,
+                                    1,
+                                    1,
+                                    1
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         private int CountModularParents(ulong parentId)
         {
             var parentIndex = _data.FindEntityIndex(parentId);
@@ -800,7 +851,7 @@ namespace Duplicationer
         public void GetCustomDataList<T>(int index, string identifier, List<T> list) => GetCustomDataList<T>(ref _data, index, identifier, list);
         public static void GetCustomDataList<T>(ref BlueprintData data, int index, string identifier, List<T> list)
         {
-            foreach (var customDataEntry in data.buildableObjects[index].customData) if (customDataEntry.identifier == identifier) list.Add((T)System.Convert.ChangeType(customDataEntry.value, typeof(T)));
+            data.buildableObjects[index].GetCustomDataList(identifier, list);
         }
 
         internal BlueprintData.BuildableObjectData GetBuildableObjectData(int index) => GetBuildableObjectData(ref _data, index);
@@ -1213,7 +1264,7 @@ namespace Duplicationer
                                 AABB3D aabb = new(0, 0, 0, wx, wy, wz);
                                 BuildModularBuildPlaceholders(anchorPosition, handles, placeholderRenderGroup, buildingPlaceholders, repeatIndex, buildingIndex, template, baseTransform, position + centerOffset, orientation, aabb, modularBuildingData, extraBoundingBoxes);
 
-                                buildingPlaceholders.Add(new BlueprintPlaceholder(buildingIndex, repeatIndex, template, position, rotation, orientation, handles.ToArray(), extraBoundingBoxes.ToArray()));
+                                buildingPlaceholders.Add(new BlueprintPlaceholder(buildableObjectData.originalEntityId, buildingIndex, repeatIndex, template, template.parentItemTemplate, position, rotation, orientation, handles.ToArray(), extraBoundingBoxes: extraBoundingBoxes.ToArray()));
                             }
                             else
                             {
@@ -1226,7 +1277,18 @@ namespace Duplicationer
                                     handles[i] = placeholderRenderGroup.AddSimplePlaceholderTransform(entry.mesh, transform, BlueprintPlaceholder.stateColours[1]);
                                 }
 
-                                buildingPlaceholders.Add(new BlueprintPlaceholder(buildingIndex, repeatIndex, template, position, rotation, orientation, handles));
+                                buildingPlaceholders.Add(new BlueprintPlaceholder(buildableObjectData.originalEntityId, buildingIndex, repeatIndex, template, template.parentItemTemplate, position, rotation, orientation, handles));
+                            }
+
+                            if (buildableObjectData.HasCustomData("powerline"))
+                            {
+                                List<ulong> powerLineEntityIds = new();
+                                buildableObjectData.GetCustomDataList("powerline", powerLineEntityIds);
+
+                                foreach (var powerLineEntityId in powerLineEntityIds)
+                                {
+                                    buildingPlaceholders.Add(new BlueprintPlaceholder(powerLineEntityId, buildingIndex, repeatIndex, null, PowerlineItemTemplate, position, rotation, orientation, null));
+                                }
                             }
                         }
 
@@ -1267,7 +1329,7 @@ namespace Duplicationer
                                                 handles[i] = placeholderRenderGroup.AddSimplePlaceholderTransform(entry.mesh, transform, BlueprintPlaceholder.stateColours[1]);
                                             }
 
-                                            terrainPlaceholders.Add(new BlueprintPlaceholder(blockIndex, repeatIndex, template, worldPos, Quaternion.identity, BuildingManager.BuildOrientation.xPos, handles));
+                                            terrainPlaceholders.Add(new BlueprintPlaceholder(0, blockIndex, repeatIndex, template, template.parentItemTemplate, worldPos, Quaternion.identity, BuildingManager.BuildOrientation.xPos, handles));
                                         }
                                     }
                                     blockIndex++;

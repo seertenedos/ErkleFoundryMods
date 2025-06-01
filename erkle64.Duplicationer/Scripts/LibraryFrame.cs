@@ -19,6 +19,8 @@ namespace Duplicationer
 
         public void Show(SaveFrame saveFrame = null)
         {
+            if (IsOpen) return;
+
             if (saveFrame == null) _tool.HideSaveFrame(true);
 
             _tool.HideBlueprintFrame(true);
