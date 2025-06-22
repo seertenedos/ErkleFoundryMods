@@ -56,6 +56,7 @@ namespace FreeStuff
 
             public IEnumerator GetEnumerator()
             {
+                var identifiersAdded = new HashSet<string>();
                 while (_enumerator.MoveNext())
                 {
                     var enumerated = _enumerator.Current;
@@ -85,6 +86,8 @@ namespace FreeStuff
                         foreach (var kv in AssetManager.getAllAssetsOfType<CraftingRecipe>())
                         {
                             var recipe = kv.Value;
+                            if(recipe.modIdentifier == "TransportDucts") continue;
+
                             if (recipe.outputElemental_data.Length == 0 && recipe.output_data.Length == 1 && !recipe.isHiddenInCharacterCraftingFrame)
                             {
                                 if (items.TryGetValue(ItemTemplate.generateStringHash(recipe.output_data[0].identifier), out var item))
@@ -130,6 +133,7 @@ namespace FreeStuff
                         var baseElementRecipe = AssetManager.getAsset<CraftingRecipe>("_base_olumic_acid");
                         foreach (var element in ItemTemplateManager.getAllElementTemplates())
                         {
+                            if (element.Value.modIdentifier == "TransportDucts") continue;
                             AddCreativeElementRecipe(baseElementRecipe, element.Value);
                         }
 
@@ -160,7 +164,10 @@ namespace FreeStuff
                                 }
                             };
 
-                            creativeRecipes.Add(creativeRecipe);
+                            if (identifiersAdded.Add(creativeRecipe.identifier))
+                            {
+                                creativeRecipes.Add(creativeRecipe);
+                            }     
                         }
 
                         void AddCreativeElementRecipe(CraftingRecipe recipe, ElementTemplate element)
@@ -182,7 +189,10 @@ namespace FreeStuff
                                 }
                             };
 
-                            creativeRecipes.Add(creativeRecipe);
+                            if (identifiersAdded.Add(creativeRecipe.identifier))
+                            {
+                                creativeRecipes.Add(creativeRecipe);
+                            }
                         }
                     }
 
