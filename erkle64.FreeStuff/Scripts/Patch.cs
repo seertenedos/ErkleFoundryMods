@@ -56,7 +56,7 @@ namespace FreeStuff
 
             public IEnumerator GetEnumerator()
             {
-                var identifiersAdded = new HashSet<string>();
+                var addedRecipeIdentifiers = new HashSet<string>();
                 while (_enumerator.MoveNext())
                 {
                     var enumerated = _enumerator.Current;
@@ -146,9 +146,13 @@ namespace FreeStuff
 
                         void AddCreativeItemRecipe(CraftingRecipe recipe, ItemTemplate item)
                         {
+                            var identifier = $"_freestuff_{item.identifier}";
+                            if (addedRecipeIdentifiers.Contains(identifier))
+                                return;
+
                             var creativeRecipe = Object.Instantiate(recipe);
                             creativeRecipe.modIdentifier = "_erkle64_freestuff";
-                            creativeRecipe.identifier = $"_freestuff_{item.identifier}";
+                            creativeRecipe.identifier = identifier;
                             creativeRecipe.name = item.name;
                             creativeRecipe.icon_identifier = item.icon_identifier;
                             creativeRecipe.timeMs = 1000;
@@ -164,17 +168,19 @@ namespace FreeStuff
                                 }
                             };
 
-                            if (identifiersAdded.Add(creativeRecipe.identifier))
-                            {
-                                creativeRecipes.Add(creativeRecipe);
-                            }     
+                            creativeRecipes.Add(creativeRecipe);
+                            addedRecipeIdentifiers.Add(creativeRecipe.identifier);
                         }
 
                         void AddCreativeElementRecipe(CraftingRecipe recipe, ElementTemplate element)
                         {
+                            var identifier = $"_freestuff_{element.identifier}";
+                            if (addedRecipeIdentifiers.Contains(identifier))
+                                return;
+
                             var creativeRecipe = Object.Instantiate(recipe);
                             creativeRecipe.modIdentifier = "_erkle64_freestuff";
-                            creativeRecipe.identifier = $"_freestuff_{element.identifier}";
+                            creativeRecipe.identifier = identifier;
                             creativeRecipe.name = element.name;
                             creativeRecipe.icon_identifier = element.icon_identifier;
                             creativeRecipe.timeMs = 1000;
@@ -189,10 +195,8 @@ namespace FreeStuff
                                 }
                             };
 
-                            if (identifiersAdded.Add(creativeRecipe.identifier))
-                            {
-                                creativeRecipes.Add(creativeRecipe);
-                            }
+                            creativeRecipes.Add(creativeRecipe);
+                            addedRecipeIdentifiers.Add(identifier);
                         }
                     }
 
